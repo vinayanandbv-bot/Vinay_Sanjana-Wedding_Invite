@@ -1,10 +1,9 @@
 /**
- * THE ROYAL PALACE WEDDING E-INVITATION - MASTER INTERACTION SCRIPT
- * - 3D Palace Gates Grand Opening with Crimson Monogram Wax Seal (P & V)
- * - Pure Visual Elegance: Silent (Zero Beeps/Audio), Zero Toast Popups
- * - Ambient 24K Gold Leaf Dust Particle Canvas
- * - Real-Time Wedding Countdown Timer (Target: Nov 28, 2026)
- * - One-Tap Google Calendar Sync & Google Maps Navigation
+ * THE ROYAL PALACE WEDDING E-INVITATION - MASTER CONTROLLER
+ * - Orchestrates Three.js WebGL 3D Palace Gates, 3D Monogram Envelope & Heritage Scroll
+ * - Zero Audio / Silent & Dignified
+ * - Live Countdown to November 28, 2026
+ * - Google Calendar One-Tap Sync & Google Maps Navigation
  */
 
 (function () {
@@ -12,13 +11,28 @@
 
   // DOM Elements
   const stageContainer = document.getElementById('stage-container');
-  const palacePortal = document.getElementById('palace-portal');
-  const doorsStage = document.getElementById('doors-stage');
-  const centralPalaceSeal = document.getElementById('central-palace-seal');
-  const portalPrompt = document.getElementById('portal-prompt');
-  const btnCloseDoors = document.getElementById('btn-close-doors');
-  const btnAddCalendar = document.getElementById('btn-add-calendar');
+  const courtyardInvitation = document.getElementById('courtyard-invitation');
   const invitationInner = document.getElementById('invitation-inner');
+  const btnCloseAction = document.getElementById('btn-close-action');
+  const btnAddCalendar = document.getElementById('btn-add-calendar');
+
+  // Theme Switcher Buttons
+  const themeBtns = document.querySelectorAll('.theme-tab-btn');
+  const stages = {
+    doors: document.getElementById('stage-doors'),
+    envelope: document.getElementById('stage-envelope'),
+    scroll: document.getElementById('stage-scroll'),
+  };
+
+  // Envelope Elements
+  const envelopeAssembly = document.getElementById('envelope-assembly');
+  const envelopeWaxSeal = document.getElementById('envelope-wax-seal');
+  const envelopePrompt = document.getElementById('envelope-prompt');
+
+  // Scroll Elements
+  const scrollAssembly = document.getElementById('scroll-assembly');
+  const scrollPullCord = document.getElementById('scroll-pull-cord');
+  const scrollPrompt = document.getElementById('scroll-prompt');
 
   // Countdown Elements
   const countDays = document.getElementById('count-days');
@@ -26,78 +40,184 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  let areGatesOpen = false;
+  let activeTheme = 'doors';
+  let isInvitationRevealed = false;
 
   /* ==========================================================================
-     1. 3D ROYAL PALACE GATES OPEN / CLOSE INTERACTION
+     1. INITIALIZE THREE.JS 3D PALACE PORTAL
      ========================================================================== */
-  function openGates() {
-    if (areGatesOpen) return;
-    areGatesOpen = true;
+  if (window.Palace3D) {
+    window.Palace3D.init({
+      containerId: 'palace-webgl-container',
+      onOpen: function () {
+        revealInvitation();
+      },
+      onClose: function () {
+        resetReveal();
+      },
+    });
+  }
 
-    // Add gates-open class to trigger 3D perspective door swing
-    stageContainer.classList.add('gates-open');
+  // Also bind the prompt line for Palace Gates
+  const portalPrompt = document.getElementById('portal-prompt');
+  if (portalPrompt) {
+    portalPrompt.addEventListener('click', function () {
+      if (window.Palace3D && !window.Palace3D.isOpen()) {
+        window.Palace3D.openGates();
+      }
+    });
+  }
 
-    // Smoothly scroll down towards the revealed royal invitation courtyard
+  /* ==========================================================================
+     2. REVEAL & CLOSE INVITATION
+     ========================================================================== */
+  function revealInvitation() {
+    if (isInvitationRevealed) return;
+    isInvitationRevealed = true;
+
+    stageContainer.classList.add('opened');
+
     setTimeout(() => {
       if (invitationInner) {
         invitationInner.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 750);
+    }, 700);
   }
 
-  function closeGates() {
-    if (!areGatesOpen) return;
-    areGatesOpen = false;
+  function resetReveal() {
+    isInvitationRevealed = false;
+    stageContainer.classList.remove('opened');
+  }
 
-    // Smooth scroll back to top first
+  function closeCurrentTheme() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Close the palace doors
     setTimeout(() => {
-      stageContainer.classList.remove('gates-open');
+      if (activeTheme === 'doors') {
+        if (window.Palace3D && window.Palace3D.isOpen()) {
+          window.Palace3D.closeGates();
+        }
+      } else {
+        resetReveal();
+      }
     }, 300);
   }
 
-  // Bind Open Gate Triggers
-  if (centralPalaceSeal) {
-    centralPalaceSeal.addEventListener('click', function (e) {
+  if (btnCloseAction) {
+    btnCloseAction.addEventListener('click', function (e) {
       e.stopPropagation();
-      openGates();
-    });
-  }
-
-  if (doorsStage) {
-    doorsStage.addEventListener('click', function () {
-      if (!areGatesOpen) {
-        openGates();
-      }
-    });
-  }
-
-  if (portalPrompt) {
-    portalPrompt.addEventListener('click', function () {
-      if (!areGatesOpen) {
-        openGates();
-      }
-    });
-  }
-
-  // Bind Close Gate Button
-  if (btnCloseDoors) {
-    btnCloseDoors.addEventListener('click', function (e) {
-      e.stopPropagation();
-      closeGates();
+      closeCurrentTheme();
     });
   }
 
   /* ==========================================================================
-     2. AMBIENT 24K GOLD LEAF DUST CANVAS
+     3. THEME SWITCHER LOGIC
+     ========================================================================== */
+  function switchTheme(newTheme) {
+    if (newTheme === activeTheme) return;
+
+    // Reset current state if opened
+    if (isInvitationRevealed) {
+      closeCurrentTheme();
+    }
+
+    activeTheme = newTheme;
+
+    // Update body class for styling tweaks
+    document.body.className = `theme-${newTheme}`;
+
+    // Update Switcher Tab Active States
+    themeBtns.forEach((btn) => {
+      if (btn.dataset.theme === newTheme) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // Update Stage Visibility
+    Object.keys(stages).forEach((key) => {
+      if (stages[key]) {
+        if (key === newTheme) {
+          stages[key].classList.add('active');
+        } else {
+          stages[key].classList.remove('active');
+        }
+      }
+    });
+
+    // If switching back to doors, trigger canvas resize in Three.js
+    if (newTheme === 'doors') {
+      window.dispatchEvent(new Event('resize'));
+    }
+  }
+
+  themeBtns.forEach((btn) => {
+    btn.addEventListener('click', function () {
+      const theme = this.dataset.theme;
+      switchTheme(theme);
+    });
+  });
+
+  /* ==========================================================================
+     4. ENVELOPE THEME INTERACTIONS
+     ========================================================================== */
+  function openEnvelope() {
+    revealInvitation();
+  }
+
+  if (envelopeWaxSeal) {
+    envelopeWaxSeal.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openEnvelope();
+    });
+  }
+
+  if (envelopeAssembly) {
+    envelopeAssembly.addEventListener('click', function () {
+      if (!isInvitationRevealed) {
+        openEnvelope();
+      }
+    });
+  }
+
+  if (envelopePrompt) {
+    envelopePrompt.addEventListener('click', openEnvelope);
+  }
+
+  /* ==========================================================================
+     5. SCROLL THEME INTERACTIONS
+     ========================================================================== */
+  function openScroll() {
+    revealInvitation();
+  }
+
+  if (scrollPullCord) {
+    scrollPullCord.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openScroll();
+    });
+  }
+
+  if (scrollAssembly) {
+    scrollAssembly.addEventListener('click', function () {
+      if (!isInvitationRevealed) {
+        openScroll();
+      }
+    });
+  }
+
+  if (scrollPrompt) {
+    scrollPrompt.addEventListener('click', openScroll);
+  }
+
+  /* ==========================================================================
+     6. AMBIENT 24K GOLD LEAF DUST CANVAS
      ========================================================================== */
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
   let particles = [];
-  const PARTICLE_COUNT = 26;
+  const PARTICLE_COUNT = 24;
 
   function resizeCanvas() {
     if (!canvas) return;
@@ -116,9 +236,9 @@
       if (!canvas) return;
       this.x = Math.random() * canvas.width;
       this.y = initial ? Math.random() * canvas.height : -15;
-      this.size = Math.random() * 2.2 + 1.0;
-      this.speedY = Math.random() * 0.45 + 0.18;
-      this.speedX = (Math.random() - 0.5) * 0.3;
+      this.size = Math.random() * 2.2 + 0.9;
+      this.speedY = Math.random() * 0.4 + 0.15;
+      this.speedX = (Math.random() - 0.5) * 0.28;
       this.opacity = Math.random() * 0.35 + 0.15;
       this.rotation = Math.random() * 360;
       this.rotSpeed = (Math.random() - 0.5) * 1.2;
@@ -167,7 +287,7 @@
   }
 
   /* ==========================================================================
-     3. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
+     7. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
      ========================================================================== */
   const targetDate = new Date('2026-11-28T18:00:00').getTime();
 
@@ -199,7 +319,7 @@
   updateCountdown();
 
   /* ==========================================================================
-     4. GOOGLE CALENDAR ONE-TAP SYNC
+     8. ONE-TAP GOOGLE CALENDAR SYNC
      ========================================================================== */
   if (btnAddCalendar) {
     btnAddCalendar.addEventListener('click', function (e) {
