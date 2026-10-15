@@ -86,19 +86,21 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Perfectly centered on first fold */
+  justify-content: center; /* Perfectly centered envelope on load */
   padding: 40px 14px 60px 14px;
   z-index: 2;
-  transition: justify-content 0.4s ease;
+  transition: justify-content 0.5s ease, padding 0.5s ease;
 }
 
-.stage-container.unrolled {
+.stage-container.opened {
   justify-content: flex-start;
-  padding: 30px 14px 70px 14px;
+  padding: 24px 12px 70px 12px;
 }
 
-/* Master Scroll Assembly */
-.scroll-master-wrapper {
+/* ==========================================================================
+   ROYAL ENVELOPE PRESENTATION SCENE
+   ========================================================================== */
+.envelope-presentation-wrapper {
   position: relative;
   width: 100%;
   max-width: 660px;
@@ -109,282 +111,281 @@ html, body {
 }
 
 /* ==========================================================================
-   AUTHENTIC GILDED DOWELS & LATHE-TURNED FINIALS
+   THE ROYAL ENVELOPE ASSEMBLY (3D HAUTE-COUTURE STATIONERY)
    ========================================================================== */
-.scroll-dowel {
+.royal-envelope-assembly {
   position: relative;
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 25;
-  filter: drop-shadow(0 8px 16px rgba(70, 45, 10, 0.32));
-}
-
-.scroll-dowel.top-dowel {
-  margin-bottom: -3px;
-}
-
-.scroll-dowel.bottom-dowel {
-  margin-top: -3px;
-}
-
-.dowel-shaft {
-  flex: 1;
-  height: 22px;
-  background: var(--gold-dowel);
-  border-radius: 3px;
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.75), inset 0 -2px 5px rgba(0, 0, 0, 0.5);
-  position: relative;
-  overflow: hidden;
-}
-
-.dowel-reflection {
-  position: absolute;
-  top: 2px;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.75);
-  filter: blur(0.8px);
-}
-
-.dowel-core-band {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 28px,
-    rgba(255, 245, 205, 0.3) 28px,
-    rgba(79, 53, 16, 0.4) 30px
-  );
-  pointer-events: none;
-}
-
-.dowel-finial {
-  display: flex;
-  align-items: center;
-  height: 38px;
-  flex-shrink: 0;
-  z-index: 2;
-}
-
-.dowel-finial.left {
-  flex-direction: row;
-}
-
-.dowel-finial.right {
-  flex-direction: row;
-}
-
-.finial-tip {
-  width: 8px;
-  height: 14px;
-  background: radial-gradient(circle at 40% 40%, #fff7d6 0%, #b88b2f 60%, #4a300a 100%);
-  border-radius: 50% 2px 2px 50%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.dowel-finial.right .finial-tip {
-  border-radius: 2px 50% 50% 2px;
-}
-
-.finial-ring {
-  width: 6px;
-  height: 26px;
-  background: linear-gradient(180deg, #ffe7a3 0%, #a87920 50%, #4a300a 100%);
-  border-radius: 2px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  margin: 0 1px;
-}
-
-.finial-bulb {
-  width: 18px;
-  height: 34px;
-  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fcedbd 25%, #b88b2f 65%, #3d2305 100%);
-  border-radius: 50% 8px 8px 50%;
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 10px rgba(50, 30, 8, 0.4);
-}
-
-.dowel-finial.right .finial-bulb {
-  border-radius: 8px 50% 50% 8px;
-}
-
-/* ==========================================================================
-   AUTHENTIC ROYAL SCROLL ASSEMBLY
-   ========================================================================== */
-.royal-scroll-assembly {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Traveling Bottom Roller Assembly */
-.traveling-roller-assembly {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.05s linear;
+  width: min(92vw, 540px);
+  height: 330px;
+  margin: 0 auto;
+  perspective: 1400px;
+  cursor: pointer;
+  transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
   z-index: 20;
 }
 
-/* Rolled Paper Cylinder (Realistic 3D Parchment Roll - No Awkward Circles!) */
-.rolled-scroll-cylinder {
-  position: relative;
-  width: calc(100% - 28px);
-  height: 145px;
-  margin: -4px auto;
-  border-radius: 6px;
+.stage-container.opened .royal-envelope-assembly {
+  height: auto;
+  width: 100%;
+  max-width: 660px;
+  cursor: default;
+}
+
+/* Envelope Back Panel & Gold Damask Interior Lining */
+.envelope-back-panel {
+  position: absolute;
+  inset: 0;
+  background: #fbf9f4;
+  border-radius: 12px;
+  box-shadow: 
+    0 25px 60px rgba(70, 45, 10, 0.22),
+    0 4px 15px rgba(0, 0, 0, 0.08),
+    inset 0 1px 3px rgba(255, 255, 255, 0.9);
+  z-index: 1;
   overflow: hidden;
-  cursor: pointer;
-  box-shadow: 
-    0 16px 36px rgba(80, 50, 15, 0.28),
-    0 4px 12px rgba(0, 0, 0, 0.12),
-    inset 0 1px 2px rgba(255, 255, 255, 0.9);
-  transition: height 0.65s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease, margin 0.5s ease;
-  touch-action: none;
+  border: 1.5px solid rgba(184, 139, 47, 0.35);
+  transition: opacity 0.5s ease, height 0.5s ease;
 }
 
-.stage-container.unrolled .rolled-scroll-cylinder {
-  height: 0px;
+.stage-container.opened .envelope-back-panel {
   opacity: 0;
-  margin: 0;
   pointer-events: none;
 }
 
-.cylinder-paper-body {
+.envelope-interior-lining {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #faf7f0;
+  inset: 12px;
+  background: 
+    radial-gradient(ellipse at 50% 30%, #ffffff 0%, #f7f0e4 70%, #eddcc3 100%);
+  border-radius: 8px;
+  border: 1px dashed rgba(184, 139, 47, 0.35);
   background-image: 
-    linear-gradient(
-      180deg,
-      rgba(45, 28, 8, 0.35) 0%,
-      rgba(140, 100, 45, 0.15) 8%,
-      rgba(255, 255, 255, 0.8) 22%,
-      rgba(253, 251, 245, 1) 48%,
-      rgba(242, 233, 218, 0.95) 75%,
-      rgba(100, 70, 25, 0.3) 94%,
-      rgba(40, 22, 5, 0.55) 100%
-    );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cylinder-paper-shadow-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background: linear-gradient(180deg, rgba(35, 20, 5, 0.45) 0%, transparent 100%);
-  pointer-events: none;
-}
-
-.cylinder-paper-shadow-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 14px;
-  background: linear-gradient(0deg, rgba(35, 20, 5, 0.5) 0%, transparent 100%);
-  pointer-events: none;
-}
-
-.cylinder-paper-highlight {
-  position: absolute;
-  top: 22%;
-  left: 0;
-  right: 0;
-  height: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
-  pointer-events: none;
-  filter: blur(1.5px);
-}
-
-/* Subtle Embossed Floral Damask Watermark on Rolled Paper */
-.cylinder-damask-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(circle at 50% 50%, rgba(184, 139, 47, 0.08) 1px, transparent 1px);
-  background-size: 14px 14px;
-  opacity: 0.85;
-  pointer-events: none;
-}
-
-/* Elegant Braided Gold Ribbon Band Tied Around Scroll Waist */
-.cylinder-gold-ribbon-band {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 18px;
-  transform: translateY(-50%);
-  background: linear-gradient(
-    180deg,
-    #7a5210 0%,
-    #d4af37 25%,
-    #fff7db 50%,
-    #c4982e 75%,
-    #5c3d0a 100%
-  );
-  box-shadow: 
-    0 3px 8px rgba(45, 25, 5, 0.35),
-    0 -2px 6px rgba(45, 25, 5, 0.25),
-    inset 0 1px 2px rgba(255, 255, 255, 0.8);
-  pointer-events: none;
-}
-
-.cylinder-gold-ribbon-band::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent 0px,
-    transparent 4px,
-    rgba(255, 255, 255, 0.4) 4px,
-    rgba(255, 255, 255, 0.4) 6px,
-    rgba(70, 45, 10, 0.3) 6px,
-    rgba(70, 45, 10, 0.3) 8px
-  );
+    radial-gradient(circle at 50% 50%, rgba(184, 139, 47, 0.07) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
 }
 
 /* ==========================================================================
-   UNROLLING PARCHMENT VIEWPORT
+   THE ROYAL LETTER (NESTED IN POCKET, SLIDES UP & EXPANDS ON OPEN)
    ========================================================================== */
-.parchment-viewport {
+.envelope-letter-chassis {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  height: calc(100% - 28px);
+  overflow: hidden;
+  z-index: 2;
+  border-radius: 8px;
+  transition: 
+    transform 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    height 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    top 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    left 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    right 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 0.6s ease;
+  box-shadow: 0 4px 15px rgba(70, 45, 10, 0.1);
+}
+
+.stage-container.opened .envelope-letter-chassis {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  z-index: 15;
+  box-shadow: 0 20px 60px rgba(150, 115, 50, 0.18), 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================================================
+   FRONT POCKET OF ENVELOPE (LOWER V-NECK FLAPS)
+   ========================================================================== */
+.envelope-front-pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: 12px;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.stage-container.opened .envelope-front-pocket {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.pocket-bottom-tri {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(0deg, #fdfbf7 0%, #ffffff 50%, #f6f0e4 100%);
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+  filter: drop-shadow(0 -5px 12px rgba(80, 50, 15, 0.15));
+  border-bottom: 2px solid #b88b2f;
+}
+
+.pocket-side-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #efe6d6 0%, #faf6ee 80%);
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+  border-left: 2px solid #b88b2f;
+}
+
+.pocket-side-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(-90deg, #efe6d6 0%, #faf6ee 80%);
+  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+  border-right: 2px solid #b88b2f;
+}
+
+.pocket-rim-gold {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(184, 139, 47, 0.45);
+  border-radius: 12px;
+}
+
+/* ==========================================================================
+   TOP TRIANGULAR FLAP (3D ROTATION UPWARD ON CLICK)
+   ========================================================================== */
+.envelope-top-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 54%;
+  z-index: 5;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), z-index 0.2s 0.3s;
+}
+
+.stage-container.opened .envelope-top-flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flap-triangle {
   position: relative;
   width: 100%;
-  height: 0px;
+  height: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #faf7f0 55%, #efe5d0 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  filter: drop-shadow(0 6px 14px rgba(70, 45, 15, 0.22));
+}
+
+.flap-border-gold {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 92%, #b88b2f 100%);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   AUTHENTIC ROYAL CRIMSON WAX SEAL WITH MONOGRAM INITIALS (P & V)
+   ========================================================================== */
+.crimson-wax-seal {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 76px;
+  height: 76px;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.crimson-wax-seal:hover {
+  transform: translateX(-50%) scale(1.06);
+}
+
+.seal-wax-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #e62248 0%, #a8122a 50%, #5c0716 100%);
+  box-shadow: 
+    0 10px 26px rgba(110, 10, 25, 0.55),
+    0 3px 8px rgba(0, 0, 0, 0.25),
+    inset 0 2.5px 5px rgba(255, 195, 205, 0.7),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   overflow: hidden;
+}
+
+.seal-beveled-rim {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 235, 190, 0.45);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.seal-inner-matrix {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: height 0.05s linear;
+  justify-content: center;
+  gap: 1px;
+  z-index: 2;
 }
 
-.parchment-viewport.smooth-transition {
-  transition: height 1.35s cubic-bezier(0.19, 1, 0.22, 1);
+.seal-crest-crown {
+  font-size: 0.92rem;
+  line-height: 1;
+  color: #fff4cb;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.seal-monogram-initials {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #fff9e0;
+  line-height: 1.1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75), 0 0 8px rgba(255, 230, 160, 0.6);
+}
+
+.seal-bottom-flourish {
+  font-size: 0.55rem;
+  color: #ffd978;
+  opacity: 0.85;
+}
+
+.seal-pulsing-sheen {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230, 34, 72, 0.35) 0%, transparent 70%);
+  animation: sealGlow 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes sealGlow {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  100% { transform: scale(1.18); opacity: 0.95; }
 }
 
 .invitation-inner {
@@ -912,30 +913,22 @@ html, body {
 }
 
 /* ==========================================================================
-   HANGING SILK GOLD CORD & WEIGHTED TASSEL
+   PROMPT BELOW ENVELOPE
    ========================================================================== */
-/* ==========================================================================
-   HANGING SILK GOLD CORD & WEIGHTED TASSEL (ANCHORED TO MOVING ROLLER)
-   ========================================================================== */
-.thread-assembly {
-  position: relative;
+.envelope-instruction {
+  margin-top: 36px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 30;
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  padding: 6px 20px;
-  transition: opacity 0.4s ease, height 0.4s ease;
+  gap: 6px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  padding: 6px 14px;
 }
 
-.thread-assembly:active {
-  cursor: grabbing;
-}
-
-.stage-container.unrolled .thread-assembly,
-.stage-container.unrolled .pull-instruction {
+.stage-container.opened .envelope-instruction {
   opacity: 0;
   height: 0;
   margin: 0;
@@ -944,104 +937,12 @@ html, body {
   pointer-events: none;
 }
 
-.pull-thread {
-  width: 4px;
-  height: 85px;
-  background: repeating-linear-gradient(
-    45deg,
-    #9e7220,
-    #9e7220 3px,
-    #fff6cb 3px,
-    #fff6cb 6px,
-    #781026 6px,
-    #781026 9px
-  );
-  box-shadow: 0 0 10px rgba(184, 139, 47, 0.4), 1px 2px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-  transform-origin: top center;
-  transition: height 0.05s linear;
-}
-
-.thread-pendant {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  transform-origin: top center;
-  animation: regalSway 4.5s ease-in-out infinite alternate;
-}
-
-@keyframes regalSway {
-  0% { transform: rotate(-2.5deg); }
-  100% { transform: rotate(2.5deg); }
-}
-
-.thread-knot {
-  width: 10px;
-  height: 6px;
-  background: #8e6216;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-}
-
-.thread-gold-bead {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #faedd0 30%, #c4982e 70%, #5c3d0a 100%);
-  box-shadow: 0 4px 10px rgba(70, 45, 10, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.7);
-  margin-top: -2px;
-}
-
-.thread-silk-tassel {
-  width: 24px;
-  height: 52px;
-  background: linear-gradient(180deg, #c59b27 0%, #8e6216 30%, #faedd0 60%, #b88b2f 100%);
-  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
-  margin-top: -3px;
-  position: relative;
-  box-shadow: 0 6px 14px rgba(70, 45, 10, 0.35);
-}
-
-.thread-silk-tassel::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(255, 255, 255, 0.28) 2px,
-    rgba(255, 255, 255, 0.28) 3px,
-    rgba(60, 35, 5, 0.32) 3px,
-    rgba(60, 35, 5, 0.32) 4px
-  );
-  pointer-events: none;
-}
-
-/* Prompt Underneath Thread */
-.pull-instruction {
-  margin-top: 18px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  padding: 6px 14px;
-}
-
 .instruction-line {
   display: flex;
   align-items: center;
   gap: 10px;
   font-family: var(--font-serif);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--gold-dark);
@@ -1055,7 +956,7 @@ html, body {
 
 .instruction-hint {
   font-family: var(--font-body);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-style: italic;
   color: var(--text-muted);
 }
@@ -1070,8 +971,21 @@ html, body {
   .stage-container {
     padding: 30px 10px 45px 10px;
   }
-  .rolled-scroll-cylinder {
-    height: 125px;
+  .stage-container.opened {
+    padding: 16px 8px 50px 8px;
+  }
+  .royal-envelope-assembly {
+    width: 92vw;
+    height: 250px;
+  }
+  .crimson-wax-seal {
+    width: 66px;
+    height: 66px;
+    bottom: -24px;
+  }
+  .seal-monogram-initials {
+    font-size: 0.95rem;
+    letter-spacing: 2px;
   }
   .invitation-inner {
     padding: 36px 14px;

@@ -24,33 +24,20 @@
 
   <!-- Main Stage Container -->
   <main class="stage-container" id="stage-container">
-    <div class="scroll-master-wrapper" id="scroll-wrapper">
+    <div class="envelope-presentation-wrapper" id="envelope-wrapper">
       
       <!-- ==========================================
-           AUTHENTIC ROYAL SCROLL ASSEMBLY
+           ROYAL WEDDING ENVELOPE ASSEMBLY
            ========================================== -->
-      <div class="royal-scroll-assembly" id="royal-scroll-assembly">
+      <div class="royal-envelope-assembly" id="envelope-assembly" title="Tap to open the royal invitation">
         
-        <!-- Top Gilded Dowel (Anchored at Top) -->
-        <div class="scroll-dowel top-dowel" id="top-dowel">
-          <div class="dowel-finial left">
-            <div class="finial-tip"></div>
-            <div class="finial-ring"></div>
-            <div class="finial-bulb"></div>
-          </div>
-          <div class="dowel-shaft">
-            <div class="dowel-reflection"></div>
-            <div class="dowel-core-band"></div>
-          </div>
-          <div class="dowel-finial right">
-            <div class="finial-bulb"></div>
-            <div class="finial-ring"></div>
-            <div class="finial-tip"></div>
-          </div>
+        <!-- Back Panel of Envelope with Golden Silk Interior -->
+        <div class="envelope-back-panel">
+          <div class="envelope-interior-lining"></div>
         </div>
 
-        <!-- Unrolling Parchment Viewport -->
-        <div class="parchment-viewport" id="parchment-viewport">
+        <!-- The Royal Letter (Inside the envelope; slides up and expands on open) -->
+        <div class="envelope-letter-chassis" id="letter-chassis">
           <article class="invitation-inner" id="invitation-inner">
             
             <!-- Ornate Double-Ruled Gold Foil Border with Filigree -->
@@ -260,69 +247,54 @@
                 For inquiries &amp; travel coordination: +91 98765 43210 &nbsp;|&nbsp; +91 98765 12345
               </div>
 
-              <!-- Roll Back Up Action -->
-              <button class="royal-replay-btn" id="btn-roll-up" type="button">
-                <span>▲ Roll Up Invitation</span>
+              <!-- Close Envelope Action -->
+              <button class="royal-replay-btn" id="btn-close-envelope" type="button">
+                <span>▲ Fold &amp; Close Envelope</span>
               </button>
             </footer>
 
           </article>
         </div>
 
-        <!-- Traveling Bottom Roller Assembly (Glides down smoothly during unroll) -->
-        <div class="traveling-roller-assembly" id="traveling-roller" title="Pull down or tap to unroll">
-          
-          <!-- Rolled Paper Cylinder (Cylindrical 3D shading, realistic paper roll without any fake disc overlay) -->
-          <div class="rolled-scroll-cylinder" id="scroll-cylinder-trigger">
-            <div class="cylinder-paper-body">
-              <div class="cylinder-paper-shadow-top"></div>
-              <div class="cylinder-paper-highlight"></div>
-              <div class="cylinder-damask-pattern"></div>
-              <div class="cylinder-gold-ribbon-band"></div>
-              <div class="cylinder-paper-shadow-bottom"></div>
-            </div>
-          </div>
-
-          <!-- Bottom Gilded Dowel -->
-          <div class="scroll-dowel bottom-dowel" id="bottom-dowel">
-            <div class="dowel-finial left">
-              <div class="finial-tip"></div>
-              <div class="finial-ring"></div>
-              <div class="finial-bulb"></div>
-            </div>
-            <div class="dowel-shaft">
-              <div class="dowel-reflection"></div>
-              <div class="dowel-core-band"></div>
-            </div>
-            <div class="dowel-finial right">
-              <div class="finial-bulb"></div>
-              <div class="finial-ring"></div>
-              <div class="finial-tip"></div>
-            </div>
-          </div>
-
-          <!-- Hanging Gold Silk Thread & Tassel (Tethered to the moving bottom dowel) -->
-          <div class="thread-assembly" id="thread-assembly">
-            <div class="pull-thread" id="pull-thread"></div>
-            <div class="thread-pendant" id="thread-pendant">
-              <div class="thread-knot"></div>
-              <div class="thread-gold-bead"></div>
-              <div class="thread-silk-tassel"></div>
-            </div>
-          </div>
-
-          <!-- Understated Royal Pull Instruction -->
-          <div class="pull-instruction" id="pull-instruction">
-            <div class="instruction-line">
-              <span class="ornament-glyph">❖</span>
-              <span class="instruction-text">PULL DOWN TO UNROLL</span>
-              <span class="ornament-glyph">❖</span>
-            </div>
-            <div class="instruction-hint">(or tap to open)</div>
-          </div>
-
+        <!-- Front Pocket of Envelope (Forms the lower V-neck pocket) -->
+        <div class="envelope-front-pocket">
+          <div class="pocket-side-left"></div>
+          <div class="pocket-side-right"></div>
+          <div class="pocket-bottom-tri"></div>
+          <div class="pocket-rim-gold"></div>
         </div>
 
+        <!-- Envelope Top Triangular Flap (Flips 180deg upwards on click) -->
+        <div class="envelope-top-flap" id="envelope-top-flap">
+          <div class="flap-triangle">
+            <div class="flap-damask-texture"></div>
+            <div class="flap-border-gold"></div>
+          </div>
+          
+          <!-- Authentic Crimson Wax Seal with Monogram "P & V" -->
+          <div class="crimson-wax-seal" id="crimson-wax-seal" title="Tap to break seal & open invitation">
+            <div class="seal-wax-circle">
+              <div class="seal-beveled-rim"></div>
+              <div class="seal-inner-matrix">
+                <div class="seal-crest-crown">♕</div>
+                <div class="seal-monogram-initials">P &amp; V</div>
+                <div class="seal-bottom-flourish">❖</div>
+              </div>
+            </div>
+            <div class="seal-pulsing-sheen"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Understated Prompt Below Envelope -->
+      <div class="envelope-instruction" id="envelope-instruction">
+        <div class="instruction-line">
+          <span class="ornament-glyph">❖</span>
+          <span class="instruction-text">TAP ENVELOPE TO OPEN</span>
+          <span class="ornament-glyph">❖</span>
+        </div>
+        <div class="instruction-hint">Touch the royal red wax seal to reveal the wedding invitation</div>
       </div>
 
     </div>

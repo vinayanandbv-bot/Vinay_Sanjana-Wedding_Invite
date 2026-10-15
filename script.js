@@ -1,10 +1,9 @@
 /**
  * THE ROYAL WEDDING E-INVITATION - MASTER INTERACTION ENGINE
- * - Realistic Physical Scroll Unrolling Physics (Zero beep noises!)
- * - Fluid Mobile Touch & Drag Gestures with Natural Inertia
- * - Tap-to-Open Fallbacks on Tassel, Rolled Scroll, Dowel & Hint
- * - Pure 24K Gold Dust Floating Particle Canvas
- * - Real-Time Wedding Countdown Engine (Target: Nov 28, 2026)
+ * - Royal Letter & Red Wax Monogram Seal (P & V) Envelope Experience
+ * - Smooth 3D Flap Unfolding & Letter Sliding Interaction (Silent, No Beeps!)
+ * - Floating 24K Gold Leaf Dust Particle Canvas
+ * - Real-Time Wedding Countdown Timer (Target: Nov 28, 2026)
  * - Seamless Google Maps & Google Calendar Actions
  */
 
@@ -13,16 +12,10 @@
 
   // DOM Elements
   const stageContainer = document.getElementById('stage-container');
-  const scrollWrapper = document.getElementById('scroll-wrapper');
-  const parchmentViewport = document.getElementById('parchment-viewport');
-  const invitationInner = document.getElementById('invitation-inner');
-  const travelingRoller = document.getElementById('traveling-roller');
-  const scrollCylinderTrigger = document.getElementById('scroll-cylinder-trigger');
-  const bottomDowel = document.getElementById('bottom-dowel');
-  const threadAssembly = document.getElementById('thread-assembly');
-  const pullThread = document.getElementById('pull-thread');
-  const pullInstruction = document.getElementById('pull-instruction');
-  const btnRollUp = document.getElementById('btn-roll-up');
+  const envelopeAssembly = document.getElementById('envelope-assembly');
+  const crimsonWaxSeal = document.getElementById('crimson-wax-seal');
+  const envelopeInstruction = document.getElementById('envelope-instruction');
+  const btnCloseEnvelope = document.getElementById('btn-close-envelope');
   const btnAddCalendar = document.getElementById('btn-add-calendar');
 
   // Countdown Elements
@@ -31,153 +24,64 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  // Interaction State
-  let isUnrolled = false;
-  let isDragging = false;
-  let startY = 0;
-  let currentDragY = 0;
-  let activePointerId = null;
-  const DRAG_THRESHOLD = 65; // Highly responsive on mobile screens
-  const BASE_THREAD_HEIGHT = 85;
+  let isOpened = false;
 
   /* ==========================================================================
-     1. PHYSICAL PULL-DOWN & UNROLL INTERACTIONS
+     1. ROYAL ENVELOPE OPEN / CLOSE INTERACTION
      ========================================================================== */
-  function initPullInteractions() {
-    const pullTargets = [threadAssembly, scrollCylinderTrigger, bottomDowel, pullInstruction];
+  function openEnvelope() {
+    if (isOpened) return;
+    isOpened = true;
 
-    pullTargets.forEach(el => {
-      if (!el) return;
-      el.addEventListener('pointerdown', onPointerDown, { passive: false });
-    });
+    // Trigger smooth 3D opening animation
+    stageContainer.classList.add('opened');
 
-    window.addEventListener('pointermove', onPointerMove, { passive: false });
-    window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointercancel', onPointerUp);
-
-    // Instant Tap-to-Open Fallbacks (Optimized for Smartphone Users)
-    if (scrollCylinderTrigger) {
-      scrollCylinderTrigger.addEventListener('click', () => {
-        if (!isUnrolled && currentDragY < 10) unrollScroll();
-      });
-    }
-
-    if (threadAssembly) {
-      threadAssembly.addEventListener('click', () => {
-        if (!isUnrolled && currentDragY < 10) unrollScroll();
-      });
-    }
-
-    if (pullInstruction) {
-      pullInstruction.addEventListener('click', () => {
-        if (!isUnrolled) unrollScroll();
-      });
-    }
-
-    if (btnRollUp) {
-      btnRollUp.addEventListener('click', rollupScroll);
-    }
-  }
-
-  function onPointerDown(e) {
-    if (isUnrolled) return;
-    isDragging = true;
-    startY = e.clientY;
-    currentDragY = 0;
-    activePointerId = e.pointerId;
-
-    try {
-      if (e.target.setPointerCapture) {
-        e.target.setPointerCapture(e.pointerId);
-      }
-    } catch (err) {}
-
-    parchmentViewport.classList.remove('smooth-transition');
-  }
-
-  function onPointerMove(e) {
-    if (!isDragging || isUnrolled) return;
-
-    const deltaY = e.clientY - startY;
-
-    if (deltaY > 0) {
-      // Prevent mobile page rubber-banding during finger pull
-      if (e.cancelable) e.preventDefault();
-
-      currentDragY = Math.min(deltaY, 280);
-
-      // Dynamically unfurl the parchment in real-time under finger
-      parchmentViewport.style.height = `${currentDragY}px`;
-      pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.18}px`;
-
-      // Gently fade the rolled cylinder as the parchment unfolds
-      const progress = currentDragY / 150;
-      scrollCylinderTrigger.style.opacity = Math.max(0.1, 1 - progress);
-    }
-  }
-
-  function onPointerUp(e) {
-    if (!isDragging || isUnrolled) return;
-    isDragging = false;
-
-    if (e && e.target && e.target.hasPointerCapture && activePointerId !== null) {
-      try {
-        if (e.target.hasPointerCapture(activePointerId)) {
-          e.target.releasePointerCapture(activePointerId);
-        }
-      } catch (err) {}
-    }
-    activePointerId = null;
-
-    if (currentDragY >= DRAG_THRESHOLD) {
-      unrollScroll();
-    } else {
-      // Smooth spring back to resting rolled position
-      parchmentViewport.classList.add('smooth-transition');
-      parchmentViewport.style.height = '0px';
-      pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
-      scrollCylinderTrigger.style.opacity = '1';
-    }
-  }
-
-  function unrollScroll() {
-    isUnrolled = true;
-    stageContainer.classList.add('unrolled');
-    parchmentViewport.classList.add('smooth-transition');
-
-    // Calculate full content height
-    const fullHeight = invitationInner.scrollHeight + 14;
-    parchmentViewport.style.height = `${fullHeight}px`;
-    pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
-
-    // Seamless unrolling (Completely silent, no intrusive notifications!)
+    // Subtle scroll adjustment after opening for comfortable reading flow
     setTimeout(() => {
-      if (isUnrolled) {
-        parchmentViewport.style.height = 'auto';
+      const card = document.getElementById('invitation-inner');
+      if (card && window.innerWidth <= 768) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 1400);
+    }, 700);
   }
 
-  function rollupScroll() {
-    isUnrolled = false;
+  function closeEnvelope() {
+    if (!isOpened) return;
+    isOpened = false;
 
-    // Lock to explicit height first for smooth CSS collapse
-    const currentHeight = invitationInner.scrollHeight + 14;
-    parchmentViewport.style.height = `${currentHeight}px`;
-    void parchmentViewport.offsetHeight;
-
-    parchmentViewport.classList.add('smooth-transition');
-    parchmentViewport.style.height = '0px';
-
-    scrollCylinderTrigger.style.opacity = '1';
-
-    setTimeout(() => {
-      if (!isUnrolled) {
-        stageContainer.classList.remove('unrolled');
-      }
-    }, 450);
-
+    // Smooth scroll back to top first
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setTimeout(() => {
+      stageContainer.classList.remove('opened');
+    }, 300);
+  }
+
+  // Bind Open Handlers
+  if (crimsonWaxSeal) {
+    crimsonWaxSeal.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openEnvelope();
+    });
+  }
+
+  if (envelopeAssembly) {
+    envelopeAssembly.addEventListener('click', () => {
+      if (!isOpened) {
+        openEnvelope();
+      }
+    });
+  }
+
+  if (envelopeInstruction) {
+    envelopeInstruction.addEventListener('click', openEnvelope);
+  }
+
+  if (btnCloseEnvelope) {
+    btnCloseEnvelope.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeEnvelope();
+    });
   }
 
   /* ==========================================================================
@@ -186,7 +90,7 @@
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
   let particles = [];
-  const PARTICLE_COUNT = 26;
+  const PARTICLE_COUNT = 24;
 
   function resizeCanvas() {
     if (!canvas) return;
@@ -208,7 +112,7 @@
       this.size = Math.random() * 2.2 + 1.0;
       this.speedY = Math.random() * 0.4 + 0.16;
       this.speedX = (Math.random() - 0.5) * 0.3;
-      this.opacity = Math.random() * 0.38 + 0.16;
+      this.opacity = Math.random() * 0.35 + 0.15;
       this.rotation = Math.random() * 360;
       this.rotSpeed = (Math.random() - 0.5) * 1.4;
     }
@@ -291,7 +195,8 @@
      4. GOOGLE CALENDAR ONE-TAP SYNC
      ========================================================================== */
   if (btnAddCalendar) {
-    btnAddCalendar.addEventListener('click', () => {
+    btnAddCalendar.addEventListener('click', (e) => {
+      e.stopPropagation();
       const title = encodeURIComponent('The Royal Wedding of Priyanka & Vikram');
       const details = encodeURIComponent('Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.');
       const location = encodeURIComponent('The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001');
@@ -302,8 +207,5 @@
       window.open(gcalUrl, '_blank', 'noopener,noreferrer');
     });
   }
-
-  // Initialize Interaction Engine
-  initPullInteractions();
 
 })();
