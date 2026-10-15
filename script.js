@@ -1,17 +1,18 @@
 /**
- * ROYAL WEDDING E-INVITATION - REFINED ENGINE
- * - Interactive Pull-Down Scroll Physics
- * - Classical Royal Raga & Court Romance Melody (Web Audio API Synthesizer)
- * - Understated Gold Stardust Canvas
- * - Live Royal Countdown Timer
- * - Google Calendar & Apple/Outlook (.ICS) Generator
- * - Copy Venue Address with Toast Feedback
+ * THE ROYAL WEDDING E-INVITATION - MOBILE-FIRST ENGINE
+ * - Touch & Gesture Physics Drag-to-Unroll with PointerCapture
+ * - Mobile Tap-to-Open Support on Thread, Tassel, Seal & Prompt
+ * - Classical Raag Yaman & Court Romance Ambient Synthesizer
+ * - Gold Stardust Particle Canvas
+ * - Live Countdown Engine
+ * - One-Tap Google Calendar, Apple/Outlook (.ICS), and Copy Address
  */
 
 (function() {
   'use strict';
 
   // DOM Elements
+  const stageContainer = document.getElementById('stage-container');
   const scrollWrapper = document.getElementById('scroll-wrapper');
   const scrollBody = document.getElementById('scroll-body');
   const invitationInner = document.getElementById('invitation-inner');
@@ -39,31 +40,40 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  // Interaction State
+  // Drag State
   let isUnrolled = false;
   let isDragging = false;
   let startY = 0;
   let currentDragY = 0;
-  const DRAG_THRESHOLD = 110;
-  const BASE_THREAD_HEIGHT = 90;
+  let activePointerId = null;
+  const DRAG_THRESHOLD = 90; // Optimized for mobile finger drag distance
+  const BASE_THREAD_HEIGHT = 80;
 
   /* ==========================================================================
-     1. PULL DOWN PHYSICS & SMOOTH UNROLLING
+     1. MOBILE TOUCH & POINTER INTERACTIONS
      ========================================================================== */
   function initPullInteractions() {
-    const pullTargets = [threadAssembly, sealTrigger, pullInstruction];
+    const pullElements = [threadAssembly, sealTrigger, bottomRod, pullInstruction];
 
-    pullTargets.forEach(target => {
-      if (target) target.addEventListener('pointerdown', onPointerDown);
+    pullElements.forEach(el => {
+      if (!el) return;
+      el.addEventListener('pointerdown', onPointerDown, { passive: false });
     });
 
-    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
 
+    // Direct Tap / Click Fallbacks (Extremely intuitive on mobile)
     if (sealTrigger) {
-      sealTrigger.addEventListener('click', () => {
-        if (!isUnrolled) unrollScroll();
+      sealTrigger.addEventListener('click', (e) => {
+        if (!isUnrolled && currentDragY < 15) unrollScroll();
+      });
+    }
+
+    if (threadAssembly) {
+      threadAssembly.addEventListener('click', (e) => {
+        if (!isUnrolled && currentDragY < 15) unrollScroll();
       });
     }
 
@@ -83,31 +93,57 @@
     isDragging = true;
     startY = e.clientY;
     currentDragY = 0;
+    activePointerId = e.pointerId;
+
+    try {
+      if (e.target.setPointerCapture) {
+        e.target.setPointerCapture(e.pointerId);
+      }
+    } catch (err) {}
+
     scrollBody.classList.remove('smooth-transition');
-    e.preventDefault();
+
+    // Wake mobile audio context on first touch gesture
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
   }
 
   function onPointerMove(e) {
     if (!isDragging || isUnrolled) return;
 
     const deltaY = e.clientY - startY;
-    if (deltaY > 0) {
-      currentDragY = Math.min(deltaY, 320);
-      scrollBody.style.height = `${currentDragY}px`;
-      pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.25}px`;
 
-      const sealOpacity = Math.max(0, 1 - (currentDragY / 140));
+    if (deltaY > 0) {
+      // Prevent mobile page rubber-band scrolling while pulling
+      if (e.cancelable) e.preventDefault();
+
+      currentDragY = Math.min(deltaY, 280);
+      scrollBody.style.height = `${currentDragY}px`;
+      pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.22}px`;
+
+      const sealOpacity = Math.max(0, 1 - (currentDragY / 120));
       sashSeal.style.opacity = sealOpacity;
     }
   }
 
-  function onPointerUp() {
+  function onPointerUp(e) {
     if (!isDragging || isUnrolled) return;
     isDragging = false;
+
+    if (e && e.target && e.target.hasPointerCapture && activePointerId !== null) {
+      try {
+        if (e.target.hasPointerCapture(activePointerId)) {
+          e.target.releasePointerCapture(activePointerId);
+        }
+      } catch (err) {}
+    }
+    activePointerId = null;
 
     if (currentDragY >= DRAG_THRESHOLD) {
       unrollScroll();
     } else {
+      // Spring back to closed state
       scrollBody.classList.add('smooth-transition');
       scrollBody.style.height = '0px';
       pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
@@ -117,15 +153,16 @@
 
   function unrollScroll() {
     isUnrolled = true;
+    stageContainer.classList.add('unrolled');
     scrollBody.classList.add('smooth-transition');
 
     const fullHeight = invitationInner.scrollHeight;
     scrollBody.style.height = `${fullHeight}px`;
     pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
 
-    // Fade out seal & instructions
+    // Fade out ribbon, seal & prompt
     sashSeal.style.opacity = '0';
-    sashSeal.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    sashSeal.style.transform = 'translate(-50%, -50%) scale(0.65)';
     pullInstruction.style.opacity = '0';
     pullInstruction.style.pointerEvents = 'none';
 
@@ -137,6 +174,7 @@
 
     showToast('The Royal Invitation is revealed');
 
+    // Set height to auto after unrolling finishes so mobile orientation/resizing works fluidly
     setTimeout(() => {
       if (isUnrolled) {
         scrollBody.style.height = 'auto';
@@ -147,6 +185,7 @@
   function rollupScroll() {
     isUnrolled = false;
 
+    // Lock to current scrollHeight first
     const currentHeight = invitationInner.scrollHeight;
     scrollBody.style.height = `${currentHeight}px`;
     void scrollBody.offsetHeight;
@@ -159,13 +198,18 @@
     pullInstruction.style.opacity = '1';
     pullInstruction.style.pointerEvents = 'auto';
 
+    setTimeout(() => {
+      if (!isUnrolled) {
+        stageContainer.classList.remove('unrolled');
+      }
+    }, 400);
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /* ==========================================================================
-     2. CLASSICAL ROYAL MELODY SYNTHESIZER (WEB AUDIO API)
-     New Tune: Authentic Majestic Royal Raga (Raag Yaman / Kalyan Court Romance)
-     Featuring resonant drone harmonics and warm, serene flute/harp phrasings.
+     2. CLASSICAL ROYAL WEDDING MELODY (RAAG YAMAN / KALYAN COURT ROMANCE)
+     Web Audio API - Starts on mobile user touch gesture.
      ========================================================================== */
   let audioCtx = null;
   let isMusicPlaying = false;
@@ -182,12 +226,10 @@
     }
   }
 
-  // Soft crystalline unroll chime
   function playUnrollChime() {
     try {
       initAudioContext();
-      // Ascending D major / Yaman notes: D4, F#4, A4, C#5, D5, F#5
-      const notes = [293.66, 369.99, 440.00, 554.37, 587.33, 739.99];
+      const notes = [293.66, 369.99, 440.00, 554.37, 587.33, 739.99]; // D4, F#4, A4, C#5, D5, F#5
       const now = audioCtx.currentTime;
 
       notes.forEach((freq, idx) => {
@@ -195,28 +237,26 @@
         const gain = audioCtx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+        osc.frequency.setValueAtTime(freq, now + idx * 0.09);
 
-        gain.gain.setValueAtTime(0.0001, now + idx * 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.1 + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.00001, now + idx * 0.1 + 1.8);
+        gain.gain.setValueAtTime(0.0001, now + idx * 0.09);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.09 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.00001, now + idx * 0.09 + 1.8);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
-        osc.start(now + idx * 0.1);
-        osc.stop(now + idx * 0.1 + 1.85);
+        osc.start(now + idx * 0.09);
+        osc.stop(now + idx * 0.09 + 1.85);
       });
     } catch (e) {
-      console.warn('Audio chime unsupported:', e);
+      console.warn('Audio chime error:', e);
     }
   }
 
-  // Warm acoustic flute/harp note synthesis
   function playMelodyNote(freq, startTime, duration = 2.4, velocity = 0.08) {
     if (!audioCtx) return;
 
-    // Dual oscillator for rich, authentic timbre (flute + string resonance)
     const osc1 = audioCtx.createOscillator();
     const osc2 = audioCtx.createOscillator();
     const filter = audioCtx.createBiquadFilter();
@@ -226,14 +266,12 @@
     osc1.frequency.setValueAtTime(freq, startTime);
 
     osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 1.002, startTime); // subtle natural chorus
+    osc2.frequency.setValueAtTime(freq * 1.002, startTime);
 
-    // Lowpass filter for warm, rounded resonance
     filter.type = 'lowpass';
     filter.frequency.setValueAtTime(1400, startTime);
     filter.frequency.exponentialRampToValueAtTime(800, startTime + duration);
 
-    // Envelope
     gain.gain.setValueAtTime(0.00001, startTime);
     gain.gain.linearRampToValueAtTime(velocity, startTime + 0.12);
     gain.gain.exponentialRampToValueAtTime(0.00001, startTime + duration);
@@ -249,23 +287,17 @@
     osc2.stop(startTime + duration);
   }
 
-  // Start the peaceful, regal Yaman court melody
   function startAmbientMusic() {
     try {
       initAudioContext();
       isMusicPlaying = true;
       musicText.textContent = 'Pause Music';
 
-      // Start warm, subtle acoustic drone pedal (D2 = 73.4Hz & A2 = 110Hz)
       startAcousticDrone();
 
-      // Classical Auspicious Theme in D (Raag Yaman notes: D4, E4, F#4, G4, A4, B4, C#5, D5)
-      const D3 = 146.83, A3 = 220.00, B3 = 246.94;
-      const D4 = 293.66, E4 = 329.63, Fs4 = 369.99, G4 = 392.00, A4 = 440.00, B4 = 493.88, Cs5 = 554.37, D5 = 587.33;
+      const B3 = 246.94, D4 = 293.66, E4 = 329.63, Fs4 = 369.99, G4 = 392.00, A4 = 440.00, B4 = 493.88, Cs5 = 554.37, D5 = 587.33;
 
-      // Regal 4-bar phrase sequence (tempo: calm, contemplative, deeply romantic)
       const melodyPhrases = [
-        // Phrase 1: Graceful peaceful entry (Ni - Re - Ga - Ma# - Pa - Dha)
         [
           { note: B3, dur: 1.6, delay: 0.0 },
           { note: D4, dur: 1.8, delay: 1.4 },
@@ -273,14 +305,12 @@
           { note: A4, dur: 2.4, delay: 4.4 },
           { note: B4, dur: 2.6, delay: 6.2 }
         ],
-        // Phrase 2: Romantic cadence (Ga - Ma# - Dha - Ni - Sa')
         [
           { note: Fs4, dur: 1.8, delay: 0.0 },
           { note: A4, dur: 1.8, delay: 1.4 },
           { note: Cs5, dur: 2.2, delay: 2.8 },
           { note: D5, dur: 3.2, delay: 4.5 }
         ],
-        // Phrase 3: Auspicious resolution (Sa' - Ni - Dha - Pa - Ma# - Ga - Re - Sa)
         [
           { note: D5, dur: 1.6, delay: 0.0 },
           { note: Cs5, dur: 1.6, delay: 1.4 },
@@ -288,7 +318,6 @@
           { note: A4, dur: 2.0, delay: 4.2 },
           { note: Fs4, dur: 2.4, delay: 5.8 }
         ],
-        // Phrase 4: Warm grounding blessing (Ni - Re - Ga - Re - Sa)
         [
           { note: B3, dur: 1.8, delay: 0.0 },
           { note: D4, dur: 2.0, delay: 1.5 },
@@ -312,7 +341,6 @@
       }
 
       playNextPhrase();
-      // Phrase cycle interval (~8.5 seconds per phrase for a majestic, slow regal cadence)
       musicIntervalId = setInterval(playNextPhrase, 8600);
 
     } catch (e) {
@@ -323,7 +351,7 @@
   function startAcousticDrone() {
     stopAcousticDrone();
     try {
-      const droneFreqs = [73.42, 110.00, 146.83]; // D1, A2, D3
+      const droneFreqs = [73.42, 110.00, 146.83];
       droneFreqs.forEach(freq => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -345,9 +373,7 @@
         osc.start();
         droneNodes.push({ osc, gain });
       });
-    } catch (e) {
-      console.warn('Drone error:', e);
-    }
+    } catch (e) {}
   }
 
   function stopAcousticDrone() {
@@ -381,12 +407,12 @@
   });
 
   /* ==========================================================================
-     3. UNDERSTATED GOLD STARDUST CANVAS
+     3. UNDERSTATED GOLD STARDUST PARTICLES CANVAS
      ========================================================================== */
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
-  const PARTICLE_COUNT = 35;
+  const PARTICLE_COUNT = 30;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -403,15 +429,15 @@
     reset(initial = false) {
       this.x = Math.random() * canvas.width;
       this.y = initial ? Math.random() * canvas.height : -15;
-      this.size = Math.random() * 2.2 + 0.8;
-      this.speedY = Math.random() * 0.45 + 0.15;
-      this.speedX = (Math.random() - 0.5) * 0.35;
+      this.size = Math.random() * 2.0 + 0.8;
+      this.speedY = Math.random() * 0.4 + 0.15;
+      this.speedX = (Math.random() - 0.5) * 0.3;
       this.opacity = Math.random() * 0.5 + 0.15;
     }
 
     update() {
       this.y += this.speedY;
-      this.x += Math.sin(this.y * 0.008) * 0.4 + this.speedX;
+      this.x += Math.sin(this.y * 0.008) * 0.35 + this.speedX;
 
       if (this.y > canvas.height + 15) {
         this.reset(false);
@@ -421,8 +447,8 @@
     draw() {
       ctx.save();
       ctx.fillStyle = `rgba(226, 192, 115, ${this.opacity})`;
-      ctx.shadowColor = 'rgba(250, 238, 194, 0.6)';
-      ctx.shadowBlur = 6;
+      ctx.shadowColor = 'rgba(250, 238, 194, 0.5)';
+      ctx.shadowBlur = 5;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fill();
@@ -445,7 +471,7 @@
   animateParticles();
 
   /* ==========================================================================
-     4. COUNTDOWN ENGINE (TARGET: NOVEMBER 28, 2026)
+     4. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
      ========================================================================== */
   const targetDate = new Date('2026-11-28T18:00:00').getTime();
 
@@ -481,7 +507,7 @@
   btnCopyAddress.addEventListener('click', () => {
     const address = document.getElementById('venue-full-address').textContent;
     navigator.clipboard.writeText(address).then(() => {
-      showToast('Venue address copied to clipboard');
+      showToast('Venue address copied');
     }).catch(() => {
       showToast(address);
     });
@@ -491,7 +517,7 @@
     const title = encodeURIComponent('The Wedding of Priyanka & Vikram');
     const details = encodeURIComponent('Together with their families, cordially inviting you to celebrate the marriage of Priyanka & Vikram.');
     const location = encodeURIComponent('The Grand Heritage Palace & Royal Gardens, Jaipur, Rajasthan 302001');
-    const startTime = '20261128T123000Z'; // 6:00 PM IST is 12:30 UTC
+    const startTime = '20261128T123000Z';
     const endTime = '20261128T183000Z';
 
     const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startTime}/${endTime}`;
@@ -539,10 +565,10 @@
     if (toastTimer) clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
       toastNotice.classList.remove('show');
-    }, 3200);
+    }, 3000);
   }
 
-  // Initialize
+  // Initialize on page load
   initPullInteractions();
 
 })();

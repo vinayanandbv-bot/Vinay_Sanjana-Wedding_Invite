@@ -2,24 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>The Royal Wedding | Priyanka & Vikram</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>The Royal Wedding | Priyanka &amp; Vikram</title>
   
-  <!-- Open Graph / Social Sharing -->
-  <meta property="og:title" content="The Royal Wedding | Priyanka & Vikram">
-  <meta property="og:description" content="Pull down the golden thread to unroll the royal wedding invitation.">
+  <!-- Open Graph / WhatsApp / Social Share Preview -->
+  <meta property="og:title" content="The Royal Wedding | Priyanka &amp; Vikram">
+  <meta property="og:description" content="Pull the golden thread to unroll the royal wedding invitation of Priyanka &amp; Vikram.">
   <meta property="og:type" content="website">
   <meta name="description" content="An interactive royal e-wedding invitation. Pull down the silk golden thread to reveal the celebration.">
-  <meta name="theme-color" content="#0d040e">
+  <meta name="theme-color" content="#09020a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Minimalist Royal Audio Controller -->
+  <!-- Floating Audio Controller (Mobile Notch Safe) -->
   <header class="audio-control-bar" aria-label="Audio Controls">
     <button id="music-toggle-btn" class="royal-audio-btn" title="Toggle Royal Melody" aria-label="Toggle Royal Melody">
-      <svg class="audio-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="audio-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18V5l12-2v13"></path>
         <circle cx="6" cy="18" r="3"></circle>
         <circle cx="18" cy="16" r="3"></circle>
@@ -32,20 +34,21 @@
   <canvas id="particles-canvas"></canvas>
   <div class="ambient-glow"></div>
 
-  <!-- Stage Center -->
-  <main class="stage-container">
+  <!-- Stage Container -->
+  <main class="stage-container" id="stage-container">
     <div class="scroll-wrapper" id="scroll-wrapper">
       
-      <!-- Top Rod: Antique Gilded Gold & Deep Walnut Accents -->
+      <!-- Top Rod: Antique Gilded Gold & Finials -->
       <div class="scroll-rod top-rod" id="top-rod">
         <div class="finial left"></div>
+        <div class="rod-shaft"></div>
         <div class="finial right"></div>
       </div>
 
       <!-- Closed Scroll Sash & Royal Wax Medallion -->
       <div class="scroll-sash-seal" id="sash-seal">
         <div class="sash-ribbon"></div>
-        <div class="seal-img-wrapper" id="seal-trigger" title="Pull the thread or click the seal to unroll">
+        <div class="seal-img-wrapper" id="seal-trigger" title="Tap or pull to unroll">
           <img src="assets/seal.jpg" alt="Royal Wedding Seal" class="seal-img">
         </div>
       </div>
@@ -54,7 +57,7 @@
       <div class="scroll-body" id="scroll-body">
         <article class="invitation-inner" id="invitation-inner">
           
-          <!-- Master Double-Ruled Gold Foil Border Frame -->
+          <!-- Double-Ruled Gold Foil Border Frame -->
           <div class="ornate-border-frame">
             <div class="ornate-border-inner"></div>
             <div class="corner-flourish corner-top-left"></div>
@@ -69,22 +72,23 @@
           <!-- Engraved Royal Crest & Monogram -->
           <div class="royal-crest-monogram">
             <span class="crest-flourish left">❖</span>
-            <div class="crest-badge">P & V</div>
+            <div class="crest-badge">P &amp; V</div>
             <span class="crest-flourish right">❖</span>
           </div>
 
+          <!-- Formal Invitation Text -->
           <div class="invitation-salutation">
             Together with their families<br>
             <strong>Mr. &amp; Mrs. Rajesh Sharma</strong><br>
             and<br>
             <strong>Mr. &amp; Mrs. Sunil Malhotra</strong><br>
-            cordially request the honour of your presence to celebrate the solemnization of the marriage of their beloved children
+            cordially request the honour of your gracious presence to celebrate the solemnization of the marriage of their beloved children
           </div>
 
-          <!-- The Bride & Groom -->
+          <!-- The Bride & Groom Showcase -->
           <section class="couple-showcase">
             <div class="couple-portrait-container">
-              <img src="assets/couple.jpg" alt="Royal Portrait of the Bride and Groom">
+              <img src="assets/couple.jpg" alt="Priyanka and Vikram">
             </div>
 
             <div class="couple-names-block">
@@ -122,11 +126,11 @@
               </div>
               <div class="time-box">
                 <span class="time-val" id="count-mins">00</span>
-                <span class="time-label">Minutes</span>
+                <span class="time-label">Mins</span>
               </div>
               <div class="time-box">
                 <span class="time-val" id="count-secs">00</span>
-                <span class="time-label">Seconds</span>
+                <span class="time-label">Secs</span>
               </div>
             </div>
           </section>
@@ -138,13 +142,12 @@
             <div class="ceremony-details">
               <div class="ceremony-field">
                 <span class="field-label">Date</span>
-                <span class="field-value">Saturday, the Twenty-Eighth of November</span>
-                <span class="field-subvalue">Two Thousand Twenty-Six</span>
+                <span class="field-value">Saturday, the 28th of November, 2026</span>
               </div>
 
               <div class="ceremony-field">
                 <span class="field-label">Auspicious Timings</span>
-                <span class="field-value">Baraat at 6:00 PM &nbsp;•&nbsp; Varmala &amp; Pheras at 8:00 PM</span>
+                <span class="field-value">Baraat at 6:00 PM &nbsp;•&nbsp; Pheras at 8:00 PM</span>
                 <span class="field-subvalue">Followed by Royal Dinner Reception</span>
               </div>
 
@@ -155,14 +158,14 @@
               </div>
             </div>
 
-            <!-- Sleek Action Buttons (No emojis, refined gold styling) -->
+            <!-- Sleek Action Buttons (Optimized for Mobile Taps) -->
             <div class="ceremony-actions">
               <a href="https://maps.google.com/?q=Jaipur+Heritage+Palace" target="_blank" rel="noopener noreferrer" class="royal-btn-gold">
                 <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                <span>View on Google Maps</span>
+                <span>Google Maps</span>
               </a>
 
               <button class="royal-btn-outline" id="btn-copy-address" type="button">
@@ -170,7 +173,7 @@
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
-                <span>Copy Venue Address</span>
+                <span>Copy Address</span>
               </button>
 
               <button class="royal-btn-gold" id="btn-add-calendar" type="button">
@@ -180,7 +183,7 @@
                   <line x1="8" y1="2" x2="8" y2="6"></line>
                   <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                <span>Add to Google Calendar</span>
+                <span>Add to Calendar</span>
               </button>
 
               <button class="royal-btn-outline" id="btn-download-ics" type="button">
@@ -204,7 +207,7 @@
               <div class="itinerary-item">
                 <div class="item-date">Friday, November 27</div>
                 <h4 class="item-name">The Sangeet &amp; Mehendi Celebration</h4>
-                <div class="item-time">5:30 PM Onwards &nbsp;•&nbsp; The Palace Courtyard</div>
+                <div class="item-time">5:30 PM Onwards &nbsp;•&nbsp; Palace Courtyard</div>
                 <div class="item-dress">Attire: Regal &amp; Vibrant Festive</div>
               </div>
 
@@ -212,7 +215,7 @@
               <div class="itinerary-item">
                 <div class="item-date">Saturday, November 28</div>
                 <h4 class="item-name">The Haldi Ceremony</h4>
-                <div class="item-time">10:00 AM &nbsp;•&nbsp; The Sun Pavilion</div>
+                <div class="item-time">10:00 AM &nbsp;•&nbsp; Sun Pavilion</div>
                 <div class="item-dress">Attire: Yellow &amp; Floral Pastels</div>
               </div>
 
@@ -220,7 +223,7 @@
               <div class="itinerary-item primary-event">
                 <div class="item-date">Saturday, November 28</div>
                 <h4 class="item-name">Baraat, Varmala &amp; Holy Pheras</h4>
-                <div class="item-time">Baraat: 6:00 PM &nbsp;•&nbsp; Pheras: 8:00 PM &nbsp;•&nbsp; The Royal Mandap</div>
+                <div class="item-time">Baraat: 6:00 PM &nbsp;•&nbsp; Pheras: 8:00 PM &nbsp;•&nbsp; Heritage Lawn</div>
                 <div class="item-dress">Attire: Traditional Royal Splendour</div>
               </div>
 
@@ -228,13 +231,13 @@
               <div class="itinerary-item">
                 <div class="item-date">Saturday, November 28</div>
                 <h4 class="item-name">The Grand Royal Reception</h4>
-                <div class="item-time">9:30 PM Onwards &nbsp;•&nbsp; The Grand Ballroom</div>
+                <div class="item-time">9:30 PM Onwards &nbsp;•&nbsp; Grand Ballroom</div>
                 <div class="item-dress">Attire: Formal Evening / Black Tie</div>
               </div>
             </div>
           </section>
 
-          <!-- Formal Conclusion & Host Signature -->
+          <!-- Formal Conclusion & Family Signature -->
           <footer class="invitation-footer">
             <div class="family-blessing">
               With Warm Blessings &amp; Regrets Only:<br>
@@ -244,12 +247,12 @@
             <div class="closing-regards">We Look Forward to Your Gracious Presence</div>
 
             <div class="inquiries-note">
-              For travel coordination and inquiries: +91 98765 43210 &nbsp;|&nbsp; +91 98765 12345
+              For inquiries &amp; travel coordination: +91 98765 43210 &nbsp;|&nbsp; +91 98765 12345
             </div>
 
             <!-- Roll Back Up Action -->
             <button class="royal-replay-btn" id="btn-roll-up" type="button">
-              <span>▲ Roll Up Invitation (Replay)</span>
+              <span>▲ Roll Up Invitation</span>
             </button>
           </footer>
 
@@ -259,6 +262,7 @@
       <!-- Lower Rod -->
       <div class="scroll-rod bottom-rod" id="bottom-rod">
         <div class="finial left"></div>
+        <div class="rod-shaft"></div>
         <div class="finial right"></div>
       </div>
 
@@ -273,11 +277,11 @@
         </div>
       </div>
 
-      <!-- Understated Haute-Couture Instruction -->
+      <!-- Understated Instruction -->
       <div class="pull-instruction" id="pull-instruction">
         <div class="instruction-line">
           <span class="ornament-glyph">❖</span>
-          <span class="instruction-text">Pull the golden thread to unroll</span>
+          <span class="instruction-text">Pull thread to unroll</span>
           <span class="ornament-glyph">❖</span>
         </div>
         <div class="instruction-hint">(or tap to open)</div>
