@@ -1,31 +1,24 @@
 /* ==========================================================================
-   THE ROYAL WEDDING E-INVITATION - WHITE PEARL & GOLD FOIL EDITION
-   Aesthetics: Luminous Alabaster, Pure White Letterpress Cardstock, 24K Gold Foil
+   THE ROYAL WEDDING E-INVITATION - HYPER-REALISTIC WHITE & GOLD SCROLL
+   Inspired by Luxury Haute Couture Stationery (Cartier & Sabyasachi Royal Editions)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap');
 
 :root {
-  /* White & Pearl Luminous Palette */
+  /* White Marble & Alabaster Palette */
   --bg-page: #fbf9f5;
+  --bg-marble: #fdfbf7;
   --bg-card: #ffffff;
-  --bg-card-warm: #fdfbf7;
   
-  --parchment-white: #ffffff;
-  --parchment-edge: #f5eedf;
-  
-  /* 24K Royal Gold Leaf Gradients */
+  /* 24K Royal Gilded Leaf */
   --gold-primary: #b88b2f;
   --gold-light: #fcedbd;
   --gold-dark: #7a5513;
   --gold-foil: linear-gradient(135deg, #a87d27 0%, #ecd896 30%, #be9031 55%, #faedd0 80%, #9e7220 100%);
-  --gold-sheen: linear-gradient(90deg, transparent, rgba(255, 245, 210, 0.7), transparent);
-  --gold-metallic: linear-gradient(180deg, #d8b257 0%, #ecd896 40%, #b88b2f 70%, #825c17 100%);
+  --gold-dowel: linear-gradient(180deg, #4f3510 0%, #b88b2f 25%, #fff6d6 50%, #9e7220 75%, #3b2408 100%);
   
-  /* 3D Cylindrical Rod Lighting */
-  --rod-cylinder: linear-gradient(180deg, #543912 0%, #b88b2f 25%, #fff6d6 50%, #a87d27 75%, #422b0a 100%);
-  
-  /* Typography Colors */
+  /* Typography */
   --text-main: #24160d;
   --text-muted: #5e4a3c;
   --text-gold: #9e7220;
@@ -52,8 +45,6 @@ html, body {
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--bg-page);
-  background-image: 
-    radial-gradient(circle at 50% 12%, #ffffff 0%, #fbf9f4 55%, #f4ede0 100%);
   color: var(--text-main);
   font-family: var(--font-body);
   overflow-x: hidden;
@@ -61,7 +52,21 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Ambient Canvas for Floating Gold Flakes */
+/* Sunlit White Italian Marble Backdrop */
+.marble-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 50% 15%, #ffffff 0%, #faf7f2 50%, #f2ebe0 100%),
+    linear-gradient(135deg, rgba(240, 235, 225, 0.5) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(240, 235, 225, 0.5) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Floating Gold Dust Particles */
 #particles-canvas {
   position: fixed;
   top: 0;
@@ -72,63 +77,7 @@ html, body {
   z-index: 1;
 }
 
-.ambient-glow {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 90vh;
-  max-width: 850px;
-  background: radial-gradient(circle, rgba(245, 230, 185, 0.4) 0%, rgba(255, 255, 255, 0.8) 50%, transparent 75%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Floating Audio Bar: White Pearl & Gold Foil Button */
-.audio-control-bar {
-  position: fixed;
-  top: max(16px, env(safe-area-inset-top, 16px));
-  right: max(16px, env(safe-area-inset-right, 16px));
-  z-index: 1000;
-}
-
-.royal-audio-btn {
-  background: rgba(255, 255, 255, 0.94);
-  border: 1.5px solid var(--gold-primary);
-  color: var(--gold-dark);
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-family: var(--font-serif);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 18px rgba(184, 139, 47, 0.2), 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  min-height: 40px;
-}
-
-.royal-audio-btn:hover {
-  background: var(--gold-foil);
-  color: #1a081a;
-  border-color: #faedd0;
-  box-shadow: 0 6px 22px rgba(184, 139, 47, 0.4);
-  transform: translateY(-2px);
-}
-
-.audio-icon {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-}
-
-/* Stage Container (Centered in Closed State, Fluid on Mobile) */
+/* Stage Container */
 .stage-container {
   position: relative;
   width: 100%;
@@ -137,22 +86,22 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60px 14px 60px 14px;
+  justify-content: center; /* Perfectly centered on first fold */
+  padding: 40px 14px 60px 14px;
   z-index: 2;
   transition: justify-content 0.4s ease;
 }
 
 .stage-container.unrolled {
   justify-content: flex-start;
-  padding: 40px 14px 80px 14px;
+  padding: 30px 14px 70px 14px;
 }
 
 /* Master Scroll Assembly */
-.scroll-wrapper {
+.scroll-master-wrapper {
   position: relative;
   width: 100%;
-  max-width: 680px;
+  max-width: 660px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -160,9 +109,9 @@ html, body {
 }
 
 /* ==========================================================================
-   REALISTIC 3D CYLINDRICAL SCROLL RODS & TURNED FINIALS
+   AUTHENTIC GILDED DOWELS & LATHE-TURNED FINIALS
    ========================================================================== */
-.scroll-rod {
+.scroll-dowel {
   position: relative;
   width: 100%;
   height: 36px;
@@ -172,76 +121,85 @@ html, body {
   z-index: 20;
 }
 
-.rod-shaft {
+.dowel-shaft {
   flex: 1;
-  height: 26px;
-  background: var(--rod-cylinder);
+  height: 24px;
+  background: var(--gold-dowel);
   border-radius: 4px;
-  box-shadow: 0 8px 24px rgba(100, 70, 20, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 22px rgba(80, 50, 10, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 6px rgba(0, 0, 0, 0.45);
   position: relative;
   overflow: hidden;
 }
 
-.rod-highlight {
+.dowel-reflection {
   position: absolute;
-  top: 3px;
+  top: 2px;
   left: 0;
   right: 0;
   height: 4px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.65);
   filter: blur(1px);
 }
 
-/* Realistic Lathe-Turned Finials */
-.finial {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.finial-collar {
-  width: 10px;
-  height: 32px;
-  background: linear-gradient(180deg, #422b0a 0%, #b88b2f 40%, #fff6d6 60%, #422b0a 100%);
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.finial-bulb {
+.dowel-finial {
   width: 26px;
-  height: 38px;
-  background: radial-gradient(circle at 35% 35%, #fffbf0 0%, #ecd896 35%, #b88b2f 70%, #543912 100%);
+  height: 36px;
+  background: radial-gradient(circle at 35% 35%, #fffdf5 0%, #ecd896 35%, #b88b2f 70%, #4f3510 100%);
   border-radius: 50% 8px 8px 50%;
-  box-shadow: 0 4px 12px rgba(80, 50, 10, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 12px rgba(80, 50, 10, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
 }
 
-.finial.right .finial-bulb {
+.dowel-finial.right {
   border-radius: 8px 50% 50% 8px;
 }
 
 /* ==========================================================================
-   AUTHENTIC CLOSED SCROLL CYLINDER (ROUNDED 3D PAPER ROLL)
+   REALISTIC 3D CLOSED SCROLL CYLINDER (EMBOSSED WHITE DAMASK PAPER)
    ========================================================================== */
-.closed-scroll-cylinder {
+.realistic-scroll-assembly {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.4s ease, height 0.4s ease, transform 0.4s ease;
+}
+
+.realistic-scroll-assembly.hidden {
+  display: none;
+  opacity: 0;
+  height: 0;
+}
+
+.scroll-paper-cylinder {
   position: relative;
   width: calc(100% - 24px);
-  height: 85px;
+  height: 165px;
   margin: -4px auto;
-  z-index: 15;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 16px 38px rgba(110, 80, 30, 0.28), 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.4s ease, height 0.4s ease;
+  touch-action: none;
 }
 
-.closed-scroll-cylinder.hidden {
-  height: 0;
-  opacity: 0;
-  pointer-events: none;
+/* Photorealistic Embossed Paper Texture Overlay */
+.cylinder-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('assets/scroll_cover.jpg') center 42%/cover no-repeat;
+  filter: contrast(1.04) brightness(1.02);
 }
 
-.cylinder-paper-roll {
+.cylinder-texture::after {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -249,284 +207,96 @@ html, body {
   bottom: 0;
   background: linear-gradient(
     180deg,
-    #cfbe98 0%,
-    #ede3ce 12%,
-    #ffffff 35%,
-    #fcf8ef 60%,
-    #e8dcbf 85%,
-    #b8a478 100%
+    rgba(70, 45, 10, 0.25) 0%,
+    rgba(255, 255, 255, 0.3) 22%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    rgba(50, 30, 5, 0.35) 100%
   );
-  box-shadow: 0 10px 30px rgba(120, 90, 40, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.8), inset 0 -3px 8px rgba(80, 50, 10, 0.25);
-  border-radius: 4px;
+  pointer-events: none;
 }
 
-.cylinder-crease {
+.cylinder-paper-crease {
   position: absolute;
   left: 0;
   right: 0;
   height: 3px;
-  background: rgba(140, 105, 40, 0.2);
-}
-
-.cylinder-crease.top { top: 6px; }
-.cylinder-crease.bottom { bottom: 6px; }
-
-/* Golden Satin Ribbon Wrapped Across Roll */
-.sash-ribbon {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  right: 10px;
-  height: 26px;
-  background: linear-gradient(180deg, #8a6519 0%, #d8b257 30%, #fff2be 55%, #b88b2f 85%, #63430a 100%);
-  box-shadow: 0 4px 14px rgba(100, 70, 20, 0.35);
-  border-top: 1.5px solid #fff3c4;
-  border-bottom: 1.5px solid #7a5513;
+  background: rgba(120, 85, 30, 0.2);
   z-index: 2;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
 }
 
-.ribbon-shine {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.6);
-  filter: blur(1px);
-}
+.cylinder-paper-crease.top { top: 6px; }
+.cylinder-paper-crease.bottom { bottom: 6px; }
 
-/* Wax Medallion Resting on Ribbon Knot */
-.seal-img-wrapper {
+/* Wax Seal Centered on Roll */
+.wax-seal-anchor {
   position: relative;
-  width: 78px;
-  height: 78px;
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.65), 0 8px 24px rgba(70, 45, 10, 0.4);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.65), 0 8px 22px rgba(60, 40, 10, 0.4);
   overflow: hidden;
-  border: 3px solid #fff5cc;
-  cursor: pointer;
+  border: 3px solid #fff6d6;
   z-index: 5;
   touch-action: none;
   animation: sealPulse 4s ease-in-out infinite alternate;
 }
 
 @keyframes sealPulse {
-  0% { transform: scale(1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 6px 18px rgba(70, 45, 10, 0.35); }
-  100% { transform: scale(1.03); box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 10px 28px rgba(70, 45, 10, 0.45); }
+  0% { transform: scale(1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 6px 18px rgba(60, 40, 10, 0.35); }
+  100% { transform: scale(1.04); box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 10px 28px rgba(60, 40, 10, 0.45); }
 }
 
-.seal-img {
+.wax-seal-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* ==========================================================================
-   UNROLLING ROYAL PARCHMENT BODY (PURE WHITE LETTERPRESS)
+   UNROLLED ROYAL INVITATION PARCHMENT
    ========================================================================== */
-.scroll-body {
+.unrolled-parchment-body {
   position: relative;
-  width: calc(100% - 24px);
-  background: var(--parchment-white);
-  background-image: 
-    radial-gradient(ellipse at 50% 6%, #ffffff 0%, #fdfcf9 60%, var(--parchment-edge) 100%);
-  color: var(--text-main);
-  box-shadow: 0 20px 60px rgba(150, 115, 50, 0.18), 0 2px 10px rgba(0, 0, 0, 0.04);
+  width: 100%;
   overflow: hidden;
   height: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition: height 0.05s linear;
+}
+
+.unrolled-parchment-body.smooth-transition {
+  transition: height 1.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.static-top-dowel {
+  margin-bottom: -4px;
+}
+
+.dynamic-bottom-dowel {
+  margin-top: -4px;
+}
+
+.invitation-inner {
+  position: relative;
+  width: calc(100% - 24px);
+  background: #ffffff;
+  background-image: 
+    radial-gradient(ellipse at 50% 6%, #ffffff 0%, #fdfcf9 60%, #f5eedf 100%);
+  color: var(--text-main);
+  box-shadow: 0 20px 60px rgba(150, 115, 50, 0.16), 0 2px 10px rgba(0, 0, 0, 0.04);
+  padding: 50px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   border-left: 2px solid rgba(184, 139, 47, 0.4);
   border-right: 2px solid rgba(184, 139, 47, 0.4);
 }
 
-.scroll-body.smooth-transition {
-  transition: height 1.25s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-/* Dynamic Rotating Bottom Dowel */
-.scroll-rod.bottom-rod {
-  cursor: grab;
-  touch-action: none;
-  margin-top: -2px;
-  transition: transform 0.05s linear;
-}
-
-.scroll-rod.bottom-rod:active {
-  cursor: grabbing;
-}
-
-/* Luminous Metallic Gold Sheen Sweep */
-.gold-sheen-sweep {
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 80%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(255, 245, 210, 0) 30%,
-    rgba(255, 245, 210, 0.45) 50%,
-    rgba(255, 245, 210, 0) 70%,
-    transparent 100%
-  );
-  transform: skewX(-20deg);
-  pointer-events: none;
-  z-index: 10;
-}
-
-.gold-sheen-sweep.sweep-active {
-  animation: sweepGold 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-@keyframes sweepGold {
-  0% { left: -120%; }
-  100% { left: 160%; }
-}
-
-/* ==========================================================================
-   HANGING SILK BRAIDED THREAD & ROYAL TASSEL
-   ========================================================================== */
-.thread-assembly {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 30;
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  padding: 6px 20px;
-}
-
-.thread-assembly:active {
-  cursor: grabbing;
-}
-
-.pull-thread {
-  width: 4px;
-  height: 85px;
-  background: repeating-linear-gradient(
-    45deg,
-    #9e7220,
-    #9e7220 3px,
-    #fff6cb 3px,
-    #fff6cb 6px,
-    #781026 6px,
-    #781026 9px
-  );
-  box-shadow: 0 0 10px rgba(184, 139, 47, 0.5), 1px 2px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  transform-origin: top center;
-  transition: height 0.05s linear;
-}
-
-.thread-pendant {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  transform-origin: top center;
-  animation: regalSway 4s ease-in-out infinite alternate;
-}
-
-@keyframes regalSway {
-  0% { transform: rotate(-2.5deg); }
-  100% { transform: rotate(2.5deg); }
-}
-
-.thread-ring {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 3.5px solid #fff5cc;
-  background: radial-gradient(circle, #ecd896 0%, #9e7220 85%);
-  box-shadow: 0 4px 12px rgba(80, 50, 10, 0.4), 0 0 14px rgba(212, 175, 55, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ring-gem {
-  width: 8px;
-  height: 8px;
-  background: #781026;
-  border-radius: 50%;
-  box-shadow: 0 0 6px #c41e42;
-}
-
-.thread-tassel {
-  width: 20px;
-  height: 44px;
-  background: linear-gradient(180deg, #c59b27 0%, #8e6216 35%, #faedd0 65%, #781026 100%);
-  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
-  margin-top: -3px;
-  position: relative;
-  box-shadow: 0 6px 14px rgba(70, 45, 10, 0.35);
-}
-
-.thread-tassel::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: repeating-linear-gradient(90deg, #c59b27, #c59b27 2px, #4d330c 2px, #4d330c 4px);
-}
-
-/* Prompt Underneath Thread */
-.pull-instruction {
-  margin-top: 18px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  padding: 6px 14px;
-}
-
-.instruction-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-serif);
-  font-size: 0.8rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold-dark);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
-}
-
-.ornament-glyph {
-  font-size: 0.72rem;
-  color: var(--gold-primary);
-}
-
-.instruction-hint {
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  font-style: italic;
-  color: var(--text-muted);
-}
-
-/* ==========================================================================
-   UNROLLED INVITATION INTERIOR (PURE WHITE & 24K GOLD LETTERPRESS)
-   ========================================================================== */
-.invitation-inner {
-  padding: 50px 28px;
-  position: relative;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Master Double-Ruled Gold Foil Border Frame */
+/* Double-Ruled Gold Foil Border Frame */
 .ornate-border-frame {
   position: absolute;
   top: 12px;
@@ -543,7 +313,7 @@ html, body {
   left: 4px;
   right: 4px;
   bottom: 4px;
-  border: 1px solid rgba(184, 139, 47, 0.4);
+  border: 1px solid rgba(184, 139, 47, 0.38);
   pointer-events: none;
 }
 
@@ -593,7 +363,7 @@ html, body {
   padding: 4px 18px 6px 18px;
   border-radius: 40px;
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(184, 139, 47, 0.2);
+  box-shadow: 0 4px 12px rgba(184, 139, 47, 0.18);
 }
 
 .crest-crown {
@@ -642,7 +412,7 @@ html, body {
   border-radius: 50%;
   position: relative;
   margin-bottom: 18px;
-  box-shadow: 0 0 25px rgba(184, 139, 47, 0.3), 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 25px rgba(184, 139, 47, 0.28), 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .portrait-gold-rim {
@@ -758,7 +528,7 @@ html, body {
   border: 1.5px solid var(--gold-primary);
   border-radius: 8px;
   padding: 10px 4px;
-  box-shadow: 0 4px 12px rgba(184, 139, 47, 0.15);
+  box-shadow: 0 4px 12px rgba(184, 139, 47, 0.12);
   text-align: center;
 }
 
@@ -788,7 +558,7 @@ html, body {
   padding: 26px 18px;
   width: 100%;
   max-width: 580px;
-  box-shadow: 0 8px 25px rgba(184, 139, 47, 0.14);
+  box-shadow: 0 8px 25px rgba(184, 139, 47, 0.12);
   margin-bottom: 32px;
 }
 
@@ -953,7 +723,7 @@ html, body {
 .itinerary-item.primary-event {
   border-left-color: var(--crimson-royal);
   background: #fffdf9;
-  box-shadow: 0 4px 14px rgba(184, 139, 47, 0.14);
+  box-shadow: 0 4px 14px rgba(184, 139, 47, 0.12);
 }
 
 .item-date {
@@ -1050,7 +820,136 @@ html, body {
   color: #ffffff;
 }
 
-/* Toast Notice */
+/* ==========================================================================
+   HANGING SILK GOLD CORD & WEIGHTED TASSEL
+   ========================================================================== */
+.thread-assembly {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 30;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  padding: 6px 20px;
+}
+
+.thread-assembly:active {
+  cursor: grabbing;
+}
+
+.pull-thread {
+  width: 4px;
+  height: 85px;
+  background: repeating-linear-gradient(
+    45deg,
+    #9e7220,
+    #9e7220 3px,
+    #fff6cb 3px,
+    #fff6cb 6px,
+    #781026 6px,
+    #781026 9px
+  );
+  box-shadow: 0 0 10px rgba(184, 139, 47, 0.4), 1px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  transform-origin: top center;
+  transition: height 0.05s linear;
+}
+
+.thread-pendant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transform-origin: top center;
+  animation: regalSway 4s ease-in-out infinite alternate;
+}
+
+@keyframes regalSway {
+  0% { transform: rotate(-2.5deg); }
+  100% { transform: rotate(2.5deg); }
+}
+
+.thread-ring {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3.5px solid #fff5cc;
+  background: radial-gradient(circle, #ecd896 0%, #9e7220 85%);
+  box-shadow: 0 4px 12px rgba(80, 50, 10, 0.35), 0 0 14px rgba(212, 175, 55, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-gem {
+  width: 8px;
+  height: 8px;
+  background: #781026;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #c41e42;
+}
+
+.thread-tassel {
+  width: 20px;
+  height: 44px;
+  background: linear-gradient(180deg, #c59b27 0%, #8e6216 35%, #faedd0 65%, #781026 100%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+  margin-top: -3px;
+  position: relative;
+  box-shadow: 0 6px 14px rgba(70, 45, 10, 0.3);
+}
+
+.thread-tassel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #c59b27, #c59b27 2px, #4d330c 2px, #4d330c 4px);
+}
+
+/* Prompt Underneath Thread */
+.pull-instruction {
+  margin-top: 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  padding: 6px 14px;
+}
+
+.instruction-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.ornament-glyph {
+  font-size: 0.72rem;
+  color: var(--gold-primary);
+}
+
+.instruction-hint {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Toast */
 .toast-notice {
   position: fixed;
   bottom: 24px;
@@ -1078,21 +977,18 @@ html, body {
   opacity: 1;
 }
 
-/* Responsive Breakpoints for Mobile */
+/* Mobile Breakpoints */
 @media (max-width: 480px) {
   .stage-container {
-    padding: 50px 8px 50px 8px;
+    padding: 35px 8px 45px 8px;
+  }
+  .scroll-paper-cylinder {
+    height: 140px;
   }
   .invitation-inner {
     padding: 38px 14px;
   }
   .ceremony-actions {
     grid-template-columns: 1fr;
-  }
-  .royal-audio-btn span {
-    display: none;
-  }
-  .royal-audio-btn {
-    padding: 8px 10px;
   }
 }

@@ -1,11 +1,11 @@
 /**
- * THE ROYAL WEDDING E-INVITATION - WHITE & GOLD MASTER ENGINE
- * - Realistic 3D Scroll Unrolling Physics (Cylinder Roll & Dowel Rotation)
- * - Luminous Gold Leaf Sheen Sweep Animation
- * - Classical Raag Yaman & Court Romance Ambient Synthesizer
- * - Sunlit 24K Gold Flake Particle Canvas
+ * THE ROYAL WEDDING E-INVITATION - MASTER INTERACTION ENGINE
+ * - Silent, Realistic 3D Scroll Unroll Animation (NO beep music!)
+ * - Physical Touch & Mouse Drag Gesture Tracking
+ * - Tap-to-Open Fallback on Cylinder, Wax Seal, Dowel & Prompt
+ * - Luminous 24K Gold Leaf Dust Particle Canvas
  * - Real-Time Wedding Countdown Engine
- * - Google Calendar, Apple/Outlook (.ICS), and Address Copy
+ * - One-Tap Google Maps, Google Calendar, Apple/Outlook (.ICS) & Copy Address
  */
 
 (function() {
@@ -14,22 +14,16 @@
   // DOM Elements
   const stageContainer = document.getElementById('stage-container');
   const scrollWrapper = document.getElementById('scroll-wrapper');
+  const closedScrollAssembly = document.getElementById('closed-scroll-assembly');
+  const scrollCylinderTrigger = document.getElementById('scroll-cylinder-trigger');
   const scrollBody = document.getElementById('scroll-body');
   const invitationInner = document.getElementById('invitation-inner');
-  const closedCylinder = document.getElementById('closed-cylinder');
-  const bottomRod = document.getElementById('bottom-rod');
-  const sashSeal = document.getElementById('sash-seal');
-  const sealTrigger = document.getElementById('seal-trigger');
+  const bottomDowelClosed = document.getElementById('bottom-dowel-closed');
   const threadAssembly = document.getElementById('thread-assembly');
   const pullThread = document.getElementById('pull-thread');
   const pullInstruction = document.getElementById('pull-instruction');
   const btnRollUp = document.getElementById('btn-roll-up');
-  const goldSheen = document.getElementById('gold-sheen');
   const toastNotice = document.getElementById('toast-notice');
-
-  // Audio Elements
-  const musicToggleBtn = document.getElementById('music-toggle-btn');
-  const musicText = document.getElementById('music-text');
 
   // Action Buttons
   const btnCopyAddress = document.getElementById('btn-copy-address');
@@ -42,20 +36,20 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  // Physics & Drag State
+  // Interaction & Physics State
   let isUnrolled = false;
   let isDragging = false;
   let startY = 0;
   let currentDragY = 0;
   let activePointerId = null;
-  const DRAG_THRESHOLD = 85;
+  const DRAG_THRESHOLD = 75; // Comfortable finger pull distance on mobile
   const BASE_THREAD_HEIGHT = 85;
 
   /* ==========================================================================
-     1. REALISTIC 3D SCROLL PULL & UNROLL PHYSICS
+     1. PHYSICAL PULL-DOWN & UNROLL INTERACTIONS (SILENT & SMOOTH)
      ========================================================================== */
   function initPullInteractions() {
-    const pullTargets = [threadAssembly, sealTrigger, bottomRod, pullInstruction];
+    const pullTargets = [threadAssembly, scrollCylinderTrigger, bottomDowelClosed, pullInstruction];
 
     pullTargets.forEach(el => {
       if (!el) return;
@@ -66,15 +60,16 @@
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
 
-    if (sealTrigger) {
-      sealTrigger.addEventListener('click', () => {
-        if (!isUnrolled && currentDragY < 15) unrollScroll();
+    // Instant Tap-to-Open Fallbacks (Intuitive for Mobile Phones)
+    if (scrollCylinderTrigger) {
+      scrollCylinderTrigger.addEventListener('click', () => {
+        if (!isUnrolled && currentDragY < 12) unrollScroll();
       });
     }
 
     if (threadAssembly) {
       threadAssembly.addEventListener('click', () => {
-        if (!isUnrolled && currentDragY < 15) unrollScroll();
+        if (!isUnrolled && currentDragY < 12) unrollScroll();
       });
     }
 
@@ -103,11 +98,6 @@
     } catch (err) {}
 
     scrollBody.classList.remove('smooth-transition');
-
-    // Wake mobile audio context on first touch gesture
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
   }
 
   function onPointerMove(e) {
@@ -116,18 +106,19 @@
     const deltaY = e.clientY - startY;
 
     if (deltaY > 0) {
+      // Prevent mobile page bouncing during pull gesture
       if (e.cancelable) e.preventDefault();
 
       currentDragY = Math.min(deltaY, 260);
 
-      // Unroll parchment & rotate the bottom cylinder rod in 3D
+      // Dynamically stretch parchment & cord
       scrollBody.style.height = `${currentDragY}px`;
-      bottomRod.style.transform = `rotateX(${currentDragY * 1.5}deg)`;
       pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.22}px`;
 
-      // Fade out closed paper cylinder
-      const cylOpacity = Math.max(0, 1 - (currentDragY / 100));
-      closedCylinder.style.opacity = cylOpacity;
+      // Squeeze and fade closed scroll roll as it unfurls
+      const progress = currentDragY / 140;
+      closedScrollAssembly.style.opacity = Math.max(0, 1 - progress);
+      closedScrollAssembly.style.transform = `scaleY(${Math.max(0.6, 1 - progress * 0.4)})`;
     }
   }
 
@@ -147,12 +138,12 @@
     if (currentDragY >= DRAG_THRESHOLD) {
       unrollScroll();
     } else {
-      // Spring back to closed state with dampening
+      // Spring back to closed state
       scrollBody.classList.add('smooth-transition');
       scrollBody.style.height = '0px';
-      bottomRod.style.transform = 'rotateX(0deg)';
       pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
-      closedCylinder.style.opacity = '1';
+      closedScrollAssembly.style.opacity = '1';
+      closedScrollAssembly.style.transform = 'scaleY(1)';
     }
   }
 
@@ -161,34 +152,19 @@
     stageContainer.classList.add('unrolled');
     scrollBody.classList.add('smooth-transition');
 
-    const fullHeight = invitationInner.scrollHeight;
+    // Calculate full content height including dowels and padding
+    const fullHeight = invitationInner.scrollHeight + 70;
     scrollBody.style.height = `${fullHeight}px`;
-    bottomRod.style.transform = 'rotateX(0deg)';
     pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
 
-    // Hide closed cylinder and prompt
-    closedCylinder.classList.add('hidden');
+    // Hide closed scroll assembly and instruction prompt smoothly (NO beeps!)
+    closedScrollAssembly.classList.add('hidden');
     pullInstruction.style.opacity = '0';
     pullInstruction.style.pointerEvents = 'none';
 
-    // Play auspicious chime and start background court music
-    playUnrollChime();
-
-    if (!isMusicPlaying) {
-      startAmbientMusic();
-    }
-
-    // Trigger gold foil sheen sweep across the unrolled card
-    setTimeout(() => {
-      if (goldSheen) {
-        goldSheen.classList.remove('sweep-active');
-        void goldSheen.offsetWidth; // Reflow
-        goldSheen.classList.add('sweep-active');
-      }
-    }, 400);
-
     showToast('The Royal Wedding Invitation is revealed');
 
+    // Set height to auto after unroll transition for responsive orientation and content flow
     setTimeout(() => {
       if (isUnrolled) {
         scrollBody.style.height = 'auto';
@@ -199,239 +175,36 @@
   function rollupScroll() {
     isUnrolled = false;
 
-    // Lock to current scrollHeight first
-    const currentHeight = invitationInner.scrollHeight;
+    // Lock to current height first
+    const currentHeight = invitationInner.scrollHeight + 70;
     scrollBody.style.height = `${currentHeight}px`;
     void scrollBody.offsetHeight;
 
     scrollBody.classList.add('smooth-transition');
     scrollBody.style.height = '0px';
 
-    closedCylinder.classList.remove('hidden');
-    closedCylinder.style.opacity = '1';
+    closedScrollAssembly.classList.remove('hidden');
+    closedScrollAssembly.style.opacity = '1';
+    closedScrollAssembly.style.transform = 'scaleY(1)';
     pullInstruction.style.opacity = '1';
     pullInstruction.style.pointerEvents = 'auto';
-
-    if (goldSheen) {
-      goldSheen.classList.remove('sweep-active');
-    }
 
     setTimeout(() => {
       if (!isUnrolled) {
         stageContainer.classList.remove('unrolled');
       }
-    }, 400);
+    }, 380);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /* ==========================================================================
-     2. CLASSICAL RAAG YAMAN / COURT ROMANCE AMBIENT SYNTHESIZER
-     Web Audio API - Gentle Sitar / Flute / Harp & Tanpura Acoustic Drone
-     ========================================================================== */
-  let audioCtx = null;
-  let isMusicPlaying = false;
-  let musicIntervalId = null;
-  let droneNodes = [];
-
-  function initAudioContext() {
-    if (!audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      audioCtx = new AudioContext();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-  }
-
-  function playUnrollChime() {
-    try {
-      initAudioContext();
-      // Ascending D Major / Yaman harmonic chime
-      const notes = [293.66, 369.99, 440.00, 554.37, 587.33, 739.99]; // D4, F#4, A4, C#5, D5, F#5
-      const now = audioCtx.currentTime;
-
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-
-        gain.gain.setValueAtTime(0.0001, now + idx * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.08 + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.00001, now + idx * 0.08 + 1.8);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start(now + idx * 0.08);
-        osc.stop(now + idx * 0.08 + 1.85);
-      });
-    } catch (e) {
-      console.warn('Audio chime error:', e);
-    }
-  }
-
-  function playMelodyNote(freq, startTime, duration = 2.4, velocity = 0.075) {
-    if (!audioCtx) return;
-
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const filter = audioCtx.createBiquadFilter();
-    const gain = audioCtx.createGain();
-
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, startTime);
-
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 1.002, startTime);
-
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1400, startTime);
-    filter.frequency.exponentialRampToValueAtTime(800, startTime + duration);
-
-    gain.gain.setValueAtTime(0.00001, startTime);
-    gain.gain.linearRampToValueAtTime(velocity, startTime + 0.12);
-    gain.gain.exponentialRampToValueAtTime(0.00001, startTime + duration);
-
-    osc1.connect(filter);
-    osc2.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc1.start(startTime);
-    osc2.start(startTime);
-    osc1.stop(startTime + duration);
-    osc2.stop(startTime + duration);
-  }
-
-  function startAmbientMusic() {
-    try {
-      initAudioContext();
-      isMusicPlaying = true;
-      musicText.textContent = 'Pause Music';
-
-      startAcousticDrone();
-
-      const B3 = 246.94, D4 = 293.66, E4 = 329.63, Fs4 = 369.99, G4 = 392.00, A4 = 440.00, B4 = 493.88, Cs5 = 554.37, D5 = 587.33;
-
-      const melodyPhrases = [
-        [
-          { note: B3, dur: 1.6, delay: 0.0 },
-          { note: D4, dur: 1.8, delay: 1.4 },
-          { note: Fs4, dur: 2.2, delay: 2.8 },
-          { note: A4, dur: 2.4, delay: 4.4 },
-          { note: B4, dur: 2.6, delay: 6.2 }
-        ],
-        [
-          { note: Fs4, dur: 1.8, delay: 0.0 },
-          { note: A4, dur: 1.8, delay: 1.4 },
-          { note: Cs5, dur: 2.2, delay: 2.8 },
-          { note: D5, dur: 3.2, delay: 4.5 }
-        ],
-        [
-          { note: D5, dur: 1.6, delay: 0.0 },
-          { note: Cs5, dur: 1.6, delay: 1.4 },
-          { note: B4, dur: 1.8, delay: 2.8 },
-          { note: A4, dur: 2.0, delay: 4.2 },
-          { note: Fs4, dur: 2.4, delay: 5.8 }
-        ],
-        [
-          { note: B3, dur: 1.8, delay: 0.0 },
-          { note: D4, dur: 2.0, delay: 1.5 },
-          { note: E4, dur: 2.0, delay: 3.2 },
-          { note: D4, dur: 3.6, delay: 4.8 }
-        ]
-      ];
-
-      let phraseIndex = 0;
-
-      function playNextPhrase() {
-        if (!isMusicPlaying) return;
-        const now = audioCtx.currentTime;
-        const currentPhrase = melodyPhrases[phraseIndex % melodyPhrases.length];
-
-        currentPhrase.forEach(item => {
-          playMelodyNote(item.note, now + item.delay, item.dur, 0.075);
-        });
-
-        phraseIndex++;
-      }
-
-      playNextPhrase();
-      musicIntervalId = setInterval(playNextPhrase, 8600);
-
-    } catch (e) {
-      console.warn('Ambient music error:', e);
-    }
-  }
-
-  function startAcousticDrone() {
-    stopAcousticDrone();
-    try {
-      const droneFreqs = [73.42, 110.00, 146.83];
-      droneFreqs.forEach(freq => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        const filter = audioCtx.createBiquadFilter();
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(260, audioCtx.currentTime);
-
-        gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 3.0);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start();
-        droneNodes.push({ osc, gain });
-      });
-    } catch (e) {}
-  }
-
-  function stopAcousticDrone() {
-    droneNodes.forEach(node => {
-      try {
-        node.gain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
-        setTimeout(() => node.osc.stop(), 900);
-      } catch (e) {}
-    });
-    droneNodes = [];
-  }
-
-  function stopAmbientMusic() {
-    isMusicPlaying = false;
-    if (musicIntervalId) {
-      clearInterval(musicIntervalId);
-      musicIntervalId = null;
-    }
-    stopAcousticDrone();
-    musicText.textContent = 'Royal Melody';
-  }
-
-  musicToggleBtn.addEventListener('click', () => {
-    if (isMusicPlaying) {
-      stopAmbientMusic();
-      showToast('Music paused');
-    } else {
-      startAmbientMusic();
-      showToast('Playing Royal Yaman Melody');
-    }
-  });
-
-  /* ==========================================================================
-     3. SUNLIT 24K GOLD FLAKE PARTICLE CANVAS
+     2. SUNLIT 24K GOLD FLAKE PARTICLE CANVAS
      ========================================================================== */
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
-  const PARTICLE_COUNT = 32;
+  const PARTICLE_COUNT = 28;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -448,17 +221,17 @@
     reset(initial = false) {
       this.x = Math.random() * canvas.width;
       this.y = initial ? Math.random() * canvas.height : -15;
-      this.size = Math.random() * 2.4 + 1.0;
-      this.speedY = Math.random() * 0.45 + 0.18;
-      this.speedX = (Math.random() - 0.5) * 0.35;
-      this.opacity = Math.random() * 0.45 + 0.2;
+      this.size = Math.random() * 2.2 + 1.0;
+      this.speedY = Math.random() * 0.4 + 0.16;
+      this.speedX = (Math.random() - 0.5) * 0.3;
+      this.opacity = Math.random() * 0.4 + 0.18;
       this.rotation = Math.random() * 360;
-      this.rotSpeed = (Math.random() - 0.5) * 1.5;
+      this.rotSpeed = (Math.random() - 0.5) * 1.4;
     }
 
     update() {
       this.y += this.speedY;
-      this.x += Math.sin(this.y * 0.008) * 0.4 + this.speedX;
+      this.x += Math.sin(this.y * 0.008) * 0.35 + this.speedX;
       this.rotation += this.rotSpeed;
 
       if (this.y > canvas.height + 15) {
@@ -471,8 +244,8 @@
       ctx.translate(this.x, this.y);
       ctx.rotate((this.rotation * Math.PI) / 180);
       ctx.fillStyle = `rgba(184, 139, 47, ${this.opacity})`;
-      ctx.shadowColor = 'rgba(252, 237, 189, 0.6)';
-      ctx.shadowBlur = 6;
+      ctx.shadowColor = 'rgba(252, 237, 189, 0.5)';
+      ctx.shadowBlur = 5;
       ctx.beginPath();
       ctx.ellipse(0, 0, this.size * 1.3, this.size * 0.8, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -495,7 +268,7 @@
   animateParticles();
 
   /* ==========================================================================
-     4. WEDDING COUNTDOWN ENGINE (TARGET: NOVEMBER 28, 2026)
+     3. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
      ========================================================================== */
   const targetDate = new Date('2026-11-28T18:00:00').getTime();
 
@@ -526,7 +299,7 @@
   updateCountdown();
 
   /* ==========================================================================
-     5. ACTION HANDLERS (MAP, CALENDAR, COPY ADDRESS)
+     4. ACTION HANDLERS (MAP, CALENDAR, COPY ADDRESS)
      ========================================================================== */
   btnCopyAddress.addEventListener('click', () => {
     const address = document.getElementById('venue-full-address').textContent;
@@ -580,7 +353,7 @@
   });
 
   /* ==========================================================================
-     6. TOAST UTILITY
+     5. TOAST NOTIFICATION UTILITY
      ========================================================================== */
   let toastTimer = null;
   function showToast(msg) {

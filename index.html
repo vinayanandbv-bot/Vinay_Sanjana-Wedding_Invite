@@ -18,100 +18,106 @@
 </head>
 <body>
 
-  <!-- Floating Audio Controller (Mobile Notch Safe) -->
-  <header class="audio-control-bar" aria-label="Audio Controls">
-    <button id="music-toggle-btn" class="royal-audio-btn" title="Toggle Royal Melody" aria-label="Toggle Royal Melody">
-      <svg class="audio-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 18V5l12-2v13"></path>
-        <circle cx="6" cy="18" r="3"></circle>
-        <circle cx="18" cy="16" r="3"></circle>
-      </svg>
-      <span id="music-text" class="audio-label">Royal Melody</span>
-    </button>
-  </header>
-
-  <!-- Luminous Ambient Background Canvas & Soft Light Halo -->
+  <!-- Marble & Light Halo Background -->
+  <div class="marble-canvas"></div>
   <canvas id="particles-canvas"></canvas>
-  <div class="ambient-glow"></div>
 
-  <!-- Stage Container -->
+  <!-- Main Stage Container -->
   <main class="stage-container" id="stage-container">
-    <div class="scroll-wrapper" id="scroll-wrapper">
+    <div class="scroll-master-wrapper" id="scroll-wrapper">
       
-      <!-- Top Rod: Antique Gilded Gold Dowel with Turned Finials -->
-      <div class="scroll-rod top-rod" id="top-rod">
-        <div class="finial left">
-          <div class="finial-collar"></div>
-          <div class="finial-bulb"></div>
+      <!-- ==========================================
+           REALISTIC 3D CLOSED SCROLL (STARTING VIEW)
+           ========================================== -->
+      <div class="realistic-scroll-assembly" id="closed-scroll-assembly">
+        <!-- Top Gilded Dowel -->
+        <div class="scroll-dowel top-dowel">
+          <div class="dowel-finial left"></div>
+          <div class="dowel-shaft">
+            <div class="dowel-reflection"></div>
+          </div>
+          <div class="dowel-finial right"></div>
         </div>
-        <div class="rod-shaft">
-          <div class="rod-highlight"></div>
+
+        <!-- The Embossed White Paper Scroll Cylinder -->
+        <div class="scroll-paper-cylinder" id="scroll-cylinder-trigger" title="Pull down or tap to open">
+          <div class="cylinder-texture"></div>
+          <div class="cylinder-paper-crease top"></div>
+          
+          <!-- Wrapped Silk Gold Cord -->
+          <div class="wrapped-gold-cord"></div>
+
+          <!-- Antique Gold Wax Seal Medallion -->
+          <div class="wax-seal-anchor">
+            <img src="assets/seal.jpg" alt="Royal Wedding Wax Seal" class="wax-seal-image">
+          </div>
+
+          <div class="cylinder-paper-crease bottom"></div>
         </div>
-        <div class="finial right">
-          <div class="finial-collar"></div>
-          <div class="finial-bulb"></div>
+
+        <!-- Bottom Gilded Dowel -->
+        <div class="scroll-dowel bottom-dowel" id="bottom-dowel-closed">
+          <div class="dowel-finial left"></div>
+          <div class="dowel-shaft">
+            <div class="dowel-reflection"></div>
+          </div>
+          <div class="dowel-finial right"></div>
         </div>
       </div>
 
-      <!-- Closed Scroll Cylinder (Authentic 3D Rolled Paper Appearance) -->
-      <div class="closed-scroll-cylinder" id="closed-cylinder">
-        <div class="cylinder-paper-roll">
-          <div class="cylinder-crease top"></div>
-          <div class="cylinder-crease bottom"></div>
+      <!-- ==========================================
+           UNROLLING PARCHMENT CONTAINER
+           ========================================== -->
+      <div class="unrolled-parchment-body" id="scroll-body">
+        
+        <!-- Top Anchored Dowel for Unrolled State -->
+        <div class="scroll-dowel static-top-dowel">
+          <div class="dowel-finial left"></div>
+          <div class="dowel-shaft">
+            <div class="dowel-reflection"></div>
+          </div>
+          <div class="dowel-finial right"></div>
         </div>
-        <div class="sash-ribbon">
-          <div class="ribbon-shine"></div>
-        </div>
-        <div class="seal-img-wrapper" id="seal-trigger" title="Tap or pull thread to unroll">
-          <img src="assets/seal.jpg" alt="Royal Wedding Seal" class="seal-img">
-        </div>
-      </div>
 
-      <!-- Unrolling Royal Parchment Body -->
-      <div class="scroll-body" id="scroll-body">
         <article class="invitation-inner" id="invitation-inner">
           
-          <!-- Luminous Gold Shimmer Sweep Effect -->
-          <div class="gold-sheen-sweep" id="gold-sheen"></div>
-
-          <!-- Master Double-Ruled Gold Foil Border Frame with Floral Filigree -->
+          <!-- Ornate Double-Ruled Gold Foil Border with Filigree -->
           <div class="ornate-border-frame">
             <div class="ornate-border-inner"></div>
             
-            <!-- Corner Filigree Ornaments -->
             <svg class="corner-filigree top-left" viewBox="0 0 60 60" fill="none">
-              <path d="M4 56V24C4 12.954 12.954 4 24 4H56" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M12 50V26C12 18.268 18.268 12 26 12H50" stroke="url(#goldGradient)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="20" cy="20" r="3.5" fill="url(#goldGradient)"/>
-              <path d="M6 34C14 34 22 26 22 18" stroke="url(#goldGradient)" stroke-width="1.2"/>
+              <path d="M4 56V24C4 12.954 12.954 4 24 4H56" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M12 50V26C12 18.268 18.268 12 26 12H50" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="20" cy="20" r="3.5" fill="url(#goldGrad)"/>
+              <path d="M6 34C14 34 22 26 22 18" stroke="url(#goldGrad)" stroke-width="1.2"/>
               <defs>
-                <linearGradient id="goldGradient" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+                <linearGradient id="goldGrad" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
                   <stop stop-color="#b88b2f"/>
-                  <stop offset="0.5" stop-color="#fcedbd"/>
-                  <stop offset="1" stop-color="#a87d27"/>
+                  <stop offset="0.5" stop-color="#faedd0"/>
+                  <stop offset="1" stop-color="#9e7220"/>
                 </linearGradient>
               </defs>
             </svg>
 
             <svg class="corner-filigree top-right" viewBox="0 0 60 60" fill="none">
-              <path d="M56 56V24C56 12.954 47.046 4 36 4H4" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M48 50V26C48 18.268 41.732 12 34 12H10" stroke="url(#goldGradient)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="40" cy="20" r="3.5" fill="url(#goldGradient)"/>
-              <path d="M54 34C46 34 38 26 38 18" stroke="url(#goldGradient)" stroke-width="1.2"/>
+              <path d="M56 56V24C56 12.954 47.046 4 36 4H4" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M48 50V26C48 18.268 41.732 12 34 12H10" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="40" cy="20" r="3.5" fill="url(#goldGrad)"/>
+              <path d="M54 34C46 34 38 26 38 18" stroke="url(#goldGrad)" stroke-width="1.2"/>
             </svg>
 
             <svg class="corner-filigree bottom-left" viewBox="0 0 60 60" fill="none">
-              <path d="M4 4V36C4 47.046 12.954 56 24 56H56" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M12 10V34C12 41.732 18.268 48 26 48H50" stroke="url(#goldGradient)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="20" cy="40" r="3.5" fill="url(#goldGradient)"/>
-              <path d="M6 26C14 26 22 34 22 42" stroke="url(#goldGradient)" stroke-width="1.2"/>
+              <path d="M4 4V36C4 47.046 12.954 56 24 56H56" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M12 10V34C12 41.732 18.268 48 26 48H50" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="20" cy="40" r="3.5" fill="url(#goldGrad)"/>
+              <path d="M6 26C14 26 22 34 22 42" stroke="url(#goldGrad)" stroke-width="1.2"/>
             </svg>
 
             <svg class="corner-filigree bottom-right" viewBox="0 0 60 60" fill="none">
-              <path d="M56 4V36C56 47.046 47.046 56 36 56H4" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M48 10V34C48 41.732 41.732 48 34 48H10" stroke="url(#goldGradient)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="40" cy="40" r="3.5" fill="url(#goldGradient)"/>
-              <path d="M54 26C46 26 38 34 38 42" stroke="url(#goldGradient)" stroke-width="1.2"/>
+              <path d="M56 4V36C56 47.046 47.046 56 36 56H4" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M48 10V34C48 41.732 41.732 48 34 48H10" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="40" cy="40" r="3.5" fill="url(#goldGrad)"/>
+              <path d="M54 26C46 26 38 34 38 42" stroke="url(#goldGrad)" stroke-width="1.2"/>
             </svg>
           </div>
 
@@ -128,7 +134,7 @@
             <div class="arch-line right"></div>
           </div>
 
-          <!-- Formal Invitation Salutation -->
+          <!-- Formal Salutation -->
           <div class="invitation-salutation">
             Together with their families<br>
             <strong>Mr. &amp; Mrs. Rajesh Sharma</strong><br>
@@ -137,7 +143,7 @@
             cordially request the honour of your gracious presence to celebrate the solemnization of the marriage of their beloved children
           </div>
 
-          <!-- The Bride & Groom Showcase -->
+          <!-- The Bride & Groom -->
           <section class="couple-showcase">
             <div class="couple-portrait-container">
               <div class="portrait-gold-rim"></div>
@@ -165,7 +171,7 @@
             </p>
           </section>
 
-          <!-- Understated Royal Countdown -->
+          <!-- Royal Countdown -->
           <section class="countdown-section" aria-label="Wedding Countdown">
             <h3 class="countdown-heading">Countdown to the Auspicious Union</h3>
             <div class="countdown-boxes">
@@ -188,7 +194,7 @@
             </div>
           </section>
 
-          <!-- Pure White Letterpress Ceremony Highlight Card -->
+          <!-- Pure White Letterpress Ceremony Card -->
           <section class="ceremony-highlight-card" aria-label="Ceremony and Venue Details">
             <h3 class="ceremony-heading">The Solemnization Ceremony</h3>
 
@@ -256,7 +262,6 @@
             <div class="title-ornament">❖</div>
 
             <div class="itinerary-grid">
-              <!-- Event 1 -->
               <div class="itinerary-item">
                 <div class="item-date">Friday, November 27</div>
                 <h4 class="item-name">The Sangeet &amp; Mehendi Celebration</h4>
@@ -264,7 +269,6 @@
                 <div class="item-dress">Attire: Regal &amp; Vibrant Festive</div>
               </div>
 
-              <!-- Event 2 -->
               <div class="itinerary-item">
                 <div class="item-date">Saturday, November 28</div>
                 <h4 class="item-name">The Haldi Ceremony</h4>
@@ -272,7 +276,6 @@
                 <div class="item-dress">Attire: Sunshine Yellow &amp; Pastels</div>
               </div>
 
-              <!-- Event 3 -->
               <div class="itinerary-item primary-event">
                 <div class="item-date">Saturday, November 28</div>
                 <h4 class="item-name">Baraat, Varmala &amp; Holy Pheras</h4>
@@ -280,7 +283,6 @@
                 <div class="item-dress">Attire: Traditional Royal Splendour</div>
               </div>
 
-              <!-- Event 4 -->
               <div class="itinerary-item">
                 <div class="item-date">Saturday, November 28</div>
                 <h4 class="item-name">The Grand Royal Reception</h4>
@@ -310,24 +312,21 @@
           </footer>
 
         </article>
+
+        <!-- Bottom Curled Dowel on Unrolled State -->
+        <div class="scroll-dowel dynamic-bottom-dowel" id="unrolled-bottom-dowel">
+          <div class="dowel-finial left"></div>
+          <div class="dowel-shaft">
+            <div class="dowel-reflection"></div>
+          </div>
+          <div class="dowel-finial right"></div>
+        </div>
+
       </div>
 
-      <!-- Lower Rod: Rotates in 3D during pull down -->
-      <div class="scroll-rod bottom-rod" id="bottom-rod">
-        <div class="finial left">
-          <div class="finial-collar"></div>
-          <div class="finial-bulb"></div>
-        </div>
-        <div class="rod-shaft">
-          <div class="rod-highlight"></div>
-        </div>
-        <div class="finial right">
-          <div class="finial-collar"></div>
-          <div class="finial-bulb"></div>
-        </div>
-      </div>
-
-      <!-- Silk Braided Cord & Weighted Royal Tassel -->
+      <!-- ==========================================
+           HANGING GOLD SILK CORD & TASSEL
+           ========================================== -->
       <div class="thread-assembly" id="thread-assembly" title="Pull down or tap to unroll">
         <div class="pull-thread" id="pull-thread"></div>
         <div class="thread-pendant" id="thread-pendant">
@@ -342,7 +341,7 @@
       <div class="pull-instruction" id="pull-instruction">
         <div class="instruction-line">
           <span class="ornament-glyph">❖</span>
-          <span class="instruction-text">Pull thread to unroll</span>
+          <span class="instruction-text">Pull thread to open</span>
           <span class="ornament-glyph">❖</span>
         </div>
         <div class="instruction-hint">(or tap to open)</div>
