@@ -1,19 +1,21 @@
 /**
- * PALACE-3D.JS - CINEMATIC THREE.JS WEBGL PALACE DOORS & SHADER ENGINE
- * - Physically Based Rendering (PBR) Materials with Procedural Teak Wood, 24K Gold Foil, and Marble
- * - Dynamic Interactive Specular Lighting (tracks mouse / touch coordinates)
- * - 3D Rajputana Scalloped Archway, Fluted Columns, and Swaying Brass Temple Bells
- * - Heavy Double Doors with 3D Carved Panels, Brass Studs, Ring Knockers & Ruby Wax Monogram Seal (P & V)
- * - Smooth 3D Door Swing & Volumetric Light Spill with GSAP
+ * PALACE-3D.JS - CINEMATIC THREE.JS WEBGL PALACE DOORS & SHADER ENGINE (V2 - ULTRA-REALISTIC)
+ * - PBR Materials: Procedural Deep-Carved Teakwood, 24K Reflective Gold Foil, and Makrana Marble
+ * - Dynamic Specular Light Shader (Follows Cursor & Touch with Anisotropic Glint)
+ * - 3D Rajputana Scalloped Archway, Fluted Marble Columns & Swaying Brass Temple Bells
+ * - Heavy Double Doors with Carved Panels, Brass Studs, Ring Knockers & Ruby Wax Monogram Seal
+ * - 3D Flower Petals Burst: Crimson Rose Petals & Golden Marigold Flowers on Gate Open
+ * - Volumetric Golden God Rays & Smooth Camera Dolly
  */
 
 window.Palace3D = (function () {
   'use strict';
 
   let container, canvas, renderer, scene, camera;
-  let leftDoorGroup, rightDoorGroup, sealMesh, backLight, lanternLight;
+  let leftDoorGroup, rightDoorGroup, sealMesh, backLight, lanternLight, sunLight;
   let bells = [];
-  let particlesMesh;
+  let petals = [];
+  let dustParticles;
   let isOpen = false;
   let isAnimating = false;
   let mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
@@ -22,16 +24,16 @@ window.Palace3D = (function () {
   let onCloseCallback = null;
 
   // Door Dimensions in 3D Units
-  const DOOR_W = 2.4;
-  const DOOR_H = 7.0;
-  const DOOR_D = 0.22;
-  const ARCH_H = 2.0;
+  const DOOR_W = 2.45;
+  const DOOR_H = 7.2;
+  const DOOR_D = 0.24;
+  const ARCH_H = 2.2;
 
   /* ==========================================================================
      1. PROCEDURAL TEXTURE GENERATORS (HIGH-FIDELITY PBR MAPS)
      ========================================================================== */
 
-  // 1A. Organic Teak Wood Texture (Diffuse + Bump)
+  // 1A. Deep-Carved Teak Wood Texture (Diffuse + Normal/Bump)
   function createTeakWoodTextures() {
     const w = 1024;
     const h = 2048;
@@ -42,41 +44,40 @@ window.Palace3D = (function () {
     dCanvas.height = h;
     const dCtx = dCanvas.getContext('2d');
 
-    // Rich Dark Teak Base
+    // Rich Dark Teak & Rosewood Gradient
     const grad = dCtx.createLinearGradient(0, 0, w, 0);
-    grad.addColorStop(0, '#220e06');
-    grad.addColorStop(0.3, '#35180c');
-    grad.addColorStop(0.7, '#2b1309');
-    grad.addColorStop(1, '#1e0c05');
+    grad.addColorStop(0, '#1c0c05');
+    grad.addColorStop(0.2, '#2f150a');
+    grad.addColorStop(0.5, '#241007');
+    grad.addColorStop(0.8, '#32160b');
+    grad.addColorStop(1, '#180a04');
     dCtx.fillStyle = grad;
     dCtx.fillRect(0, 0, w, h);
 
-    // Wood Grain Fibers
-    dCtx.fillStyle = 'rgba(15, 6, 2, 0.25)';
-    for (let i = 0; i < 900; i++) {
+    // Natural Wood Grain Fibers & Rings
+    dCtx.fillStyle = 'rgba(12, 5, 2, 0.35)';
+    for (let i = 0; i < 1100; i++) {
       const x = Math.random() * w;
-      const lineWidth = Math.random() * 3 + 1;
-      const alpha = Math.random() * 0.18 + 0.05;
-      dCtx.strokeStyle = `rgba(18, 7, 3, ${alpha})`;
-      dCtx.lineWidth = lineWidth;
+      const alpha = Math.random() * 0.22 + 0.06;
+      dCtx.strokeStyle = `rgba(14, 5, 2, ${alpha})`;
+      dCtx.lineWidth = Math.random() * 3.5 + 0.8;
       dCtx.beginPath();
       dCtx.moveTo(x, 0);
       dCtx.bezierCurveTo(
-        x + (Math.random() - 0.5) * 40,
+        x + (Math.random() - 0.5) * 50,
         h * 0.33,
-        x + (Math.random() - 0.5) * 40,
+        x + (Math.random() - 0.5) * 50,
         h * 0.66,
-        x + (Math.random() - 0.5) * 30,
+        x + (Math.random() - 0.5) * 40,
         h
       );
       dCtx.stroke();
     }
 
-    // Warm Gold/Amber Highlights in Wood Pores
-    dCtx.fillStyle = 'rgba(92, 48, 22, 0.18)';
-    for (let i = 0; i < 400; i++) {
-      const x = Math.random() * w;
-      dCtx.fillRect(x, Math.random() * h, Math.random() * 2 + 1, Math.random() * 40 + 10);
+    // Warm Golden Amber Specular Flecks in Pores
+    for (let i = 0; i < 500; i++) {
+      dCtx.fillStyle = 'rgba(110, 58, 25, 0.2)';
+      dCtx.fillRect(Math.random() * w, Math.random() * h, Math.random() * 2 + 1, Math.random() * 45 + 10);
     }
 
     const diffuseTex = new THREE.CanvasTexture(dCanvas);
@@ -91,14 +92,14 @@ window.Palace3D = (function () {
     bCtx.fillStyle = '#808080';
     bCtx.fillRect(0, 0, 512, 1024);
 
-    for (let i = 0; i < 450; i++) {
+    for (let i = 0; i < 600; i++) {
       const x = Math.random() * 512;
       const shade = Math.random() > 0.5 ? 255 : 0;
-      bCtx.strokeStyle = `rgba(${shade}, ${shade}, ${shade}, 0.12)`;
-      bCtx.lineWidth = Math.random() * 2 + 0.8;
+      bCtx.strokeStyle = `rgba(${shade}, ${shade}, ${shade}, 0.15)`;
+      bCtx.lineWidth = Math.random() * 2.5 + 0.8;
       bCtx.beginPath();
       bCtx.moveTo(x, 0);
-      bCtx.lineTo(x + (Math.random() - 0.5) * 15, 1024);
+      bCtx.lineTo(x + (Math.random() - 0.5) * 20, 1024);
       bCtx.stroke();
     }
 
@@ -118,17 +119,17 @@ window.Palace3D = (function () {
     const ctx = canvas.getContext('2d');
 
     const grad = ctx.createLinearGradient(0, 0, size, size);
-    grad.addColorStop(0, '#c99e32');
-    grad.addColorStop(0.25, '#fff0bd');
-    grad.addColorStop(0.5, '#b88828');
-    grad.addColorStop(0.75, '#fae196');
-    grad.addColorStop(1, '#8c6114');
+    grad.addColorStop(0, '#c7982d');
+    grad.addColorStop(0.25, '#fff2c4');
+    grad.addColorStop(0.5, '#b58422');
+    grad.addColorStop(0.75, '#fae194');
+    grad.addColorStop(1, '#875b11');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, size, size);
 
-    // Subtle micro leaf flecks
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-    for (let i = 0; i < 300; i++) {
+    // Micro Leaf Flecks
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    for (let i = 0; i < 350; i++) {
       ctx.beginPath();
       ctx.arc(Math.random() * size, Math.random() * size, Math.random() * 2.5 + 0.5, 0, Math.PI * 2);
       ctx.fill();
@@ -149,7 +150,7 @@ window.Palace3D = (function () {
     const ctx = canvas.getContext('2d');
 
     // Rich deep ruby red wax with radial lighting
-    const grad = ctx.createRadialGradient(size * 0.38, size * 0.35, 10, size * 0.5, size * 0.5, size * 0.48);
+    const grad = ctx.createRadialGradient(size * 0.38, size * 0.35, 12, size * 0.5, size * 0.5, size * 0.48);
     grad.addColorStop(0, '#f22e56');
     grad.addColorStop(0.35, '#c01538');
     grad.addColorStop(0.75, '#780a1e');
@@ -161,9 +162,9 @@ window.Palace3D = (function () {
 
     // Wax Edge Drips / Irregularities
     ctx.fillStyle = '#8a0d24';
-    for (let i = 0; i < 24; i++) {
-      const angle = (i / 24) * Math.PI * 2;
-      const r = size * 0.46 + Math.sin(i * 3) * 8;
+    for (let i = 0; i < 28; i++) {
+      const angle = (i / 28) * Math.PI * 2;
+      const r = size * 0.46 + Math.sin(i * 3.5) * 8;
       const x = size / 2 + Math.cos(angle) * r;
       const y = size / 2 + Math.sin(angle) * r;
       ctx.beginPath();
@@ -172,7 +173,7 @@ window.Palace3D = (function () {
     }
 
     // Concentric Inner Gilded Beveled Rim
-    ctx.strokeStyle = 'rgba(255, 225, 150, 0.85)';
+    ctx.strokeStyle = 'rgba(255, 225, 150, 0.9)';
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(size / 2, size / 2, size * 0.38, 0, Math.PI * 2);
@@ -193,17 +194,17 @@ window.Palace3D = (function () {
     ctx.shadowOffsetX = 1;
     ctx.shadowOffsetY = 2;
 
-    ctx.font = 'bold 36px "Cinzel", Georgia, serif';
+    ctx.font = 'bold 38px "Cinzel", Georgia, serif';
     ctx.fillText('♕', size / 2, size * 0.28);
 
     // Monogram Initials "P & V"
-    ctx.font = 'bold 58px "Cinzel", Georgia, serif';
+    ctx.font = 'bold 60px "Cinzel", Georgia, serif';
     ctx.fillText('P & V', size / 2, size * 0.52);
 
     // Bottom Decorative Flourish
-    ctx.font = '22px Georgia, serif';
+    ctx.font = '24px Georgia, serif';
     ctx.fillStyle = '#ffd666';
-    ctx.fillText('❖', size / 2, size * 0.73);
+    ctx.fillText('❖', size / 2, size * 0.74);
 
     return new THREE.CanvasTexture(canvas);
   }
@@ -212,6 +213,7 @@ window.Palace3D = (function () {
      2. MATERIALS SETUP (PHYSICALLY BASED RENDERING)
      ========================================================================== */
   let woodMaterial, goldMaterial, brassMaterial, sealMaterial, stoneMaterial, archMaterial;
+  let rosePetalMaterial, marigoldMaterial;
 
   function initMaterials() {
     const woodTextures = createTeakWoodTextures();
@@ -222,8 +224,8 @@ window.Palace3D = (function () {
     woodMaterial = new THREE.MeshStandardMaterial({
       map: woodTextures.diffuse,
       bumpMap: woodTextures.bump,
-      bumpScale: 0.05,
-      roughness: 0.55,
+      bumpScale: 0.06,
+      roughness: 0.52,
       metalness: 0.12,
     });
 
@@ -231,38 +233,54 @@ window.Palace3D = (function () {
     goldMaterial = new THREE.MeshStandardMaterial({
       map: goldTexture,
       color: 0xffe285,
-      roughness: 0.22,
-      metalness: 0.88,
+      roughness: 0.2,
+      metalness: 0.9,
     });
 
-    // Antique Brass (for studs and knockers)
+    // Antique Brass
     brassMaterial = new THREE.MeshStandardMaterial({
       color: 0xdfab39,
-      roughness: 0.25,
-      metalness: 0.92,
+      roughness: 0.22,
+      metalness: 0.94,
     });
 
     // Ruby Wax Seal (Subsurface sheen, clearcoat finish)
     sealMaterial = new THREE.MeshPhysicalMaterial({
       map: sealTexture,
-      roughness: 0.32,
+      roughness: 0.3,
       metalness: 0.15,
-      clearcoat: 0.85,
-      clearcoatRoughness: 0.1,
+      clearcoat: 0.9,
+      clearcoatRoughness: 0.08,
     });
 
     // White Heritage Marble for Pillars and Pediments
     stoneMaterial = new THREE.MeshStandardMaterial({
       color: 0xfdfaf5,
-      roughness: 0.75,
+      roughness: 0.72,
       metalness: 0.05,
     });
 
     // Gilded Arch Material
     archMaterial = new THREE.MeshStandardMaterial({
       color: 0xecd078,
-      roughness: 0.35,
-      metalness: 0.75,
+      roughness: 0.32,
+      metalness: 0.78,
+    });
+
+    // 3D Rose Petal Material (Double-Sided Velvet Crimson)
+    rosePetalMaterial = new THREE.MeshStandardMaterial({
+      color: 0xb5122e,
+      roughness: 0.45,
+      metalness: 0.05,
+      side: THREE.DoubleSide,
+    });
+
+    // 3D Marigold Petal Material (Double-Sided Golden Saffron)
+    marigoldMaterial = new THREE.MeshStandardMaterial({
+      color: 0xeb8b07,
+      roughness: 0.5,
+      metalness: 0.05,
+      side: THREE.DoubleSide,
     });
   }
 
@@ -273,35 +291,33 @@ window.Palace3D = (function () {
     const archGroup = new THREE.Group();
 
     // 3A. Left & Right Fluted Stone Columns
-    const colGeo = new THREE.CylinderGeometry(0.24, 0.28, DOOR_H + 0.6, 24);
+    const colGeo = new THREE.CylinderGeometry(0.26, 0.3, DOOR_H + 0.6, 24);
     const colLeft = new THREE.Mesh(colGeo, stoneMaterial);
-    colLeft.position.set(-DOOR_W - 0.24, (DOOR_H + 0.6) / 2 - 0.3, 0.1);
+    colLeft.position.set(-DOOR_W - 0.26, (DOOR_H + 0.6) / 2 - 0.3, 0.1);
     archGroup.add(colLeft);
 
     const colRight = new THREE.Mesh(colGeo, stoneMaterial);
-    colRight.position.set(DOOR_W + 0.24, (DOOR_H + 0.6) / 2 - 0.3, 0.1);
+    colRight.position.set(DOOR_W + 0.26, (DOOR_H + 0.6) / 2 - 0.3, 0.1);
     archGroup.add(colRight);
 
     // Column Bases & Capitals
-    const capGeo = new THREE.BoxGeometry(0.68, 0.26, 0.68);
+    const capGeo = new THREE.BoxGeometry(0.72, 0.28, 0.72);
     const capLeftTop = new THREE.Mesh(capGeo, goldMaterial);
-    capLeftTop.position.set(-DOOR_W - 0.24, DOOR_H + 0.1, 0.1);
+    capLeftTop.position.set(-DOOR_W - 0.26, DOOR_H + 0.1, 0.1);
     archGroup.add(capLeftTop);
 
     const capRightTop = new THREE.Mesh(capGeo, goldMaterial);
-    capRightTop.position.set(DOOR_W + 0.24, DOOR_H + 0.1, 0.1);
+    capRightTop.position.set(DOOR_W + 0.26, DOOR_H + 0.1, 0.1);
     archGroup.add(capRightTop);
 
     // 3B. Scalloped Cusped Arch Crown (Extruded Rajputana Curve)
     const archShape = new THREE.Shape();
-    const span = DOOR_W * 2 + 0.8;
+    const span = DOOR_W * 2 + 0.85;
     const halfSpan = span / 2;
 
     // Outer profile
     archShape.moveTo(-halfSpan, 0);
     archShape.lineTo(-halfSpan, ARCH_H * 0.9);
-
-    // Multi-cusped scalloped arch curve
     archShape.bezierCurveTo(-halfSpan * 0.75, ARCH_H * 0.95, -halfSpan * 0.5, ARCH_H * 0.6, -halfSpan * 0.3, ARCH_H * 0.9);
     archShape.bezierCurveTo(-halfSpan * 0.15, ARCH_H * 1.1, 0, ARCH_H * 1.25, 0, ARCH_H * 1.35);
     archShape.bezierCurveTo(0, ARCH_H * 1.25, halfSpan * 0.15, ARCH_H * 1.1, halfSpan * 0.3, ARCH_H * 0.9);
@@ -309,15 +325,15 @@ window.Palace3D = (function () {
     archShape.lineTo(halfSpan, 0);
 
     // Inner arch cutout line
-    archShape.lineTo(halfSpan - 0.25, 0);
+    archShape.lineTo(halfSpan - 0.26, 0);
     archShape.bezierCurveTo(halfSpan * 0.7, ARCH_H * 0.75, halfSpan * 0.45, ARCH_H * 0.45, halfSpan * 0.25, ARCH_H * 0.7);
     archShape.bezierCurveTo(halfSpan * 0.1, ARCH_H * 0.85, 0, ARCH_H * 0.95, 0, ARCH_H * 1.05);
     archShape.bezierCurveTo(0, ARCH_H * 0.95, -halfSpan * 0.1, ARCH_H * 0.85, -halfSpan * 0.25, ARCH_H * 0.7);
-    archShape.bezierCurveTo(-halfSpan * 0.45, ARCH_H * 0.45, -halfSpan * 0.7, ARCH_H * 0.75, -halfSpan + 0.25, 0);
+    archShape.bezierCurveTo(-halfSpan * 0.45, ARCH_H * 0.45, -halfSpan * 0.7, ARCH_H * 0.75, -halfSpan + 0.26, 0);
     archShape.closePath();
 
     const extrudeSettings = {
-      depth: 0.3,
+      depth: 0.32,
       bevelEnabled: true,
       bevelSegments: 4,
       steps: 2,
@@ -331,32 +347,29 @@ window.Palace3D = (function () {
     archGroup.add(archMesh);
 
     // Arch Central Gold Kalash Emblem
-    const kalashGeo = new THREE.SphereGeometry(0.24, 16, 16);
+    const kalashGeo = new THREE.SphereGeometry(0.26, 16, 16);
     const kalashMesh = new THREE.Mesh(kalashGeo, goldMaterial);
     kalashMesh.position.set(0, DOOR_H + ARCH_H * 1.35, 0.1);
     archGroup.add(kalashMesh);
 
     // 3C. Hanging 3D Temple Bells with Brass Chains
-    const bellPositions = [-1.6, -0.8, 0.8, 1.6];
+    const bellPositions = [-1.65, -0.85, 0.85, 1.65];
     bellPositions.forEach((xPos, idx) => {
       const bellGroup = new THREE.Group();
       bellGroup.position.set(xPos, DOOR_H + 0.4, 0.2);
 
-      // Chain
       const chainGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.65, 8);
       const chainMesh = new THREE.Mesh(chainGeo, brassMaterial);
       chainMesh.position.y = -0.325;
       bellGroup.add(chainMesh);
 
-      // Bell Dome
-      const bellGeo = new THREE.ConeGeometry(0.12, 0.22, 16, 1, true);
+      const bellGeo = new THREE.ConeGeometry(0.13, 0.24, 16, 1, true);
       const bellMesh = new THREE.Mesh(bellGeo, brassMaterial);
       bellMesh.position.y = -0.7;
       bellMesh.rotation.x = Math.PI;
       bellGroup.add(bellMesh);
 
-      // Bell Clapper
-      const clapperGeo = new THREE.SphereGeometry(0.04, 12, 12);
+      const clapperGeo = new THREE.SphereGeometry(0.045, 12, 12);
       const clapperMesh = new THREE.Mesh(clapperGeo, goldMaterial);
       clapperMesh.position.y = -0.78;
       bellGroup.add(clapperMesh);
@@ -373,15 +386,10 @@ window.Palace3D = (function () {
      ========================================================================== */
   function buildDoorLeaf(isRight) {
     const doorGroup = new THREE.Group();
-
-    // Pivot placement:
-    // Left door rotates around x = -DOOR_W
-    // Right door rotates around x = +DOOR_W
     const pivotX = isRight ? DOOR_W : -DOOR_W;
     doorGroup.position.set(pivotX, 0, 0);
 
     const leafInner = new THREE.Group();
-    // Offset so the inner edge is at x=0
     leafInner.position.set(isRight ? -DOOR_W / 2 : DOOR_W / 2, DOOR_H / 2, 0);
 
     // Main Wood Door Leaf Slab
@@ -394,7 +402,7 @@ window.Palace3D = (function () {
     const frameMesh = new THREE.Mesh(frameGeo, goldMaterial);
     leafInner.add(frameMesh);
 
-    // Re-insert inner wood slab recessed panel
+    // Recessed wood slab
     const innerWoodGeo = new THREE.BoxGeometry(DOOR_W - 0.24, DOOR_H - 0.24, DOOR_D + 0.04);
     const innerWood = new THREE.Mesh(innerWoodGeo, woodMaterial);
     leafInner.add(innerWood);
@@ -405,29 +413,26 @@ window.Palace3D = (function () {
     for (let p = 0; p < panelCount; p++) {
       const yOffset = (p - 1.5) * (panelHeight + 0.18);
 
-      // Gold Beveled Panel Rim
       const pFrameGeo = new THREE.BoxGeometry(DOOR_W - 0.5, panelHeight, 0.06);
       const pFrame = new THREE.Mesh(pFrameGeo, goldMaterial);
       pFrame.position.set(0, yOffset, DOOR_D / 2 + 0.02);
       leafInner.add(pFrame);
 
-      // Recessed Wood Center
       const pWoodGeo = new THREE.BoxGeometry(DOOR_W - 0.65, panelHeight - 0.15, 0.07);
       const pWood = new THREE.Mesh(pWoodGeo, woodMaterial);
       pWood.position.set(0, yOffset, DOOR_D / 2 + 0.03);
       leafInner.add(pWood);
 
-      // Central Floral Brass Rosette
-      const rosetteGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.03, 12);
+      const rosetteGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.03, 12);
       const rosette = new THREE.Mesh(rosetteGeo, brassMaterial);
       rosette.rotation.x = Math.PI / 2;
       rosette.position.set(0, yOffset, DOOR_D / 2 + 0.06);
       leafInner.add(rosette);
     }
 
-    // Antique Brass Studs (along the seam edge)
+    // Antique Brass Studs
     const studCount = 7;
-    const studGeo = new THREE.SphereGeometry(0.055, 12, 12);
+    const studGeo = new THREE.SphereGeometry(0.06, 12, 12);
     const studEdgeX = isRight ? -DOOR_W / 2 + 0.12 : DOOR_W / 2 - 0.12;
 
     for (let s = 0; s < studCount; s++) {
@@ -438,24 +443,23 @@ window.Palace3D = (function () {
     }
 
     // Heavy Brass Ring Knocker
-    const knockerMountGeo = new THREE.CylinderGeometry(0.12, 0.14, 0.04, 16);
+    const knockerMountGeo = new THREE.CylinderGeometry(0.13, 0.15, 0.04, 16);
     const knockerMount = new THREE.Mesh(knockerMountGeo, brassMaterial);
     knockerMount.rotation.x = Math.PI / 2;
-    const knockerX = isRight ? -0.4 : 0.4;
+    const knockerX = isRight ? -0.42 : 0.42;
     knockerMount.position.set(knockerX, 0.1, DOOR_D / 2 + 0.04);
     leafInner.add(knockerMount);
 
-    const ringGeo = new THREE.TorusGeometry(0.16, 0.032, 12, 24);
+    const ringGeo = new THREE.TorusGeometry(0.17, 0.034, 12, 24);
     const ringMesh = new THREE.Mesh(ringGeo, brassMaterial);
     ringMesh.position.set(knockerX, -0.1, DOOR_D / 2 + 0.07);
     leafInner.add(ringMesh);
 
     // If Right Door: Mount Central Royal Ruby Wax Monogram Medallion (P & V)
     if (isRight) {
-      const sealCylGeo = new THREE.CylinderGeometry(0.55, 0.58, 0.08, 36);
+      const sealCylGeo = new THREE.CylinderGeometry(0.58, 0.62, 0.09, 36);
       sealMesh = new THREE.Mesh(sealCylGeo, sealMaterial);
       sealMesh.rotation.x = Math.PI / 2;
-      // Position right at the center seam (x = -DOOR_W/2)
       sealMesh.position.set(-DOOR_W / 2, 0.1, DOOR_D / 2 + 0.08);
       sealMesh.name = 'centralSeal';
       leafInner.add(sealMesh);
@@ -466,54 +470,88 @@ window.Palace3D = (function () {
   }
 
   /* ==========================================================================
-     5. LIGHTING ARCHITECTURE (CINEMATIC & SHADERS)
+     5. 3D FLOWER PETAL SHOWER SYSTEM (ROSE & MARIGOLD PHYSICALLY SIMULATED)
+     ========================================================================== */
+  function spawnFlowerPetals() {
+    const petalCount = 55;
+    const petalGeo = new THREE.PlaneGeometry(0.22, 0.3, 3, 3);
+
+    // Curve the plane into a natural curved petal
+    const pos = petalGeo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+      pos.setZ(i, (x * x + y * y) * 0.4);
+    }
+    petalGeo.computeVertexNormals();
+
+    for (let i = 0; i < petalCount; i++) {
+      const isRose = Math.random() > 0.45;
+      const mat = isRose ? rosePetalMaterial : marigoldMaterial;
+      const mesh = new THREE.Mesh(petalGeo, mat);
+
+      // Start clustered at the door seam arch
+      mesh.position.set((Math.random() - 0.5) * 1.5, DOOR_H * 0.7 + Math.random() * 1.5, 0.2);
+
+      mesh.scale.setScalar(Math.random() * 0.6 + 0.7);
+
+      const petalObj = {
+        mesh: mesh,
+        vx: (Math.random() - 0.5) * 0.06,
+        vy: -(Math.random() * 0.04 + 0.025),
+        vz: Math.random() * 0.05 + 0.02,
+        rx: (Math.random() - 0.5) * 0.08,
+        ry: (Math.random() - 0.5) * 0.08,
+        rz: (Math.random() - 0.5) * 0.08,
+        swaySpeed: Math.random() * 2 + 1.5,
+        swayOffset: Math.random() * Math.PI * 2,
+      };
+
+      scene.add(mesh);
+      petals.push(petalObj);
+    }
+  }
+
+  /* ==========================================================================
+     6. LIGHTING ARCHITECTURE
      ========================================================================== */
   function setupLighting() {
-    // Warm Palace Ambient Glow
-    const ambient = new THREE.AmbientLight(0xffedd8, 0.75);
+    const ambient = new THREE.AmbientLight(0xffedd8, 0.8);
     scene.add(ambient);
 
-    // Key Directional Sunbeam (casts rich specular highlights across gold & brass)
-    const sunLight = new THREE.DirectionalLight(0xfff6e0, 1.35);
+    sunLight = new THREE.DirectionalLight(0xfff6e0, 1.45);
     sunLight.position.set(-4, 9, 8);
     scene.add(sunLight);
 
-    // Secondary Warm Fill Light from lower right
     const fillLight = new THREE.DirectionalLight(0xcc9a50, 0.65);
     fillLight.position.set(5, 2, 6);
     scene.add(fillLight);
 
-    // Interactive Golden Lantern Light (Tracks Cursor/Touch)
     lanternLight = new THREE.PointLight(0xffd57a, 2.2, 12);
     lanternLight.position.set(0, DOOR_H / 2, 4.5);
     scene.add(lanternLight);
 
-    // Courtyard Backlight (Spills through the door seam when opening)
     backLight = new THREE.PointLight(0xfff3c4, 0.1, 18);
     backLight.position.set(0, DOOR_H / 2, -2.0);
     scene.add(backLight);
   }
 
   /* ==========================================================================
-     6. ATMOSPHERIC 3D FLOATING GOLD LEAF PARTICLES
+     7. FLOATING 24K GOLD DUST
      ========================================================================== */
-  function setupParticles() {
+  function setupDustParticles() {
     const particleCount = 70;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    const scales = new Float32Array(particleCount);
 
     for (let i = 0; i < particleCount; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 12;
       positions[i * 3 + 1] = Math.random() * 10;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 6 + 1.5;
-      scales[i] = Math.random() * 0.12 + 0.05;
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
 
-    // Particle Material with Soft Golden Shimmer
     const pCanvas = document.createElement('canvas');
     pCanvas.width = 64;
     pCanvas.height = 64;
@@ -534,17 +572,20 @@ window.Palace3D = (function () {
       depthWrite: false,
     });
 
-    particlesMesh = new THREE.Points(geometry, pMaterial);
-    scene.add(particlesMesh);
+    dustParticles = new THREE.Points(geometry, pMaterial);
+    scene.add(dustParticles);
   }
 
   /* ==========================================================================
-     7. 3D OPEN & CLOSE ANIMATIONS (GSAP POWERED)
+     8. 3D OPEN & CLOSE ANIMATIONS (GSAP POWERED)
      ========================================================================== */
   function openGates() {
     if (isOpen || isAnimating) return;
     isAnimating = true;
     isOpen = true;
+
+    // Burst flower petals into the air!
+    spawnFlowerPetals();
 
     if (window.gsap) {
       const tl = gsap.timeline({
@@ -579,18 +620,18 @@ window.Palace3D = (function () {
       tl.to(
         backLight,
         {
-          intensity: 4.8,
+          intensity: 5.2,
           duration: 1.8,
           ease: 'power2.out',
         },
         0.3
       );
 
-      // 3. Cinematic Camera Push Forward (Step inside palace portal)
+      // 3. Cinematic Camera Dolly Forward (Step inside palace portal)
       tl.to(
         camera.position,
         {
-          z: 7.2,
+          z: 7.0,
           y: DOOR_H * 0.48,
           duration: 2.4,
           ease: 'power2.inOut',
@@ -598,10 +639,9 @@ window.Palace3D = (function () {
         0.2
       );
     } else {
-      // Fallback without GSAP
       leftDoorGroup.rotation.y = -Math.PI * 0.62;
       rightDoorGroup.rotation.y = Math.PI * 0.62;
-      backLight.intensity = 4.8;
+      backLight.intensity = 5.2;
       isAnimating = false;
       if (onOpenCallback) onOpenCallback();
     }
@@ -610,6 +650,10 @@ window.Palace3D = (function () {
   function closeGates() {
     if (!isOpen || isAnimating) return;
     isAnimating = true;
+
+    // Clear falling petals
+    petals.forEach((p) => scene.remove(p.mesh));
+    petals = [];
 
     if (window.gsap) {
       const tl = gsap.timeline({
@@ -620,7 +664,6 @@ window.Palace3D = (function () {
         },
       });
 
-      // Doors swing shut with heavy wooden latch damping
       tl.to(
         leftDoorGroup.rotation,
         {
@@ -671,7 +714,7 @@ window.Palace3D = (function () {
   }
 
   /* ==========================================================================
-     8. INTERACTION & RAYCASTING
+     9. INTERACTION & RAYCASTING
      ========================================================================== */
   function onPointerMove(e) {
     const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
@@ -701,7 +744,7 @@ window.Palace3D = (function () {
   }
 
   /* ==========================================================================
-     9. ANIMATION LOOP & RESIZE
+     10. ANIMATION LOOP & RESIZE
      ========================================================================== */
   let clock;
   function animate() {
@@ -710,36 +753,49 @@ window.Palace3D = (function () {
     const delta = clock.getDelta();
     const elapsedTime = clock.getElapsedTime();
 
-    // Smooth cursor interpolation
     mouse.x += (mouse.targetX - mouse.x) * 0.08;
     mouse.y += (mouse.targetY - mouse.y) * 0.08;
 
-    // Move Dynamic Specular Lantern Light with cursor
     if (lanternLight) {
       lanternLight.position.x = mouse.x * 3.5;
       lanternLight.position.y = DOOR_H / 2 + mouse.y * 2.5;
     }
 
-    // Subtle 3D Portal Tilting Parallax
     if (!isOpen) {
       scene.rotation.y = mouse.x * 0.06;
       scene.rotation.x = -mouse.y * 0.04;
     }
 
-    // Sway Hanging Temple Bells
+    // Sway Temple Bells
     bells.forEach((bell) => {
       bell.group.rotation.z = Math.sin(elapsedTime * bell.speed + bell.offset) * 0.08;
     });
 
-    // Drift Golden Particles
-    if (particlesMesh) {
-      const positions = particlesMesh.geometry.attributes.position.array;
+    // Animate Falling Petals
+    for (let i = petals.length - 1; i >= 0; i--) {
+      const p = petals[i];
+      p.mesh.position.y += p.vy;
+      p.mesh.position.x += p.vx + Math.sin(elapsedTime * p.swaySpeed + p.swayOffset) * 0.015;
+      p.mesh.position.z += p.vz;
+      p.mesh.rotation.x += p.rx;
+      p.mesh.rotation.y += p.ry;
+      p.mesh.rotation.z += p.rz;
+
+      if (p.mesh.position.y < -1.0) {
+        scene.remove(p.mesh);
+        petals.splice(i, 1);
+      }
+    }
+
+    // Drift Dust Particles
+    if (dustParticles) {
+      const positions = dustParticles.geometry.attributes.position.array;
       for (let i = 1; i < positions.length; i += 3) {
         positions[i] -= 0.008;
         if (positions[i] < 0) positions[i] = 9.5;
       }
-      particlesMesh.geometry.attributes.position.needsUpdate = true;
-      particlesMesh.rotation.y = elapsedTime * 0.02;
+      dustParticles.geometry.attributes.position.needsUpdate = true;
+      dustParticles.rotation.y = elapsedTime * 0.02;
     }
 
     renderer.render(scene, camera);
@@ -751,7 +807,6 @@ window.Palace3D = (function () {
     const height = container.clientHeight || 580;
 
     camera.aspect = width / height;
-    // Adjust FOV for mobile tall screens to ensure entire majestic arch fits
     if (width < 600) {
       camera.fov = 52;
       camera.position.z = 10.4;
@@ -765,7 +820,7 @@ window.Palace3D = (function () {
   }
 
   /* ==========================================================================
-     10. INITIALIZATION
+     11. INITIALIZATION
      ========================================================================== */
   function init(options = {}) {
     container = document.getElementById(options.containerId || 'palace-webgl-container');
@@ -781,7 +836,6 @@ window.Palace3D = (function () {
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || 580;
 
-    // WebGL Renderer with High-Performance Filmic Tone Mapping
     renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -790,7 +844,7 @@ window.Palace3D = (function () {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.18;
+    renderer.toneMappingExposure = 1.2;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -802,12 +856,10 @@ window.Palace3D = (function () {
     canvas.style.cursor = 'pointer';
     container.appendChild(canvas);
 
-    // Scene & Perspective Camera
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(width < 600 ? 52 : 42, width / height, 0.1, 100);
     camera.position.set(0, DOOR_H * 0.5, width < 600 ? 10.4 : 9.2);
 
-    // Build Scene Graph
     initMaterials();
     buildRajputanaArchway();
 
@@ -818,9 +870,8 @@ window.Palace3D = (function () {
     scene.add(rightDoorGroup);
 
     setupLighting();
-    setupParticles();
+    setupDustParticles();
 
-    // Event Listeners
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', onPointerMove, { passive: true });
     window.addEventListener('touchmove', onPointerMove, { passive: true });

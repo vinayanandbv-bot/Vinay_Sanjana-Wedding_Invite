@@ -1,8 +1,10 @@
 /**
- * THE ROYAL PALACE WEDDING E-INVITATION - MASTER CONTROLLER
- * - Orchestrates Three.js WebGL 3D Palace Gates, 3D Monogram Envelope & Heritage Scroll
- * - Zero Audio / Silent & Dignified
- * - Live Countdown to November 28, 2026
+ * THE ROYAL PALACE WEDDING E-INVITATION - MASTER CONTROLLER (V2 - 9.5 GRADE)
+ * - Three.js WebGL 3D Palace Doors with Flower Petal Burst & PBR Shaders
+ * - Cinematic Multi-Scene Story Card Engine (Swipe, Progress Bars, Direct Jump)
+ * - View Mode Toggle: Interactive Story Carousel vs Continuous Royal Parchment
+ * - 24K Gold Specular Shimmer Calligraphy Animations
+ * - Live Wedding Countdown to November 28, 2026
  * - Google Calendar One-Tap Sync & Google Maps Navigation
  */
 
@@ -12,9 +14,14 @@
   // DOM Elements
   const stageContainer = document.getElementById('stage-container');
   const courtyardInvitation = document.getElementById('courtyard-invitation');
-  const invitationInner = document.getElementById('invitation-inner');
-  const btnCloseAction = document.getElementById('btn-close-action');
+  const btnReplayGates = document.getElementById('btn-replay-gates');
+  const btnCloseScroll = document.querySelector('.btn-close-scroll');
   const btnAddCalendar = document.getElementById('btn-add-calendar');
+  const btnCalendarScroll = document.querySelector('.btn-calendar-scroll');
+
+  // Mode Switcher Elements
+  const btnModeStory = document.getElementById('btn-mode-story');
+  const btnModeScroll = document.getElementById('btn-mode-scroll');
 
   // Theme Switcher Buttons
   const themeBtns = document.querySelectorAll('.theme-tab-btn');
@@ -34,17 +41,21 @@
   const scrollPullCord = document.getElementById('scroll-pull-cord');
   const scrollPrompt = document.getElementById('scroll-prompt');
 
-  // Countdown Elements
-  const countDays = document.getElementById('count-days');
-  const countHours = document.getElementById('count-hours');
-  const countMins = document.getElementById('count-mins');
-  const countSecs = document.getElementById('count-secs');
+  // Story Carousel Elements
+  const storyCards = document.querySelectorAll('.story-card');
+  const progressSegments = document.querySelectorAll('.progress-segment');
+  const btnStoryPrev = document.getElementById('btn-story-prev');
+  const btnStoryNext = document.getElementById('btn-story-next');
+  const storyCounter = document.getElementById('story-counter');
+  const storyTrack = document.getElementById('story-slides-track');
 
+  let currentCardIndex = 0;
+  const totalCards = storyCards.length;
   let activeTheme = 'doors';
   let isInvitationRevealed = false;
 
   /* ==========================================================================
-     1. INITIALIZE THREE.JS 3D PALACE PORTAL
+     1. THREE.JS 3D PALACE PORTAL ENGINE INITIALIZATION
      ========================================================================== */
   if (window.Palace3D) {
     window.Palace3D.init({
@@ -58,7 +69,6 @@
     });
   }
 
-  // Also bind the prompt line for Palace Gates
   const portalPrompt = document.getElementById('portal-prompt');
   if (portalPrompt) {
     portalPrompt.addEventListener('click', function () {
@@ -69,7 +79,7 @@
   }
 
   /* ==========================================================================
-     2. REVEAL & CLOSE INVITATION
+     2. REVEAL & RESET INVITATION
      ========================================================================== */
   function revealInvitation() {
     if (isInvitationRevealed) return;
@@ -78,8 +88,8 @@
     stageContainer.classList.add('opened');
 
     setTimeout(() => {
-      if (invitationInner) {
-        invitationInner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (courtyardInvitation) {
+        courtyardInvitation.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 700);
   }
@@ -89,7 +99,7 @@
     stageContainer.classList.remove('opened');
   }
 
-  function closeCurrentTheme() {
+  function replayPalaceExperience() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     setTimeout(() => {
@@ -100,33 +110,151 @@
       } else {
         resetReveal();
       }
+      goToCard(0);
     }, 300);
   }
 
-  if (btnCloseAction) {
-    btnCloseAction.addEventListener('click', function (e) {
+  if (btnReplayGates) {
+    btnReplayGates.addEventListener('click', function (e) {
       e.stopPropagation();
-      closeCurrentTheme();
+      replayPalaceExperience();
+    });
+  }
+
+  if (btnCloseScroll) {
+    btnCloseScroll.addEventListener('click', function (e) {
+      e.stopPropagation();
+      replayPalaceExperience();
     });
   }
 
   /* ==========================================================================
-     3. THEME SWITCHER LOGIC
+     3. CINEMATIC STORY CAROUSEL ENGINE
+     ========================================================================== */
+  function updateStoryCarousel() {
+    // Update active card
+    storyCards.forEach((card, idx) => {
+      if (idx === currentCardIndex) {
+        card.classList.add('active');
+      } else {
+        card.classList.remove('active');
+      }
+    });
+
+    // Update progress segments
+    progressSegments.forEach((segment, idx) => {
+      segment.classList.remove('active', 'completed');
+      if (idx < currentCardIndex) {
+        segment.classList.add('completed');
+      } else if (idx === currentCardIndex) {
+        segment.classList.add('active');
+      }
+    });
+
+    // Update Counter
+    if (storyCounter) {
+      storyCounter.textContent = `${currentCardIndex + 1} / ${totalCards}`;
+    }
+  }
+
+  function goToCard(index) {
+    if (index < 0 || index >= totalCards) return;
+    currentCardIndex = index;
+    updateStoryCarousel();
+  }
+
+  function nextCard() {
+    if (currentCardIndex < totalCards - 1) {
+      goToCard(currentCardIndex + 1);
+    }
+  }
+
+  function prevCard() {
+    if (currentCardIndex > 0) {
+      goToCard(currentCardIndex - 1);
+    }
+  }
+
+  if (btnStoryNext) btnStoryNext.addEventListener('click', nextCard);
+  if (btnStoryPrev) btnStoryPrev.addEventListener('click', prevCard);
+
+  // Direct Progress Bar Segment Click
+  progressSegments.forEach((seg, idx) => {
+    seg.addEventListener('click', () => goToCard(idx));
+  });
+
+  // Touch Swipe on Story Track
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  if (storyTrack) {
+    storyTrack.addEventListener(
+      'touchstart',
+      function (e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
+
+    storyTrack.addEventListener(
+      'touchend',
+      function (e) {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+
+        // Ensure horizontal swipe
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+          if (diffX < 0) {
+            nextCard();
+          } else {
+            prevCard();
+          }
+        }
+      },
+      { passive: true }
+    );
+  }
+
+  // Keyboard Navigation
+  window.addEventListener('keydown', function (e) {
+    if (!isInvitationRevealed) return;
+    if (e.key === 'ArrowRight') nextCard();
+    if (e.key === 'ArrowLeft') prevCard();
+  });
+
+  /* ==========================================================================
+     4. VIEW MODE TOGGLE (STORY CAROUSEL VS CONTINUOUS SCROLL)
+     ========================================================================== */
+  if (btnModeStory && btnModeScroll) {
+    btnModeStory.addEventListener('click', function () {
+      btnModeStory.classList.add('active');
+      btnModeScroll.classList.remove('active');
+      document.body.classList.remove('mode-scroll-active');
+    });
+
+    btnModeScroll.addEventListener('click', function () {
+      btnModeScroll.classList.add('active');
+      btnModeStory.classList.remove('active');
+      document.body.classList.add('mode-scroll-active');
+    });
+  }
+
+  /* ==========================================================================
+     5. THEME SWITCHER LOGIC
      ========================================================================== */
   function switchTheme(newTheme) {
     if (newTheme === activeTheme) return;
 
-    // Reset current state if opened
     if (isInvitationRevealed) {
-      closeCurrentTheme();
+      replayPalaceExperience();
     }
 
     activeTheme = newTheme;
-
-    // Update body class for styling tweaks
     document.body.className = `theme-${newTheme}`;
 
-    // Update Switcher Tab Active States
     themeBtns.forEach((btn) => {
       if (btn.dataset.theme === newTheme) {
         btn.classList.add('active');
@@ -135,7 +263,6 @@
       }
     });
 
-    // Update Stage Visibility
     Object.keys(stages).forEach((key) => {
       if (stages[key]) {
         if (key === newTheme) {
@@ -146,7 +273,6 @@
       }
     });
 
-    // If switching back to doors, trigger canvas resize in Three.js
     if (newTheme === 'doors') {
       window.dispatchEvent(new Event('resize'));
     }
@@ -160,7 +286,7 @@
   });
 
   /* ==========================================================================
-     4. ENVELOPE THEME INTERACTIONS
+     6. ENVELOPE & SCROLL FALLBACK INTERACTION
      ========================================================================== */
   function openEnvelope() {
     revealInvitation();
@@ -185,9 +311,6 @@
     envelopePrompt.addEventListener('click', openEnvelope);
   }
 
-  /* ==========================================================================
-     5. SCROLL THEME INTERACTIONS
-     ========================================================================== */
   function openScroll() {
     revealInvitation();
   }
@@ -212,7 +335,7 @@
   }
 
   /* ==========================================================================
-     6. AMBIENT 24K GOLD LEAF DUST CANVAS
+     7. FLOATING 24K GOLD LEAF DUST CANVAS
      ========================================================================== */
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
@@ -287,20 +410,23 @@
   }
 
   /* ==========================================================================
-     7. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
+     8. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
      ========================================================================== */
   const targetDate = new Date('2026-11-28T18:00:00').getTime();
+  const storyDays = document.getElementById('story-days');
+  const storyHours = document.getElementById('story-hours');
+  const storyMins = document.getElementById('story-mins');
+  const storySecs = document.getElementById('story-secs');
 
   function updateCountdown() {
-    if (!countDays || !countHours || !countMins || !countSecs) return;
     const now = new Date().getTime();
     const diff = targetDate - now;
 
     if (diff <= 0) {
-      countDays.textContent = '00';
-      countHours.textContent = '00';
-      countMins.textContent = '00';
-      countSecs.textContent = '00';
+      if (storyDays) storyDays.textContent = '00';
+      if (storyHours) storyHours.textContent = '00';
+      if (storyMins) storyMins.textContent = '00';
+      if (storySecs) storySecs.textContent = '00';
       return;
     }
 
@@ -309,33 +435,39 @@
     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-    countDays.textContent = String(d).padStart(2, '0');
-    countHours.textContent = String(h).padStart(2, '0');
-    countMins.textContent = String(m).padStart(2, '0');
-    countSecs.textContent = String(s).padStart(2, '0');
+    const sD = String(d).padStart(2, '0');
+    const sH = String(h).padStart(2, '0');
+    const sM = String(m).padStart(2, '0');
+    const sS = String(s).padStart(2, '0');
+
+    if (storyDays) storyDays.textContent = sD;
+    if (storyHours) storyHours.textContent = sH;
+    if (storyMins) storyMins.textContent = sM;
+    if (storySecs) storySecs.textContent = sS;
   }
 
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
   /* ==========================================================================
-     8. ONE-TAP GOOGLE CALENDAR SYNC
+     9. ONE-TAP GOOGLE CALENDAR SYNC
      ========================================================================== */
-  if (btnAddCalendar) {
-    btnAddCalendar.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const title = encodeURIComponent('The Royal Wedding of Priyanka & Vikram');
-      const details = encodeURIComponent(
-        'Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.'
-      );
-      const location = encodeURIComponent(
-        'The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001'
-      );
-      const startTime = '20261128T123000Z';
-      const endTime = '20261128T183000Z';
+  function syncGoogleCalendar(e) {
+    if (e) e.stopPropagation();
+    const title = encodeURIComponent('The Royal Wedding of Priyanka & Vikram');
+    const details = encodeURIComponent(
+      'Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.'
+    );
+    const location = encodeURIComponent(
+      'The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001'
+    );
+    const startTime = '20261128T123000Z';
+    const endTime = '20261128T183000Z';
 
-      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startTime}/${endTime}`;
-      window.open(gcalUrl, '_blank', 'noopener,noreferrer');
-    });
+    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startTime}/${endTime}`;
+    window.open(gcalUrl, '_blank', 'noopener,noreferrer');
   }
+
+  if (btnAddCalendar) btnAddCalendar.addEventListener('click', syncGoogleCalendar);
+  if (btnCalendarScroll) btnCalendarScroll.addEventListener('click', syncGoogleCalendar);
 })();

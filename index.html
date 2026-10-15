@@ -9,7 +9,7 @@
   <meta property="og:title" content="The Royal Wedding | Priyanka &amp; Vikram">
   <meta property="og:description" content="You are cordially invited to celebrate the royal wedding of Priyanka & Vikram.">
   <meta property="og:type" content="website">
-  <meta name="description" content="An interactive royal e-wedding invitation with realistic 3D palace door reveal, countdown, and event details.">
+  <meta name="description" content="A cinematic royal e-wedding invitation featuring 3D palace gate reveal, multi-scene story cards, and live countdown.">
   <meta name="theme-color" content="#fdfbf7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -54,10 +54,7 @@
            ========================================== -->
       <section class="theme-portal-stage active" id="stage-doors" aria-label="3D Royal Palace Portal">
         <div class="palace-webgl-wrapper">
-          <!-- Three.js Canvas Injected Here -->
           <div id="palace-webgl-container"></div>
-
-          <!-- Ambient Lighting Halo Behind Portal -->
           <div class="portal-light-aura"></div>
         </div>
 
@@ -88,7 +85,6 @@
             <div class="envelope-bottom-flap"></div>
             <div class="envelope-top-flap" id="envelope-top-flap"></div>
 
-            <!-- Central Wax Seal on Envelope Flap -->
             <div class="envelope-wax-seal" id="envelope-wax-seal">
               <div class="seal-wax-circle">
                 <div class="seal-beveled-rim"></div>
@@ -136,7 +132,6 @@
             <div class="finial-right"></div>
           </div>
 
-          <!-- Hanging Silk Thread with Golden Tassel -->
           <div class="scroll-pull-cord" id="scroll-pull-cord">
             <div class="cord-thread"></div>
             <div class="cord-bead"></div>
@@ -154,230 +149,526 @@
         </div>
       </section>
 
-      <!-- ==========================================
-           ROYAL WEDDING INVITATION (THE REVEAL)
-           ========================================== -->
+      <!-- ========================================================
+           ROYAL WEDDING INVITATION COURTYARD (CINEMATIC REVEAL)
+           ======================================================== -->
       <div class="invitation-palace-courtyard" id="courtyard-invitation">
-        <article class="invitation-inner" id="invitation-inner">
-          
-          <!-- Ornate Double-Ruled Gold Foil Border with Filigree -->
-          <div class="ornate-border-frame">
-            <div class="ornate-border-inner"></div>
-            
-            <svg class="corner-filigree top-left" viewBox="0 0 60 60" fill="none">
-              <path d="M4 56V24C4 12.954 12.954 4 24 4H56" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M12 50V26C12 18.268 18.268 12 26 12H50" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="20" cy="20" r="3.5" fill="url(#goldGrad)"/>
-              <path d="M6 34C14 34 22 26 22 18" stroke="url(#goldGrad)" stroke-width="1.2"/>
-              <defs>
-                <linearGradient id="goldGrad" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#b88b2f"/>
-                  <stop offset="0.5" stop-color="#faedd0"/>
-                  <stop offset="1" stop-color="#9e7220"/>
-                </linearGradient>
-              </defs>
-            </svg>
 
-            <svg class="corner-filigree top-right" viewBox="0 0 60 60" fill="none">
-              <path d="M56 56V24C56 12.954 47.046 4 36 4H4" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M48 50V26C48 18.268 41.732 12 34 12H10" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="40" cy="20" r="3.5" fill="url(#goldGrad)"/>
-              <path d="M54 34C46 34 38 26 38 18" stroke="url(#goldGrad)" stroke-width="1.2"/>
-            </svg>
-
-            <svg class="corner-filigree bottom-left" viewBox="0 0 60 60" fill="none">
-              <path d="M4 4V36C4 47.046 12.954 56 24 56H56" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M12 10V34C12 41.732 18.268 48 26 48H50" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="20" cy="40" r="3.5" fill="url(#goldGrad)"/>
-              <path d="M6 26C14 26 22 34 22 42" stroke="url(#goldGrad)" stroke-width="1.2"/>
-            </svg>
-
-            <svg class="corner-filigree bottom-right" viewBox="0 0 60 60" fill="none">
-              <path d="M56 4V36C56 47.046 47.046 56 36 56H4" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M48 10V34C48 41.732 41.732 48 34 48H10" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/>
-              <circle cx="40" cy="40" r="3.5" fill="url(#goldGrad)"/>
-              <path d="M54 26C46 26 38 34 38 42" stroke="url(#goldGrad)" stroke-width="1.2"/>
-            </svg>
-          </div>
-
-          <!-- Auspicious Sacred Invocation -->
-          <div class="sacred-invocation">॥ श्री गणेशाय नमः ॥</div>
-
-          <!-- Royal Arch Crest with Monogram -->
-          <div class="royal-arch-crest">
-            <div class="arch-line left"></div>
-            <div class="crest-emblem">
-              <div class="crest-crown">♕</div>
-              <div class="crest-monogram">P &amp; V</div>
-            </div>
-            <div class="arch-line right"></div>
-          </div>
-
-          <!-- Formal Salutation -->
-          <div class="invitation-salutation">
-            Together with their families<br>
-            <strong>Mr. &amp; Mrs. Rajesh Sharma</strong><br>
-            and<br>
-            <strong>Mr. &amp; Mrs. Sunil Malhotra</strong><br>
-            cordially request the honour of your gracious presence to celebrate the solemnization of the marriage of their beloved children
-          </div>
-
-          <!-- The Bride & Groom -->
-          <section class="couple-showcase">
-            <div class="couple-portrait-container">
-              <div class="portrait-gold-rim"></div>
-              <img src="assets/couple.jpg" alt="Priyanka and Vikram">
-            </div>
-
-            <div class="couple-names-block">
-              <h1 class="person-name">Priyanka</h1>
-              <p class="parentage">Daughter of Mrs. Sunita &amp; Mr. Rajesh Sharma</p>
-              
-              <div class="ampersand-separator">&amp;</div>
-              
-              <h2 class="person-name">Vikram</h2>
-              <p class="parentage">Son of Mrs. Anita &amp; Mr. Sunil Malhotra</p>
-            </div>
-
-            <div class="royal-divider">
-              <span class="divider-line"></span>
-              <span class="divider-motif">❖</span>
-              <span class="divider-line"></span>
-            </div>
-
-            <p class="romantic-quote">
-              &ldquo;Two lives, two souls, united in eternal grace and bound by love everlasting.&rdquo;
-            </p>
-          </section>
-
-          <!-- Royal Wedding Countdown Timer -->
-          <section class="countdown-section" aria-label="Celebration Countdown">
-            <h3 class="countdown-heading">Awaiting The Auspicious Moment</h3>
-            <div class="countdown-timer-grid">
-              <div class="time-box">
-                <span class="time-num" id="count-days">00</span>
-                <span class="time-unit">Days</span>
-              </div>
-              <div class="time-box-sep">:</div>
-              <div class="time-box">
-                <span class="time-num" id="count-hours">00</span>
-                <span class="time-unit">Hours</span>
-              </div>
-              <div class="time-box-sep">:</div>
-              <div class="time-box">
-                <span class="time-num" id="count-mins">00</span>
-                <span class="time-unit">Mins</span>
-              </div>
-              <div class="time-box-sep">:</div>
-              <div class="time-box">
-                <span class="time-num" id="count-secs">00</span>
-                <span class="time-unit">Secs</span>
-              </div>
-            </div>
-          </section>
-
-          <!-- Ceremony Details Card -->
-          <section class="ceremony-details-card">
-            <h3 class="ceremony-title">The Wedding Ceremony</h3>
-            <div class="ceremony-motif">❖ &nbsp; ❖ &nbsp; ❖</div>
-
-            <div class="ceremony-meta-grid">
-              <div class="ceremony-field">
-                <span class="field-label">Date of Celebration</span>
-                <span class="field-value">Saturday, the 28th of November, 2026</span>
-              </div>
-
-              <div class="ceremony-field">
-                <span class="field-label">Auspicious Timings</span>
-                <span class="field-value">Baraat at 6:00 PM &nbsp;•&nbsp; Pheras at 8:00 PM</span>
-                <span class="field-subvalue">Followed by Grand Dinner Reception</span>
-              </div>
-
-              <div class="ceremony-field">
-                <span class="field-label">Venue</span>
-                <span class="field-value">The Grand Heritage Palace &amp; Royal Gardens</span>
-                <span class="field-subvalue" id="venue-full-address">Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001</span>
-              </div>
-            </div>
-
-            <!-- Only Two Action Buttons - Centered -->
-            <div class="ceremony-actions">
-              <a href="https://maps.google.com/?q=Jaipur+Heritage+Palace" target="_blank" rel="noopener noreferrer" class="royal-btn-gold">
-                <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                <span>View on Google Maps</span>
-              </a>
-
-              <button class="royal-btn-gold" id="btn-add-calendar" type="button">
-                <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <span>Add to Google Calendar</span>
-              </button>
-            </div>
-          </section>
-
-          <!-- Simplistic & Royal Itinerary -->
-          <section class="itinerary-section" aria-label="Celebration Schedule">
-            <h3 class="section-title">The Wedding Festivities</h3>
-            <div class="title-ornament">❖</div>
-
-            <div class="itinerary-grid">
-              <div class="itinerary-item">
-                <div class="item-date">Friday, November 27</div>
-                <h4 class="item-name">The Sangeet &amp; Mehendi Celebration</h4>
-                <div class="item-time">5:30 PM Onwards &nbsp;•&nbsp; Palace Courtyard</div>
-                <div class="item-dress">Attire: Regal &amp; Vibrant Festive</div>
-              </div>
-
-              <div class="itinerary-item">
-                <div class="item-date">Saturday, November 28</div>
-                <h4 class="item-name">The Haldi Ceremony</h4>
-                <div class="item-time">10:00 AM &nbsp;•&nbsp; Sun Pavilion</div>
-                <div class="item-dress">Attire: Sunshine Yellow &amp; Pastels</div>
-              </div>
-
-              <div class="itinerary-item primary-event">
-                <div class="item-date">Saturday, November 28</div>
-                <h4 class="item-name">Baraat, Varmala &amp; Holy Pheras</h4>
-                <div class="item-time">Baraat: 6:00 PM &nbsp;•&nbsp; Pheras: 8:00 PM &nbsp;•&nbsp; Heritage Mandap</div>
-                <div class="item-dress">Attire: Traditional Royal Splendour</div>
-              </div>
-
-              <div class="itinerary-item">
-                <div class="item-date">Saturday, November 28</div>
-                <h4 class="item-name">The Grand Royal Reception</h4>
-                <div class="item-time">9:30 PM Onwards &nbsp;•&nbsp; Grand Ballroom</div>
-                <div class="item-dress">Attire: Formal Evening / Black Tie</div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Formal Conclusion & Family Signature -->
-          <footer class="invitation-footer">
-            <div class="family-blessing">
-              With Warm Blessings &amp; Regrets Only:<br>
-              <strong>The Sharma &amp; Malhotra Families</strong>
-            </div>
-
-            <div class="closing-regards">We Look Forward to Your Gracious Presence</div>
-
-            <div class="inquiries-note">
-              For inquiries &amp; travel coordination: +91 98765 43210 &nbsp;|&nbsp; +91 98765 12345
-            </div>
-
-            <!-- Close & Replay Action Button -->
-            <button class="royal-replay-btn" id="btn-close-action" type="button">
-              <span>❖ Close Invitation ❖</span>
+        <!-- Experience View Mode Switcher -->
+        <div class="experience-mode-bar">
+          <div class="mode-bar-inner">
+            <button class="mode-toggle-btn active" id="btn-mode-story" type="button">
+              <span>🎞️ Story Cards</span>
             </button>
-          </footer>
+            <button class="mode-toggle-btn" id="btn-mode-scroll" type="button">
+              <span>📜 Full Document</span>
+            </button>
+          </div>
+        </div>
 
-        </article>
+        <!-- ==========================================
+             MODE A: CINEMATIC STORY CARD CAROUSEL
+             ========================================== -->
+        <div class="story-carousel-container" id="story-carousel">
+          
+          <!-- Story Progress Indicator Bar (6 Segments) -->
+          <div class="story-progress-bar" id="story-progress-bar">
+            <div class="progress-segment active" data-index="0"><div class="progress-fill"></div></div>
+            <div class="progress-segment" data-index="1"><div class="progress-fill"></div></div>
+            <div class="progress-segment" data-index="2"><div class="progress-fill"></div></div>
+            <div class="progress-segment" data-index="3"><div class="progress-fill"></div></div>
+            <div class="progress-segment" data-index="4"><div class="progress-fill"></div></div>
+            <div class="progress-segment" data-index="5"><div class="progress-fill"></div></div>
+          </div>
+
+          <!-- Story Slides Wrapper -->
+          <div class="story-slides-track" id="story-slides-track">
+
+            <!-- SLIDE 1: SACRED BLESSINGS & GANESHA INVOCATION -->
+            <article class="story-card slide-welcome active" data-card="0">
+              <div class="card-ornate-frame">
+                <div class="card-filigree-rim"></div>
+              </div>
+
+              <!-- Gilded Ganesha Emblem SVG with Radiant Halo -->
+              <div class="ganesha-emblem-wrap">
+                <div class="ganesha-gilded-halo"></div>
+                <svg class="ganesha-svg" viewBox="0 0 100 100" fill="none">
+                  <!-- Crown (Mukut) -->
+                  <path d="M50 12 L56 24 L50 21 L44 24 Z" fill="url(#ganeshaGold)"/>
+                  <circle cx="50" cy="10" r="2.5" fill="#ffd700"/>
+                  <!-- Forehead Tilak & Trishul -->
+                  <path d="M49 24 H51 V32 H49 Z" fill="#b3122e"/>
+                  <path d="M46 26 Q50 30 54 26" stroke="#b3122e" stroke-width="1.5" fill="none"/>
+                  <!-- Elephant Head & Ears -->
+                  <path d="M42 28 C34 26 28 32 30 42 C32 49 39 49 42 45" stroke="url(#ganeshaGold)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                  <path d="M58 28 C66 26 72 32 70 42 C68 49 61 49 58 45" stroke="url(#ganeshaGold)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                  <!-- Trunk & Curve -->
+                  <path d="M47 34 Q50 38 52 44 Q53 53 48 57 Q43 60 41 55 Q39 50 45 47" stroke="url(#ganeshaGold)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                  <!-- Modak (Sweet) -->
+                  <circle cx="43" cy="53" r="3.2" fill="#ffd700"/>
+                  <!-- Om Silhouette / Tusk -->
+                  <path d="M54 44 L58 44" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                  <defs>
+                    <linearGradient id="ganeshaGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#fcedbd"/>
+                      <stop offset="50%" stop-color="#b88b2f"/>
+                      <stop offset="100%" stop-color="#7a5513"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <div class="sacred-invocation-shloka">
+                ॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ॥<br>
+                ॥ निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥
+              </div>
+
+              <div class="sacred-heading-ruby">॥ श्री गणेशाय नमः ॥</div>
+
+              <div class="card-divider-swag">
+                <span class="swag-line"></span>
+                <span class="swag-flower">❀</span>
+                <span class="swag-line"></span>
+              </div>
+
+              <div class="formal-card-text">
+                Together with their beloved families<br>
+                <strong class="family-highlight">Mr. &amp; Mrs. Rajesh Sharma</strong><br>
+                &amp;<br>
+                <strong class="family-highlight">Mr. &amp; Mrs. Sunil Malhotra</strong><br>
+                cordially invite you to celebrate the joyous union and marriage solemnization of their beloved children
+              </div>
+
+              <div class="card-step-hint">Swipe or tap right to continue ➔</div>
+            </article>
+
+            <!-- SLIDE 2: THE BRIDE & GROOM & LOVE STORY -->
+            <article class="story-card slide-couple" data-card="1">
+              <div class="card-ornate-frame">
+                <div class="card-filigree-rim"></div>
+              </div>
+
+              <!-- Royal Rajasthani Jharokha Arch Frame for Portrait -->
+              <div class="jharokha-portrait-stage">
+                <div class="jharokha-arch-cap">
+                  <span class="jharokha-crest-crown">♕</span>
+                </div>
+                <div class="jharokha-image-wrap">
+                  <img src="assets/couple.jpg" alt="Priyanka and Vikram">
+                  <div class="jharokha-gold-border"></div>
+                </div>
+              </div>
+
+              <div class="couple-title-group">
+                <h2 class="couple-name-royal gold-shimmer-text">Priyanka</h2>
+                <p class="couple-lineage">Daughter of Mrs. Sunita &amp; Mr. Rajesh Sharma</p>
+
+                <div class="royal-ampersand">&amp;</div>
+
+                <h2 class="couple-name-royal gold-shimmer-text">Vikram</h2>
+                <p class="couple-lineage">Son of Mrs. Anita &amp; Mr. Sunil Malhotra</p>
+              </div>
+
+              <p class="story-vow-quote">
+                &ldquo;Two lives, two souls, united in eternal grace and bound by love everlasting.&rdquo;
+              </p>
+
+              <!-- Live Countdown Widget -->
+              <div class="card-countdown-widget">
+                <div class="countdown-title">The Auspicious Countdown</div>
+                <div class="countdown-digits-row">
+                  <div class="time-slot"><span class="val" id="story-days">00</span><span class="lbl">Days</span></div>
+                  <div class="colon">:</div>
+                  <div class="time-slot"><span class="val" id="story-hours">00</span><span class="lbl">Hours</span></div>
+                  <div class="colon">:</div>
+                  <div class="time-slot"><span class="val" id="story-mins">00</span><span class="lbl">Mins</span></div>
+                  <div class="colon">:</div>
+                  <div class="time-slot"><span class="val" id="story-secs">00</span><span class="lbl">Secs</span></div>
+                </div>
+              </div>
+            </article>
+
+            <!-- SLIDE 3: THE SANGEET & MEHENDI CELEBRATION -->
+            <article class="story-card slide-sangeet" data-card="2">
+              <div class="card-ornate-frame">
+                <div class="card-filigree-rim"></div>
+              </div>
+
+              <!-- Sangeet Sitar/Tabla Musical Motif SVG -->
+              <div class="event-theme-emblem">
+                <svg class="event-svg" viewBox="0 0 80 80" fill="none">
+                  <path d="M22 62 C16 56 16 46 24 40 C32 34 38 42 34 52 C30 62 26 66 22 62 Z" fill="url(#eventGold)" stroke="#ffd700" stroke-width="1.5"/>
+                  <path d="M30 46 L62 14" stroke="url(#eventGold)" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="56" y1="12" x2="66" y2="22" stroke="#ffd700" stroke-width="2"/>
+                  <circle cx="60" cy="18" r="3" fill="#ffd700"/>
+                  <!-- Sangeet Stars & Musical Notes -->
+                  <path d="M52 48 Q56 42 62 46" stroke="#ffd700" stroke-width="1.5" fill="none"/>
+                  <circle cx="62" cy="46" r="2.5" fill="#ffd700"/>
+                  <defs>
+                    <linearGradient id="eventGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#fff0bd"/>
+                      <stop offset="50%" stop-color="#d4af37"/>
+                      <stop offset="100%" stop-color="#805b10"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <div class="event-subtitle-tag">Evening of Melody &amp; Henna</div>
+              <h3 class="event-headline gold-shimmer-text">The Sangeet &amp; Mehendi</h3>
+              <div class="event-theme-name">&ldquo;Raas &amp; Rhythms Under The Starlit Sky&rdquo;</div>
+
+              <div class="event-details-box">
+                <div class="detail-row">
+                  <span class="detail-icon">📅</span>
+                  <span class="detail-label">Friday, November 27, 2026</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">⏰</span>
+                  <span class="detail-label">5:30 PM Onwards</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">📍</span>
+                  <span class="detail-label">The Palace Courtyard &amp; Royal Lawns</span>
+                </div>
+                <div class="detail-row attire">
+                  <span class="detail-icon">👗</span>
+                  <span class="detail-label">Dress Code: <strong>Regal &amp; Vibrant Festive</strong></span>
+                </div>
+              </div>
+            </article>
+
+            <!-- SLIDE 4: THE AUSPICIOUS HALDI CEREMONY -->
+            <article class="story-card slide-haldi" data-card="3">
+              <div class="card-ornate-frame">
+                <div class="card-filigree-rim"></div>
+              </div>
+
+              <!-- Brass Urli & Marigolds Motif SVG -->
+              <div class="event-theme-emblem">
+                <svg class="event-svg" viewBox="0 0 80 80" fill="none">
+                  <!-- Urli Bowl -->
+                  <path d="M14 42 C14 58 66 58 66 42 L62 38 H18 Z" fill="url(#haldiGold)" stroke="#d49200" stroke-width="1.8"/>
+                  <ellipse cx="40" cy="38" rx="22" ry="5" fill="#fcd75e"/>
+                  <!-- Floating Marigold Blossoms -->
+                  <circle cx="32" cy="38" r="4" fill="#e86100"/>
+                  <circle cx="48" cy="37" r="4.5" fill="#e88b00"/>
+                  <circle cx="40" cy="39" r="3.8" fill="#d94b00"/>
+                  <!-- Garlands Dropping -->
+                  <circle cx="22" cy="22" r="3" fill="#f09600"/>
+                  <circle cx="22" cy="28" r="3" fill="#e07200"/>
+                  <circle cx="58" cy="22" r="3" fill="#f09600"/>
+                  <circle cx="58" cy="28" r="3" fill="#e07200"/>
+                  <defs>
+                    <linearGradient id="haldiGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#fff8d1"/>
+                      <stop offset="50%" stop-color="#e6a817"/>
+                      <stop offset="100%" stop-color="#8f5700"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <div class="event-subtitle-tag">Turmeric Radiance &amp; Floral Blessings</div>
+              <h3 class="event-headline gold-shimmer-text">The Haldi Ceremony</h3>
+              <div class="event-theme-name">&ldquo;Pithi, Haldi &amp; Phoolon Ki Holi&rdquo;</div>
+
+              <div class="event-details-box">
+                <div class="detail-row">
+                  <span class="detail-icon">📅</span>
+                  <span class="detail-label">Saturday, November 28, 2026</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">⏰</span>
+                  <span class="detail-label">10:00 AM</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">📍</span>
+                  <span class="detail-label">The Sun Pavilion &amp; Fountains</span>
+                </div>
+                <div class="detail-row attire">
+                  <span class="detail-icon">👗</span>
+                  <span class="detail-label">Dress Code: <strong>Sunshine Yellow &amp; Floral Pastels</strong></span>
+                </div>
+              </div>
+            </article>
+
+            <!-- SLIDE 5: THE WEDDING & SACRED PHERAS -->
+            <article class="story-card slide-wedding" data-card="4">
+              <div class="card-ornate-frame">
+                <div class="card-filigree-rim"></div>
+              </div>
+
+              <!-- Sacred Mandap & Holy Fire (Agni) Motif SVG -->
+              <div class="event-theme-emblem">
+                <svg class="event-svg" viewBox="0 0 80 80" fill="none">
+                  <!-- Mandap Pillars & Arch -->
+                  <path d="M16 64 V26 M64 64 V26" stroke="url(#eventGold)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M12 26 C26 14 54 14 68 26" stroke="url(#eventGold)" stroke-width="3.2" fill="none"/>
+                  <circle cx="40" cy="16" r="3.5" fill="#ffd700"/>
+                  <!-- Agni Kunda (Altar) -->
+                  <polygon points="30,64 50,64 47,56 33,56" fill="url(#eventGold)"/>
+                  <!-- Sacred Flames -->
+                  <path d="M40 46 Q43 51 40 56 Q37 51 40 46 Z" fill="#e82c0c"/>
+                  <path d="M38 49 Q40 52 38 56 Q36 52 38 49 Z" fill="#f59300"/>
+                  <path d="M42 49 Q44 52 42 56 Q40 52 42 49 Z" fill="#f5c800"/>
+                </svg>
+              </div>
+
+              <div class="event-subtitle-tag">Auspicious Marriage Solemnization</div>
+              <h3 class="event-headline gold-shimmer-text">Varmala &amp; Holy Pheras</h3>
+              <div class="event-theme-name">&ldquo;Saat Phere &amp; Sacred Eternal Vows&rdquo;</div>
+
+              <div class="event-details-box">
+                <div class="detail-row">
+                  <span class="detail-icon">📅</span>
+                  <span class="detail-label">Saturday, the 28th of November, 2026</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">⏰</span>
+                  <span class="detail-label">Baraat: 6:00 PM &nbsp;•&nbsp; Pheras: 8:00 PM</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">📍</span>
+                  <span class="detail-label">The Grand Heritage Palace &amp; Royal Gardens</span>
+                </div>
+                <div class="detail-address-sub">
+                  Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001
+                </div>
+                <div class="detail-row attire">
+                  <span class="detail-icon">👗</span>
+                  <span class="detail-label">Dress Code: <strong>Traditional Royal Splendour</strong></span>
+                </div>
+              </div>
+
+              <!-- Only Two Action Buttons - Perfectly Centered -->
+              <div class="ceremony-actions">
+                <a href="https://maps.google.com/?q=Jaipur+Heritage+Palace" target="_blank" rel="noopener noreferrer" class="royal-btn-gold">
+                  <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span>View on Google Maps</span>
+                </a>
+
+                <button class="royal-btn-gold" id="btn-add-calendar" type="button">
+                  <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span>Add to Google Calendar</span>
+                </button>
+              </div>
+            </article>
+
+            <!-- SLIDE 6: THE GRAND RECEPTION & FAMILY REGARDS -->
+            <article class="story-card slide-reception" data-card="5">
+              <div class="card-ornate-frame">
+                <div class="card-filigree-rim"></div>
+              </div>
+
+              <div class="event-theme-emblem">
+                <span class="reception-crown">♕</span>
+              </div>
+
+              <div class="event-subtitle-tag">An Evening of Elegance &amp; Revelry</div>
+              <h3 class="event-headline gold-shimmer-text">The Grand Royal Reception</h3>
+              <div class="event-theme-name">&ldquo;Celebration of Love &amp; Fellowship&rdquo;</div>
+
+              <div class="event-details-box">
+                <div class="detail-row">
+                  <span class="detail-icon">📅</span>
+                  <span class="detail-label">Saturday, November 28, 2026</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">⏰</span>
+                  <span class="detail-label">9:30 PM Onwards</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-icon">📍</span>
+                  <span class="detail-label">The Grand Ballroom &amp; Terrace</span>
+                </div>
+                <div class="detail-row attire">
+                  <span class="detail-icon">👗</span>
+                  <span class="detail-label">Dress Code: <strong>Black Tie / Royal Formal</strong></span>
+                </div>
+              </div>
+
+              <div class="family-blessing-block">
+                <p class="blessing-text">With Warm Blessings &amp; Regrets Only:</p>
+                <p class="family-names"><strong>The Sharma &amp; Malhotra Families</strong></p>
+                <p class="inquiries-text">For inquiries &amp; travel assistance: +91 98765 43210 &nbsp;|&nbsp; +91 98765 12345</p>
+              </div>
+
+              <!-- Replay Gates Button -->
+              <button class="royal-replay-btn" id="btn-replay-gates" type="button">
+                <span>❖ Replay Palace Gate Reveal ❖</span>
+              </button>
+            </article>
+
+          </div>
+
+          <!-- Carousel Arrow Navigation Controls -->
+          <div class="story-nav-bar">
+            <button class="story-nav-btn prev" id="btn-story-prev" type="button" aria-label="Previous Slide">
+              <span>‹</span>
+            </button>
+            <div class="story-counter" id="story-counter">1 / 6</div>
+            <button class="story-nav-btn next" id="btn-story-next" type="button" aria-label="Next Slide">
+              <span>›</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ==========================================
+             MODE B: CONTINUOUS ROYAL PARCHMENT SCROLL
+             ========================================== -->
+        <div class="continuous-scroll-document" id="continuous-document">
+          <article class="invitation-inner" id="invitation-inner">
+            
+            <div class="ornate-border-frame">
+              <div class="ornate-border-inner"></div>
+              <svg class="corner-filigree top-left" viewBox="0 0 60 60" fill="none"><path d="M4 56V24C4 12.954 12.954 4 24 4H56" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/><path d="M12 50V26C12 18.268 18.268 12 26 12H50" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/><circle cx="20" cy="20" r="3.5" fill="url(#goldGrad)"/><defs><linearGradient id="goldGrad" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse"><stop stop-color="#b88b2f"/><stop offset="0.5" stop-color="#faedd0"/><stop offset="1" stop-color="#9e7220"/></linearGradient></defs></svg>
+              <svg class="corner-filigree top-right" viewBox="0 0 60 60" fill="none"><path d="M56 56V24C56 12.954 47.046 4 36 4H4" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/><path d="M48 50V26C48 18.268 41.732 12 34 12H10" stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round"/><circle cx="40" cy="20" r="3.5" fill="url(#goldGrad)"/></svg>
+              <svg class="corner-filigree bottom-left" viewBox="0 0 60 60" fill="none"><path d="M4 4V36C4 47.046 12.954 56 24 56H56" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="40" r="3.5" fill="url(#goldGrad)"/></svg>
+              <svg class="corner-filigree bottom-right" viewBox="0 0 60 60" fill="none"><path d="M56 4V36C56 47.046 47.046 56 36 56H4" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/><circle cx="40" cy="40" r="3.5" fill="url(#goldGrad)"/></svg>
+            </div>
+
+            <div class="sacred-invocation">॥ श्री गणेशाय नमः ॥</div>
+
+            <div class="royal-arch-crest">
+              <div class="arch-line left"></div>
+              <div class="crest-emblem">
+                <div class="crest-crown">♕</div>
+                <div class="crest-monogram">P &amp; V</div>
+              </div>
+              <div class="arch-line right"></div>
+            </div>
+
+            <div class="invitation-salutation">
+              Together with their families<br>
+              <strong>Mr. &amp; Mrs. Rajesh Sharma</strong><br>
+              and<br>
+              <strong>Mr. &amp; Mrs. Sunil Malhotra</strong><br>
+              cordially request the honour of your gracious presence to celebrate the solemnization of the marriage of their beloved children
+            </div>
+
+            <section class="couple-showcase">
+              <div class="couple-portrait-container">
+                <div class="portrait-gold-rim"></div>
+                <img src="assets/couple.jpg" alt="Priyanka and Vikram">
+              </div>
+
+              <div class="couple-names-block">
+                <h1 class="person-name gold-shimmer-text">Priyanka</h1>
+                <p class="parentage">Daughter of Mrs. Sunita &amp; Mr. Rajesh Sharma</p>
+                <div class="ampersand-separator">&amp;</div>
+                <h2 class="person-name gold-shimmer-text">Vikram</h2>
+                <p class="parentage">Son of Mrs. Anita &amp; Mr. Sunil Malhotra</p>
+              </div>
+
+              <p class="romantic-quote">
+                &ldquo;Two lives, two souls, united in eternal grace and bound by love everlasting.&rdquo;
+              </p>
+            </section>
+
+            <!-- Ceremony Details Card -->
+            <section class="ceremony-details-card">
+              <h3 class="ceremony-title">The Wedding Ceremony</h3>
+              <div class="ceremony-motif">❖ &nbsp; ❖ &nbsp; ❖</div>
+
+              <div class="ceremony-meta-grid">
+                <div class="ceremony-field">
+                  <span class="field-label">Date of Celebration</span>
+                  <span class="field-value">Saturday, the 28th of November, 2026</span>
+                </div>
+                <div class="ceremony-field">
+                  <span class="field-label">Auspicious Timings</span>
+                  <span class="field-value">Baraat at 6:00 PM &nbsp;•&nbsp; Pheras at 8:00 PM</span>
+                  <span class="field-subvalue">Followed by Grand Dinner Reception</span>
+                </div>
+                <div class="ceremony-field">
+                  <span class="field-label">Venue</span>
+                  <span class="field-value">The Grand Heritage Palace &amp; Royal Gardens</span>
+                  <span class="field-subvalue">Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001</span>
+                </div>
+              </div>
+
+              <div class="ceremony-actions">
+                <a href="https://maps.google.com/?q=Jaipur+Heritage+Palace" target="_blank" rel="noopener noreferrer" class="royal-btn-gold">
+                  <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span>View on Google Maps</span>
+                </a>
+
+                <button class="royal-btn-gold btn-calendar-scroll" type="button">
+                  <svg class="btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span>Add to Google Calendar</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- Complete Itinerary -->
+            <section class="itinerary-section">
+              <h3 class="section-title">The Wedding Festivities</h3>
+              <div class="title-ornament">❖</div>
+
+              <div class="itinerary-grid">
+                <div class="itinerary-item">
+                  <div class="item-date">Friday, November 27</div>
+                  <h4 class="item-name">The Sangeet &amp; Mehendi Celebration</h4>
+                  <div class="item-time">5:30 PM Onwards &nbsp;•&nbsp; Palace Courtyard</div>
+                  <div class="item-dress">Attire: Regal &amp; Vibrant Festive</div>
+                </div>
+
+                <div class="itinerary-item">
+                  <div class="item-date">Saturday, November 28</div>
+                  <h4 class="item-name">The Haldi Ceremony</h4>
+                  <div class="item-time">10:00 AM &nbsp;•&nbsp; Sun Pavilion</div>
+                  <div class="item-dress">Attire: Sunshine Yellow &amp; Pastels</div>
+                </div>
+
+                <div class="itinerary-item primary-event">
+                  <div class="item-date">Saturday, November 28</div>
+                  <h4 class="item-name">Baraat, Varmala &amp; Holy Pheras</h4>
+                  <div class="item-time">Baraat: 6:00 PM &nbsp;•&nbsp; Pheras: 8:00 PM &nbsp;•&nbsp; Heritage Mandap</div>
+                  <div class="item-dress">Attire: Traditional Royal Splendour</div>
+                </div>
+
+                <div class="itinerary-item">
+                  <div class="item-date">Saturday, November 28</div>
+                  <h4 class="item-name">The Grand Royal Reception</h4>
+                  <div class="item-time">9:30 PM Onwards &nbsp;•&nbsp; Grand Ballroom</div>
+                  <div class="item-dress">Attire: Formal Evening / Black Tie</div>
+                </div>
+              </div>
+            </section>
+
+            <footer class="invitation-footer">
+              <div class="family-blessing">
+                With Warm Blessings &amp; Regrets Only:<br>
+                <strong>The Sharma &amp; Malhotra Families</strong>
+              </div>
+              <div class="closing-regards">We Look Forward to Your Gracious Presence</div>
+              <button class="royal-replay-btn btn-close-scroll" type="button">
+                <span>❖ Close Invitation ❖</span>
+              </button>
+            </footer>
+
+          </article>
+        </div>
+
       </div>
 
     </div>
