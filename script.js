@@ -1,11 +1,11 @@
 /**
- * THE ROYAL WEDDING E-INVITATION - MOBILE-FIRST ENGINE
- * - Touch & Gesture Physics Drag-to-Unroll with PointerCapture
- * - Mobile Tap-to-Open Support on Thread, Tassel, Seal & Prompt
+ * THE ROYAL WEDDING E-INVITATION - WHITE & GOLD MASTER ENGINE
+ * - Realistic 3D Scroll Unrolling Physics (Cylinder Roll & Dowel Rotation)
+ * - Luminous Gold Leaf Sheen Sweep Animation
  * - Classical Raag Yaman & Court Romance Ambient Synthesizer
- * - Gold Stardust Particle Canvas
- * - Live Countdown Engine
- * - One-Tap Google Calendar, Apple/Outlook (.ICS), and Copy Address
+ * - Sunlit 24K Gold Flake Particle Canvas
+ * - Real-Time Wedding Countdown Engine
+ * - Google Calendar, Apple/Outlook (.ICS), and Address Copy
  */
 
 (function() {
@@ -16,6 +16,7 @@
   const scrollWrapper = document.getElementById('scroll-wrapper');
   const scrollBody = document.getElementById('scroll-body');
   const invitationInner = document.getElementById('invitation-inner');
+  const closedCylinder = document.getElementById('closed-cylinder');
   const bottomRod = document.getElementById('bottom-rod');
   const sashSeal = document.getElementById('sash-seal');
   const sealTrigger = document.getElementById('seal-trigger');
@@ -23,6 +24,7 @@
   const pullThread = document.getElementById('pull-thread');
   const pullInstruction = document.getElementById('pull-instruction');
   const btnRollUp = document.getElementById('btn-roll-up');
+  const goldSheen = document.getElementById('gold-sheen');
   const toastNotice = document.getElementById('toast-notice');
 
   // Audio Elements
@@ -40,22 +42,22 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  // Drag State
+  // Physics & Drag State
   let isUnrolled = false;
   let isDragging = false;
   let startY = 0;
   let currentDragY = 0;
   let activePointerId = null;
-  const DRAG_THRESHOLD = 90; // Optimized for mobile finger drag distance
-  const BASE_THREAD_HEIGHT = 80;
+  const DRAG_THRESHOLD = 85;
+  const BASE_THREAD_HEIGHT = 85;
 
   /* ==========================================================================
-     1. MOBILE TOUCH & POINTER INTERACTIONS
+     1. REALISTIC 3D SCROLL PULL & UNROLL PHYSICS
      ========================================================================== */
   function initPullInteractions() {
-    const pullElements = [threadAssembly, sealTrigger, bottomRod, pullInstruction];
+    const pullTargets = [threadAssembly, sealTrigger, bottomRod, pullInstruction];
 
-    pullElements.forEach(el => {
+    pullTargets.forEach(el => {
       if (!el) return;
       el.addEventListener('pointerdown', onPointerDown, { passive: false });
     });
@@ -64,15 +66,14 @@
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
 
-    // Direct Tap / Click Fallbacks (Extremely intuitive on mobile)
     if (sealTrigger) {
-      sealTrigger.addEventListener('click', (e) => {
+      sealTrigger.addEventListener('click', () => {
         if (!isUnrolled && currentDragY < 15) unrollScroll();
       });
     }
 
     if (threadAssembly) {
-      threadAssembly.addEventListener('click', (e) => {
+      threadAssembly.addEventListener('click', () => {
         if (!isUnrolled && currentDragY < 15) unrollScroll();
       });
     }
@@ -115,15 +116,18 @@
     const deltaY = e.clientY - startY;
 
     if (deltaY > 0) {
-      // Prevent mobile page rubber-band scrolling while pulling
       if (e.cancelable) e.preventDefault();
 
-      currentDragY = Math.min(deltaY, 280);
+      currentDragY = Math.min(deltaY, 260);
+
+      // Unroll parchment & rotate the bottom cylinder rod in 3D
       scrollBody.style.height = `${currentDragY}px`;
+      bottomRod.style.transform = `rotateX(${currentDragY * 1.5}deg)`;
       pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.22}px`;
 
-      const sealOpacity = Math.max(0, 1 - (currentDragY / 120));
-      sashSeal.style.opacity = sealOpacity;
+      // Fade out closed paper cylinder
+      const cylOpacity = Math.max(0, 1 - (currentDragY / 100));
+      closedCylinder.style.opacity = cylOpacity;
     }
   }
 
@@ -143,11 +147,12 @@
     if (currentDragY >= DRAG_THRESHOLD) {
       unrollScroll();
     } else {
-      // Spring back to closed state
+      // Spring back to closed state with dampening
       scrollBody.classList.add('smooth-transition');
       scrollBody.style.height = '0px';
+      bottomRod.style.transform = 'rotateX(0deg)';
       pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
-      sashSeal.style.opacity = '1';
+      closedCylinder.style.opacity = '1';
     }
   }
 
@@ -158,23 +163,32 @@
 
     const fullHeight = invitationInner.scrollHeight;
     scrollBody.style.height = `${fullHeight}px`;
+    bottomRod.style.transform = 'rotateX(0deg)';
     pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
 
-    // Fade out ribbon, seal & prompt
-    sashSeal.style.opacity = '0';
-    sashSeal.style.transform = 'translate(-50%, -50%) scale(0.65)';
+    // Hide closed cylinder and prompt
+    closedCylinder.classList.add('hidden');
     pullInstruction.style.opacity = '0';
     pullInstruction.style.pointerEvents = 'none';
 
+    // Play auspicious chime and start background court music
     playUnrollChime();
 
     if (!isMusicPlaying) {
       startAmbientMusic();
     }
 
-    showToast('The Royal Invitation is revealed');
+    // Trigger gold foil sheen sweep across the unrolled card
+    setTimeout(() => {
+      if (goldSheen) {
+        goldSheen.classList.remove('sweep-active');
+        void goldSheen.offsetWidth; // Reflow
+        goldSheen.classList.add('sweep-active');
+      }
+    }, 400);
 
-    // Set height to auto after unrolling finishes so mobile orientation/resizing works fluidly
+    showToast('The Royal Wedding Invitation is revealed');
+
     setTimeout(() => {
       if (isUnrolled) {
         scrollBody.style.height = 'auto';
@@ -193,10 +207,14 @@
     scrollBody.classList.add('smooth-transition');
     scrollBody.style.height = '0px';
 
-    sashSeal.style.opacity = '1';
-    sashSeal.style.transform = 'translate(-50%, -50%) scale(1)';
+    closedCylinder.classList.remove('hidden');
+    closedCylinder.style.opacity = '1';
     pullInstruction.style.opacity = '1';
     pullInstruction.style.pointerEvents = 'auto';
+
+    if (goldSheen) {
+      goldSheen.classList.remove('sweep-active');
+    }
 
     setTimeout(() => {
       if (!isUnrolled) {
@@ -208,8 +226,8 @@
   }
 
   /* ==========================================================================
-     2. CLASSICAL ROYAL WEDDING MELODY (RAAG YAMAN / KALYAN COURT ROMANCE)
-     Web Audio API - Starts on mobile user touch gesture.
+     2. CLASSICAL RAAG YAMAN / COURT ROMANCE AMBIENT SYNTHESIZER
+     Web Audio API - Gentle Sitar / Flute / Harp & Tanpura Acoustic Drone
      ========================================================================== */
   let audioCtx = null;
   let isMusicPlaying = false;
@@ -229,6 +247,7 @@
   function playUnrollChime() {
     try {
       initAudioContext();
+      // Ascending D Major / Yaman harmonic chime
       const notes = [293.66, 369.99, 440.00, 554.37, 587.33, 739.99]; // D4, F#4, A4, C#5, D5, F#5
       const now = audioCtx.currentTime;
 
@@ -237,24 +256,24 @@
         const gain = audioCtx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
 
-        gain.gain.setValueAtTime(0.0001, now + idx * 0.09);
-        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.09 + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.00001, now + idx * 0.09 + 1.8);
+        gain.gain.setValueAtTime(0.0001, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.08 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.00001, now + idx * 0.08 + 1.8);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
-        osc.start(now + idx * 0.09);
-        osc.stop(now + idx * 0.09 + 1.85);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 1.85);
       });
     } catch (e) {
       console.warn('Audio chime error:', e);
     }
   }
 
-  function playMelodyNote(freq, startTime, duration = 2.4, velocity = 0.08) {
+  function playMelodyNote(freq, startTime, duration = 2.4, velocity = 0.075) {
     if (!audioCtx) return;
 
     const osc1 = audioCtx.createOscillator();
@@ -344,7 +363,7 @@
       musicIntervalId = setInterval(playNextPhrase, 8600);
 
     } catch (e) {
-      console.warn('Ambient music failed to start:', e);
+      console.warn('Ambient music error:', e);
     }
   }
 
@@ -361,7 +380,7 @@
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(280, audioCtx.currentTime);
+        filter.frequency.setValueAtTime(260, audioCtx.currentTime);
 
         gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
         gain.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 3.0);
@@ -407,12 +426,12 @@
   });
 
   /* ==========================================================================
-     3. UNDERSTATED GOLD STARDUST PARTICLES CANVAS
+     3. SUNLIT 24K GOLD FLAKE PARTICLE CANVAS
      ========================================================================== */
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
-  const PARTICLE_COUNT = 30;
+  const PARTICLE_COUNT = 32;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -421,7 +440,7 @@
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  class GoldStardust {
+  class GoldLeafFlake {
     constructor() {
       this.reset(true);
     }
@@ -429,15 +448,18 @@
     reset(initial = false) {
       this.x = Math.random() * canvas.width;
       this.y = initial ? Math.random() * canvas.height : -15;
-      this.size = Math.random() * 2.0 + 0.8;
-      this.speedY = Math.random() * 0.4 + 0.15;
-      this.speedX = (Math.random() - 0.5) * 0.3;
-      this.opacity = Math.random() * 0.5 + 0.15;
+      this.size = Math.random() * 2.4 + 1.0;
+      this.speedY = Math.random() * 0.45 + 0.18;
+      this.speedX = (Math.random() - 0.5) * 0.35;
+      this.opacity = Math.random() * 0.45 + 0.2;
+      this.rotation = Math.random() * 360;
+      this.rotSpeed = (Math.random() - 0.5) * 1.5;
     }
 
     update() {
       this.y += this.speedY;
-      this.x += Math.sin(this.y * 0.008) * 0.35 + this.speedX;
+      this.x += Math.sin(this.y * 0.008) * 0.4 + this.speedX;
+      this.rotation += this.rotSpeed;
 
       if (this.y > canvas.height + 15) {
         this.reset(false);
@@ -446,18 +468,20 @@
 
     draw() {
       ctx.save();
-      ctx.fillStyle = `rgba(226, 192, 115, ${this.opacity})`;
-      ctx.shadowColor = 'rgba(250, 238, 194, 0.5)';
-      ctx.shadowBlur = 5;
+      ctx.translate(this.x, this.y);
+      ctx.rotate((this.rotation * Math.PI) / 180);
+      ctx.fillStyle = `rgba(184, 139, 47, ${this.opacity})`;
+      ctx.shadowColor = 'rgba(252, 237, 189, 0.6)';
+      ctx.shadowBlur = 6;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, this.size * 1.3, this.size * 0.8, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
   }
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push(new GoldStardust());
+    particles.push(new GoldLeafFlake());
   }
 
   function animateParticles() {
@@ -471,7 +495,7 @@
   animateParticles();
 
   /* ==========================================================================
-     4. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
+     4. WEDDING COUNTDOWN ENGINE (TARGET: NOVEMBER 28, 2026)
      ========================================================================== */
   const targetDate = new Date('2026-11-28T18:00:00').getTime();
 
@@ -568,7 +592,7 @@
     }, 3000);
   }
 
-  // Initialize on page load
+  // Initialize
   initPullInteractions();
 
 })();
