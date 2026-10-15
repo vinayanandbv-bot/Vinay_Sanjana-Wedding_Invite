@@ -1,22 +1,24 @@
 /**
- * THE ROYAL WEDDING E-INVITATION - MASTER INTERACTION ENGINE
- * - Royal Letter & Red Wax Monogram Seal (P & V) Envelope Experience
- * - Smooth 3D Flap Unfolding & Letter Sliding Interaction (Silent, No Beeps!)
- * - Floating 24K Gold Leaf Dust Particle Canvas
+ * THE ROYAL PALACE WEDDING E-INVITATION - MASTER INTERACTION SCRIPT
+ * - 3D Palace Gates Grand Opening with Crimson Monogram Wax Seal (P & V)
+ * - Pure Visual Elegance: Silent (Zero Beeps/Audio), Zero Toast Popups
+ * - Ambient 24K Gold Leaf Dust Particle Canvas
  * - Real-Time Wedding Countdown Timer (Target: Nov 28, 2026)
- * - Seamless Google Maps & Google Calendar Actions
+ * - One-Tap Google Calendar Sync & Google Maps Navigation
  */
 
-(function() {
+(function () {
   'use strict';
 
   // DOM Elements
   const stageContainer = document.getElementById('stage-container');
-  const envelopeAssembly = document.getElementById('envelope-assembly');
-  const crimsonWaxSeal = document.getElementById('crimson-wax-seal');
-  const envelopeInstruction = document.getElementById('envelope-instruction');
-  const btnCloseEnvelope = document.getElementById('btn-close-envelope');
+  const palacePortal = document.getElementById('palace-portal');
+  const doorsStage = document.getElementById('doors-stage');
+  const centralPalaceSeal = document.getElementById('central-palace-seal');
+  const portalPrompt = document.getElementById('portal-prompt');
+  const btnCloseDoors = document.getElementById('btn-close-doors');
   const btnAddCalendar = document.getElementById('btn-add-calendar');
+  const invitationInner = document.getElementById('invitation-inner');
 
   // Countdown Elements
   const countDays = document.getElementById('count-days');
@@ -24,63 +26,68 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  let isOpened = false;
+  let areGatesOpen = false;
 
   /* ==========================================================================
-     1. ROYAL ENVELOPE OPEN / CLOSE INTERACTION
+     1. 3D ROYAL PALACE GATES OPEN / CLOSE INTERACTION
      ========================================================================== */
-  function openEnvelope() {
-    if (isOpened) return;
-    isOpened = true;
+  function openGates() {
+    if (areGatesOpen) return;
+    areGatesOpen = true;
 
-    // Trigger smooth 3D opening animation
-    stageContainer.classList.add('opened');
+    // Add gates-open class to trigger 3D perspective door swing
+    stageContainer.classList.add('gates-open');
 
-    // Subtle scroll adjustment after opening for comfortable reading flow
+    // Smoothly scroll down towards the revealed royal invitation courtyard
     setTimeout(() => {
-      const card = document.getElementById('invitation-inner');
-      if (card && window.innerWidth <= 768) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (invitationInner) {
+        invitationInner.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 700);
+    }, 750);
   }
 
-  function closeEnvelope() {
-    if (!isOpened) return;
-    isOpened = false;
+  function closeGates() {
+    if (!areGatesOpen) return;
+    areGatesOpen = false;
 
     // Smooth scroll back to top first
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    // Close the palace doors
     setTimeout(() => {
-      stageContainer.classList.remove('opened');
+      stageContainer.classList.remove('gates-open');
     }, 300);
   }
 
-  // Bind Open Handlers
-  if (crimsonWaxSeal) {
-    crimsonWaxSeal.addEventListener('click', (e) => {
+  // Bind Open Gate Triggers
+  if (centralPalaceSeal) {
+    centralPalaceSeal.addEventListener('click', function (e) {
       e.stopPropagation();
-      openEnvelope();
+      openGates();
     });
   }
 
-  if (envelopeAssembly) {
-    envelopeAssembly.addEventListener('click', () => {
-      if (!isOpened) {
-        openEnvelope();
+  if (doorsStage) {
+    doorsStage.addEventListener('click', function () {
+      if (!areGatesOpen) {
+        openGates();
       }
     });
   }
 
-  if (envelopeInstruction) {
-    envelopeInstruction.addEventListener('click', openEnvelope);
+  if (portalPrompt) {
+    portalPrompt.addEventListener('click', function () {
+      if (!areGatesOpen) {
+        openGates();
+      }
+    });
   }
 
-  if (btnCloseEnvelope) {
-    btnCloseEnvelope.addEventListener('click', (e) => {
+  // Bind Close Gate Button
+  if (btnCloseDoors) {
+    btnCloseDoors.addEventListener('click', function (e) {
       e.stopPropagation();
-      closeEnvelope();
+      closeGates();
     });
   }
 
@@ -90,7 +97,7 @@
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
   let particles = [];
-  const PARTICLE_COUNT = 24;
+  const PARTICLE_COUNT = 26;
 
   function resizeCanvas() {
     if (!canvas) return;
@@ -110,11 +117,11 @@
       this.x = Math.random() * canvas.width;
       this.y = initial ? Math.random() * canvas.height : -15;
       this.size = Math.random() * 2.2 + 1.0;
-      this.speedY = Math.random() * 0.4 + 0.16;
+      this.speedY = Math.random() * 0.45 + 0.18;
       this.speedX = (Math.random() - 0.5) * 0.3;
       this.opacity = Math.random() * 0.35 + 0.15;
       this.rotation = Math.random() * 360;
-      this.rotSpeed = (Math.random() - 0.5) * 1.4;
+      this.rotSpeed = (Math.random() - 0.5) * 1.2;
     }
 
     update() {
@@ -150,7 +157,7 @@
 
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
+      particles.forEach((p) => {
         p.update();
         p.draw();
       });
@@ -195,11 +202,15 @@
      4. GOOGLE CALENDAR ONE-TAP SYNC
      ========================================================================== */
   if (btnAddCalendar) {
-    btnAddCalendar.addEventListener('click', (e) => {
+    btnAddCalendar.addEventListener('click', function (e) {
       e.stopPropagation();
       const title = encodeURIComponent('The Royal Wedding of Priyanka & Vikram');
-      const details = encodeURIComponent('Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.');
-      const location = encodeURIComponent('The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001');
+      const details = encodeURIComponent(
+        'Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.'
+      );
+      const location = encodeURIComponent(
+        'The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001'
+      );
       const startTime = '20261128T123000Z';
       const endTime = '20261128T183000Z';
 
@@ -207,5 +218,4 @@
       window.open(gcalUrl, '_blank', 'noopener,noreferrer');
     });
   }
-
 })();

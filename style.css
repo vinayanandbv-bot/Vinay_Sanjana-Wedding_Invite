@@ -86,21 +86,19 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Perfectly centered envelope on load */
-  padding: 40px 14px 60px 14px;
+  justify-content: center; /* Perfectly centered gates on load */
+  padding: 30px 14px 50px 14px;
   z-index: 2;
-  transition: justify-content 0.5s ease, padding 0.5s ease;
+  transition: justify-content 0.6s ease, padding 0.6s ease;
 }
 
-.stage-container.opened {
+.stage-container.gates-open {
   justify-content: flex-start;
-  padding: 24px 12px 70px 12px;
+  padding: 20px 12px 70px 12px;
 }
 
-/* ==========================================================================
-   ROYAL ENVELOPE PRESENTATION SCENE
-   ========================================================================== */
-.envelope-presentation-wrapper {
+/* Grand Palace Scene Wrapper */
+.palace-grand-scene {
   position: relative;
   width: 100%;
   max-width: 660px;
@@ -111,209 +109,272 @@ html, body {
 }
 
 /* ==========================================================================
-   THE ROYAL ENVELOPE ASSEMBLY (3D HAUTE-COUTURE STATIONERY)
+   PALACE PORTAL & 3D ARCHWAY GATES
    ========================================================================== */
-.royal-envelope-assembly {
+.palace-portal-wrapper {
   position: relative;
-  width: min(92vw, 540px);
-  height: 330px;
+  width: min(92vw, 460px);
   margin: 0 auto;
-  perspective: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
-  transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  perspective: 1600px;
   z-index: 20;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), margin 0.8s ease;
 }
 
-.stage-container.opened .royal-envelope-assembly {
-  height: auto;
-  width: 100%;
-  max-width: 660px;
+.stage-container.gates-open .palace-portal-wrapper {
   cursor: default;
+  margin-bottom: 20px;
 }
 
-/* Envelope Back Panel & Gold Damask Interior Lining */
-.envelope-back-panel {
-  position: absolute;
-  inset: 0;
-  background: #fbf9f4;
-  border-radius: 12px;
-  box-shadow: 
-    0 25px 60px rgba(70, 45, 10, 0.22),
-    0 4px 15px rgba(0, 0, 0, 0.08),
-    inset 0 1px 3px rgba(255, 255, 255, 0.9);
-  z-index: 1;
-  overflow: hidden;
-  border: 1.5px solid rgba(184, 139, 47, 0.35);
-  transition: opacity 0.5s ease, height 0.5s ease;
-}
-
-.stage-container.opened .envelope-back-panel {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.envelope-interior-lining {
-  position: absolute;
-  inset: 12px;
-  background: 
-    radial-gradient(ellipse at 50% 30%, #ffffff 0%, #f7f0e4 70%, #eddcc3 100%);
-  border-radius: 8px;
-  border: 1px dashed rgba(184, 139, 47, 0.35);
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(184, 139, 47, 0.07) 1.5px, transparent 1.5px);
-  background-size: 16px 16px;
-}
-
-/* ==========================================================================
-   THE ROYAL LETTER (NESTED IN POCKET, SLIDES UP & EXPANDS ON OPEN)
-   ========================================================================== */
-.envelope-letter-chassis {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  right: 14px;
-  height: calc(100% - 28px);
-  overflow: hidden;
-  z-index: 2;
-  border-radius: 8px;
-  transition: 
-    transform 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-    height 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-    top 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-    left 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-    right 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-    box-shadow 0.6s ease;
-  box-shadow: 0 4px 15px rgba(70, 45, 10, 0.1);
-}
-
-.stage-container.opened .envelope-letter-chassis {
+/* Scalloped Rajputana Palace Archway Crown */
+.palace-arch-crown {
   position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
   width: 100%;
-  height: auto;
-  overflow: visible;
-  z-index: 15;
-  box-shadow: 0 20px 60px rgba(150, 115, 50, 0.18), 0 2px 10px rgba(0, 0, 0, 0.04);
+  height: 85px;
+  margin-bottom: -6px;
+  z-index: 10;
+  filter: drop-shadow(0 6px 16px rgba(70, 45, 10, 0.35));
 }
 
-/* ==========================================================================
-   FRONT POCKET OF ENVELOPE (LOWER V-NECK FLAPS)
-   ========================================================================== */
-.envelope-front-pocket {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  border-radius: 12px;
-  overflow: hidden;
-  pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.stage-container.opened .envelope-front-pocket {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.pocket-bottom-tri {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.arch-svg-shape {
+  width: 100%;
   height: 100%;
-  background: linear-gradient(0deg, #fdfbf7 0%, #ffffff 50%, #f6f0e4 100%);
-  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
-  filter: drop-shadow(0 -5px 12px rgba(80, 50, 15, 0.15));
-  border-bottom: 2px solid #b88b2f;
+  display: block;
 }
 
-.pocket-side-left {
+/* Hanging Temple Bells & Floral Garlands */
+.arch-festoon-decor {
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background: linear-gradient(90deg, #efe6d6 0%, #faf6ee 80%);
-  clip-path: polygon(0 0, 50% 50%, 0 100%);
-  border-left: 2px solid #b88b2f;
-}
-
-.pocket-side-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  background: linear-gradient(-90deg, #efe6d6 0%, #faf6ee 80%);
-  clip-path: polygon(100% 0, 50% 50%, 100% 100%);
-  border-right: 2px solid #b88b2f;
-}
-
-.pocket-rim-gold {
-  position: absolute;
-  inset: 0;
-  border: 1.5px solid rgba(184, 139, 47, 0.45);
-  border-radius: 12px;
-}
-
-/* ==========================================================================
-   TOP TRIANGULAR FLAP (3D ROTATION UPWARD ON CLICK)
-   ========================================================================== */
-.envelope-top-flap {
-  position: absolute;
-  top: 0;
+  bottom: -4px;
   left: 0;
   right: 0;
-  height: 54%;
-  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.bell-tether {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transform-origin: top center;
-  transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), z-index 0.2s 0.3s;
+  animation: bellSway 4s ease-in-out infinite alternate;
 }
 
-.stage-container.opened .envelope-top-flap {
-  transform: rotateX(180deg);
-  z-index: 0;
-  opacity: 0;
-  pointer-events: none;
+.bell-tether.b1 { animation-delay: 0s; }
+.bell-tether.b2 { animation-delay: 0.8s; }
+.bell-tether.b3 { animation-delay: 0.4s; }
+.bell-tether.b4 { animation-delay: 1.2s; }
+
+@keyframes bellSway {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(3deg); }
 }
 
-.flap-triangle {
+.tether-chain {
+  width: 2px;
+  height: 14px;
+  background: repeating-linear-gradient(180deg, #b88b2f, #b88b2f 2px, #fff5cc 2px, #fff5cc 4px);
+}
+
+.golden-bell {
+  font-size: 1rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+}
+
+.arch-garland-swag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d4af37;
+  font-size: 0.9rem;
+  text-shadow: 0 0 8px rgba(255, 230, 160, 0.8);
+  margin-top: 6px;
+}
+
+.garland-flower {
+  color: #e67e22;
+  font-size: 1rem;
+}
+
+/* 3D Doors Perspective Stage */
+.doors-perspective-stage {
   position: relative;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #ffffff 0%, #faf7f0 55%, #efe5d0 100%);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  filter: drop-shadow(0 6px 14px rgba(70, 45, 15, 0.22));
+  height: 440px;
+  display: flex;
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 24px 65px rgba(50, 30, 8, 0.35), 0 4px 15px rgba(0,0,0,0.12);
+  border: 2px solid #b88b2f;
+  border-top: none;
+  background: #1a0c06;
 }
 
-.flap-border-gold {
+/* Individual Palace Door Leaves (3D Swivel) */
+.palace-door {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1.35s ease;
+  z-index: 5;
+}
+
+.palace-door.door-left {
+  transform-origin: left center;
+  border-right: 1px solid rgba(255, 240, 200, 0.25);
+}
+
+.palace-door.door-right {
+  transform-origin: right center;
+  border-left: 1px solid rgba(0, 0, 0, 0.45);
+}
+
+/* 3D Gate Open Transform */
+.stage-container.gates-open .palace-door.door-left {
+  transform: rotateY(-112deg);
+  box-shadow: -15px 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.stage-container.gates-open .palace-door.door-right {
+  transform: rotateY(112deg);
+  box-shadow: 15px 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+/* Door Wood Surface Finish (Antique Teak & Rosewood) */
+.door-leaf-inner {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 92%, #b88b2f 100%);
+  background: 
+    radial-gradient(ellipse at 50% 20%, rgba(255, 235, 180, 0.12) 0%, transparent 60%),
+    linear-gradient(135deg, #2b180d 0%, #442513 30%, #30170a 60%, #1c0d05 100%);
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* Gold Beveled Frame Molding */
+.door-molding-frame {
+  position: absolute;
+  inset: 8px;
+  border: 1.5px solid #b88b2f;
+  border-radius: 4px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.75), 0 0 4px rgba(255, 240, 180, 0.3);
   pointer-events: none;
 }
 
-/* ==========================================================================
-   AUTHENTIC ROYAL CRIMSON WAX SEAL WITH MONOGRAM INITIALS (P & V)
-   ========================================================================== */
-.crimson-wax-seal {
+/* Traditional Carved Panel Matrix */
+.door-panel-matrix {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 14px 10px;
+  gap: 8px;
+  z-index: 2;
+}
+
+.carved-panel {
+  flex: 1;
+  background: linear-gradient(145deg, #180b04 0%, #351a0c 50%, #1f0f07 100%);
+  border: 1.5px solid rgba(184, 139, 47, 0.55);
+  border-radius: 6px;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-gold-flower {
+  color: #dfb755;
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  opacity: 0.9;
+}
+
+/* Antique Brass Studs Along Stile */
+.door-studs-line {
   position: absolute;
-  bottom: -28px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.door-studs-line.left { right: 8px; }
+.door-studs-line.right { left: 8px; }
+
+.brass-stud {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fffbe8 0%, #dfb552 45%, #664610 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Antique Brass Ring Knockers */
+.brass-knocker-mount {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.knocker-left { right: 20px; }
+.knocker-right { left: 20px; }
+
+.knocker-rosette {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fffcee 0%, #d4af37 45%, #593c0c 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.65);
+  border: 1px solid #ffe89e;
+}
+
+.knocker-ring {
+  width: 20px;
+  height: 24px;
+  border: 3.5px solid #d4af37;
+  border-radius: 50%;
+  margin-top: -6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+  background: transparent;
+}
+
+/* Central Royal Ruby Red Wax Monogram Medallion (P & V) */
+.central-palace-seal {
+  position: absolute;
+  top: 50%;
+  left: -38px;
+  transform: translateY(-50%);
   width: 76px;
   height: 76px;
   z-index: 10;
   cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
   user-select: none;
   touch-action: manipulation;
+  transition: transform 0.3s ease;
 }
 
-.crimson-wax-seal:hover {
-  transform: translateX(-50%) scale(1.06);
+.central-palace-seal:hover {
+  transform: translateY(-50%) scale(1.06);
 }
 
 .seal-wax-circle {
@@ -322,10 +383,10 @@ html, body {
   border-radius: 50%;
   background: radial-gradient(circle at 35% 32%, #e62248 0%, #a8122a 50%, #5c0716 100%);
   box-shadow: 
-    0 10px 26px rgba(110, 10, 25, 0.55),
-    0 3px 8px rgba(0, 0, 0, 0.25),
-    inset 0 2.5px 5px rgba(255, 195, 205, 0.7),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.5);
+    0 10px 28px rgba(110, 10, 25, 0.6),
+    0 3px 8px rgba(0, 0, 0, 0.35),
+    inset 0 2.5px 5px rgba(255, 195, 205, 0.75),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -337,8 +398,8 @@ html, body {
   position: absolute;
   inset: 6px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 235, 190, 0.45);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+  border: 1.5px solid rgba(255, 235, 190, 0.5);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
 
@@ -352,7 +413,7 @@ html, body {
 }
 
 .seal-crest-crown {
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   line-height: 1;
   color: #fff4cb;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
@@ -360,7 +421,7 @@ html, body {
 
 .seal-monogram-initials {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 700;
   letter-spacing: 2.5px;
   color: #fff9e0;
@@ -386,6 +447,53 @@ html, body {
 @keyframes sealGlow {
   0% { transform: scale(0.95); opacity: 0.5; }
   100% { transform: scale(1.18); opacity: 0.95; }
+}
+
+/* Door Threshold Prompt */
+.portal-threshold-prompt {
+  margin-top: 26px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  padding: 6px 14px;
+}
+
+.stage-container.gates-open .portal-threshold-prompt {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   ROYAL WEDDING INVITATION (INSIDE THE PALACE COURTYARD)
+   ========================================================================== */
+.invitation-palace-courtyard {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  opacity: 0;
+  transform: scale(0.96);
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stage-container.gates-open .invitation-palace-courtyard {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  height: auto;
+  overflow: visible;
+  margin-top: 18px;
 }
 
 .invitation-inner {
