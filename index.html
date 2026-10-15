@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Royal Wedding Invitation | Priyanka & Vikram</title>
+  
+  <!-- Open Graph / WhatsApp / Social Share Preview -->
+  <meta property="og:title" content="Royal Wedding Invitation | Priyanka & Vikram">
+  <meta property="og:description" content="We joyfully invite you to celebrate our wedding. Pull down the golden thread to unroll our invitation.">
+  <meta property="og:type" content="website">
+  <meta name="description" content="An interactive e-wedding invitation. Pull down the golden thread to unroll the royal scroll and reveal the celebration details.">
+  <meta name="theme-color" content="#1a081a">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+</head>
+<body>
+
+  <!-- Floating Audio & Customizer Action Bar -->
+  <header class="floating-controls" aria-label="Controls">
+    <button id="music-toggle-btn" class="icon-btn" title="Toggle Wedding Music" aria-label="Toggle Wedding Music">
+      <span id="music-icon">🎵</span>
+      <span class="btn-text" id="music-text">Play Music</span>
+    </button>
+    <button id="customize-btn" class="icon-btn" title="Customize Invitation Details" aria-label="Customize Invitation Details">
+      <span>⚙️</span>
+      <span class="btn-text">Personalize</span>
+    </button>
+  </header>
+
+  <!-- Ambient Background Canvas for Sparkles & Rose Petals -->
+  <canvas id="particles-canvas"></canvas>
+  <div class="ambient-glow"></div>
+
+  <!-- Stage Center -->
+  <main class="stage-container">
+    <div class="scroll-wrapper" id="scroll-wrapper">
+      
+      <!-- Top Rod with Ornate Carved Finials -->
+      <div class="scroll-rod top-rod" id="top-rod">
+        <div class="finial left"></div>
+        <div class="finial right"></div>
+      </div>
+
+      <!-- Closed Scroll Ribbon & Wax Medallion (Visible before unrolling) -->
+      <div class="scroll-sash-seal" id="sash-seal">
+        <div class="sash-ribbon"></div>
+        <div class="seal-img-wrapper" id="seal-trigger" title="Click or pull to open">
+          <img src="assets/seal.jpg" alt="Royal Wedding Seal" class="seal-img">
+        </div>
+      </div>
+
+      <!-- Unrolling Parchment Body (Expands dynamically) -->
+      <div class="scroll-body" id="scroll-body">
+        <article class="invitation-inner" id="invitation-inner">
+          
+          <!-- Ornate Vintage Filigree Border -->
+          <div class="ornate-border-frame">
+            <div class="ornate-border-inner"></div>
+            <div class="corner-flourish corner-top-left"></div>
+            <div class="corner-flourish corner-top-right"></div>
+            <div class="corner-flourish corner-bottom-left"></div>
+            <div class="corner-flourish corner-bottom-right"></div>
+          </div>
+
+          <!-- Sacred Invocation -->
+          <div class="sacred-invocation" id="field-invocation">॥ श्री गणेशाय नमः ॥</div>
+
+          <!-- Monogram Crest -->
+          <div class="royal-crest-monogram">
+            <div class="crest-line"></div>
+            <div class="crest-badge" id="field-monogram">P & V</div>
+            <div class="crest-line"></div>
+          </div>
+
+          <p class="invitation-salutation" id="field-salutation">
+            With the divine blessings of Almighty and our ancestors,<br>
+            we joyfully invite you to celebrate the union of love and friendship of
+          </p>
+
+          <!-- Bride & Groom Spotlight -->
+          <section class="couple-showcase">
+            <div class="couple-portrait-container">
+              <img src="assets/couple.jpg" alt="Bride and Groom" id="couple-img">
+            </div>
+
+            <div class="couple-names-block">
+              <h1 class="person-name" id="field-bride-name">Priyanka Sharma</h1>
+              <p class="parentage" id="field-bride-parents">Daughter of Mrs. Sunita & Mr. Rajesh Sharma</p>
+              
+              <div class="ampersand-separator">&</div>
+              
+              <h2 class="person-name" id="field-groom-name">Vikram Malhotra</h2>
+              <p class="parentage" id="field-groom-parents">Son of Mrs. Anita & Mr. Sunil Malhotra</p>
+            </div>
+
+            <p class="romantic-quote" id="field-quote">
+              "Two lives, two souls, joined together in an eternal journey of love, laughter, and togetherness."
+            </p>
+          </section>
+
+          <!-- Live Countdown to The Big Day -->
+          <section class="countdown-section" aria-label="Wedding Countdown">
+            <h3 class="countdown-heading">Counting Down To Our Forever</h3>
+            <div class="countdown-boxes">
+              <div class="time-box">
+                <span class="time-val" id="count-days">00</span>
+                <span class="time-label">Days</span>
+              </div>
+              <div class="time-box">
+                <span class="time-val" id="count-hours">00</span>
+                <span class="time-label">Hours</span>
+              </div>
+              <div class="time-box">
+                <span class="time-val" id="count-mins">00</span>
+                <span class="time-label">Mins</span>
+              </div>
+              <div class="time-box">
+                <span class="time-val" id="count-secs">00</span>
+                <span class="time-label">Secs</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Date, Time, Venue Main Highlight Card -->
+          <section class="event-highlight-card" aria-label="Main Ceremony Details">
+            <h3 class="card-title">✦ The Wedding Celebration ✦</h3>
+            
+            <div class="details-grid">
+              <!-- Date -->
+              <div class="detail-item">
+                <div class="detail-icon">📅</div>
+                <div class="detail-content">
+                  <h4>Date</h4>
+                  <p id="field-event-date">Saturday, November 28, 2026</p>
+                </div>
+              </div>
+
+              <!-- Time -->
+              <div class="detail-item">
+                <div class="detail-icon">⏰</div>
+                <div class="detail-content">
+                  <h4>Time</h4>
+                  <p id="field-event-time">6:00 PM Onwards</p>
+                </div>
+              </div>
+
+              <!-- Venue Name -->
+              <div class="detail-item" style="grid-column: 1 / -1;">
+                <div class="detail-icon">🏰</div>
+                <div class="detail-content">
+                  <h4>Venue</h4>
+                  <p id="field-venue-name">The Grand Royal Heritage Palace & Gardens</p>
+                </div>
+              </div>
+
+              <!-- Venue Full Address -->
+              <div class="detail-item" style="grid-column: 1 / -1;">
+                <div class="detail-icon">📍</div>
+                <div class="detail-content">
+                  <h4>Address</h4>
+                  <p id="field-venue-address">74 Heritage Boulevard, Palace Road, Lake View Enclave, Jaipur, Rajasthan 302001</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons: Google Maps, Calendar, Copy -->
+            <div class="action-buttons-group">
+              <a href="https://maps.google.com/?q=Jaipur+Palace" target="_blank" rel="noopener noreferrer" class="gold-btn" id="btn-map-link">
+                <span>📍 View on Google Maps</span>
+              </a>
+              <button class="outline-btn" id="btn-copy-address" type="button">
+                <span>📋 Copy Address</span>
+              </button>
+              <button class="gold-btn" id="btn-add-calendar" type="button">
+                <span>📅 Add to Google Calendar</span>
+              </button>
+              <button class="outline-btn" id="btn-download-ics" type="button">
+                <span>💾 Apple / Outlook (.ics)</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Wedding Ceremonies / Itinerary -->
+          <section class="itinerary-section" aria-label="Wedding Itinerary">
+            <h3 class="section-header">Wedding Festivities</h3>
+            
+            <div class="timeline-container">
+              <!-- Event 1 -->
+              <div class="timeline-card">
+                <div class="event-top-row">
+                  <h4 class="event-title">Mehendi & Sangeet Night</h4>
+                  <span class="event-badge">Day 1</span>
+                </div>
+                <div class="event-meta">
+                  <span>📅 Friday, Nov 27, 2026</span>
+                  <span>⏰ 5:30 PM Onwards</span>
+                  <span>📍 Royal Courtyard</span>
+                </div>
+                <p class="event-desc">An evening of rhythmic beats, mehendi patterns, music, cocktails and dance performances.</p>
+                <div class="dress-code-tag">👗 Dress Code: Vibrant & Glamorous Ethnic</div>
+              </div>
+
+              <!-- Event 2 -->
+              <div class="timeline-card">
+                <div class="event-top-row">
+                  <h4 class="event-title">Haldi & Phoolon Ki Holi</h4>
+                  <span class="event-badge">Day 2</span>
+                </div>
+                <div class="event-meta">
+                  <span>📅 Saturday, Nov 28, 2026</span>
+                  <span>⏰ 10:00 AM</span>
+                  <span>📍 Poolside Pavilion</span>
+                </div>
+                <p class="event-desc">Soak in golden turmeric blessings and a floral shower of marigolds and rose petals.</p>
+                <div class="dress-code-tag">👗 Dress Code: Sunshine Yellow & Floral Pastels</div>
+              </div>
+
+              <!-- Event 3 -->
+              <div class="timeline-card">
+                <div class="event-top-row">
+                  <h4 class="event-title">Baraat, Varmala & Holy Pheras</h4>
+                  <span class="event-badge">The Wedding</span>
+                </div>
+                <div class="event-meta">
+                  <span>📅 Saturday, Nov 28, 2026</span>
+                  <span>⏰ Baraat: 6:00 PM | Pheras: 8:00 PM</span>
+                  <span>📍 Mandap at Heritage Lawn</span>
+                </div>
+                <p class="event-desc">The sacred vows around the holy fire to unite two hearts in eternal matrimony.</p>
+                <div class="dress-code-tag">👗 Dress Code: Traditional Royal Splendor</div>
+              </div>
+
+              <!-- Event 4 -->
+              <div class="timeline-card">
+                <div class="event-top-row">
+                  <h4 class="event-title">Grand Gala Dinner & Reception</h4>
+                  <span class="event-badge">Celebration</span>
+                </div>
+                <div class="event-meta">
+                  <span>📅 Saturday, Nov 28, 2026</span>
+                  <span>⏰ 9:30 PM Onwards</span>
+                  <span>📍 Crystal Ballroom</span>
+                </div>
+                <p class="event-desc">A royal culinary feast, champagne toasts, and heartfelt celebrations into the night.</p>
+                <div class="dress-code-tag">👗 Dress Code: Black Tie / Regal Elegance</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Interactive RSVP Form -->
+          <section class="rsvp-section" id="rsvp-section" aria-label="RSVP Form">
+            <h3 class="section-header">Kindly RSVP</h3>
+            <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 20px; font-style: italic;">
+              Your presence will make our celebration complete. Please let us know if you can join us by November 15, 2026.
+            </p>
+
+            <form class="rsvp-form" id="rsvp-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="rsvp-guest-name">Full Name *</label>
+                  <input type="text" id="rsvp-guest-name" required placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                  <label for="rsvp-guest-email">Phone or Email *</label>
+                  <input type="text" id="rsvp-guest-email" required placeholder="contact@example.com">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Will You Grace Us With Your Presence? *</label>
+                <div class="rsvp-options-radio">
+                  <label class="radio-item">
+                    <input type="radio" name="attendance" value="Joyfully Accepts" checked>
+                    Joyfully Accepts
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="attendance" value="Regretfully Declines">
+                    Regretfully Declines
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="rsvp-guest-count">Total Guests Attending</label>
+                  <select id="rsvp-guest-count">
+                    <option value="1">1 Person</option>
+                    <option value="2" selected>2 Persons</option>
+                    <option value="3">3 Persons</option>
+                    <option value="4">4 Persons</option>
+                    <option value="5+">5+ Persons</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="rsvp-diet">Dietary Preference</label>
+                  <select id="rsvp-diet">
+                    <option value="Vegetarian">Pure Vegetarian</option>
+                    <option value="Jain">Jain Friendly</option>
+                    <option value="Non-Veg">Non-Vegetarian</option>
+                    <option value="Vegan">Vegan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="rsvp-wishes">A Blessing or Note for the Couple</label>
+                <textarea id="rsvp-wishes" rows="2" placeholder="Write your warm wishes for the bride & groom..."></textarea>
+              </div>
+
+              <button type="submit" class="gold-btn" style="align-self: center; margin-top: 10px;">
+                <span>✨ Send RSVP & Blessing</span>
+              </button>
+
+              <div class="rsvp-success-banner" id="rsvp-success-banner">
+                🎉 Thank you! Your RSVP and heartfelt blessing have been received. We can't wait to celebrate with you!
+              </div>
+            </form>
+          </section>
+
+          <!-- Interactive Blessings Wall -->
+          <section class="blessings-wall" aria-label="Blessings Wall">
+            <h3 class="section-header">Blessings Wall</h3>
+            <div class="wishes-list" id="wishes-list">
+              <div class="wish-bubble">
+                <div class="wish-author">The Sharma Family</div>
+                <div class="wish-message">"Wishing both of you a lifetime of boundless love, laughter, and blessed moments together!"</div>
+              </div>
+              <div class="wish-bubble">
+                <div class="wish-author">Aakash & Neha</div>
+                <div class="wish-message">"Heartiest congratulations! Can't wait to dance at the Sangeet and celebrate the most magical couple!"</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Love Story Milestones -->
+          <section class="gallery-section" aria-label="Love Story">
+            <h3 class="section-header">Our Journey of Love</h3>
+            <div class="gallery-grid">
+              <div class="gallery-card">
+                <img src="assets/couple.jpg" alt="When We Met">
+                <h5>The First Glance</h5>
+                <span>Coffee, Endless Conversations & 2022</span>
+              </div>
+              <div class="gallery-card">
+                <img src="assets/couple.jpg" alt="The Adventures">
+                <h5>The Adventures</h5>
+                <span>Mountains, Sunsets & Countless Smiles</span>
+              </div>
+              <div class="gallery-card">
+                <img src="assets/couple.jpg" alt="The Proposal">
+                <h5>She Said Yes!</h5>
+                <span>Under the stars with tears of pure joy</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Footer Warm Regards & Hosts -->
+          <footer class="invitation-footer">
+            <p class="family-hosts" id="field-footer-hosts">
+              With Warm Blessings & Regards:<br>
+              <strong>The Sharma & Malhotra Families</strong>
+            </p>
+            <div class="warm-regards">We Await Your Gracious Presence</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-sans);">
+              For queries or assistance: +91 98765 43210 / +91 98765 12345
+            </p>
+
+            <!-- Roll Back Up Replay Button -->
+            <button class="rollup-trigger-btn" id="btn-roll-up" type="button">
+              ▲ Roll Up Scroll (Replay Opening)
+            </button>
+          </footer>
+
+        </article>
+      </div>
+
+      <!-- Lower Rod with Carved Finials (Follows drag or moves down) -->
+      <div class="scroll-rod bottom-rod" id="bottom-rod">
+        <div class="finial left"></div>
+        <div class="finial right"></div>
+      </div>
+
+      <!-- Golden Pull Thread & Tassel Assembly -->
+      <div class="thread-assembly" id="thread-assembly" title="Pull down or tap to open scroll">
+        <div class="pull-thread" id="pull-thread"></div>
+        <div class="thread-pendant" id="thread-pendant">
+          <div class="thread-ring">
+            <div class="ring-gem"></div>
+          </div>
+          <div class="thread-tassel"></div>
+        </div>
+      </div>
+
+      <!-- Instruction Prompt Underneath -->
+      <div class="pull-instruction" id="pull-instruction">
+        <div class="instruction-main">
+          <span class="down-arrow-bounce">⇣</span>
+          <span>Pull down the thread to unroll the invitation</span>
+          <span class="down-arrow-bounce">⇣</span>
+        </div>
+        <div class="instruction-sub">(or tap the thread to open)</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Slide-Out Personalization / Live Customizer Drawer -->
+  <aside class="customizer-drawer" id="customizer-drawer" aria-label="Personalization Drawer">
+    <div class="drawer-header">
+      <h3>Personalize Invitation</h3>
+      <button class="drawer-close-btn" id="drawer-close-btn" aria-label="Close">&times;</button>
+    </div>
+    <div class="drawer-body">
+      <p style="font-size: 0.8rem; color: #cca86b; font-family: var(--font-sans);">
+        Customize placeholders in real-time. Changes are immediately visible and saved in your browser!
+      </p>
+
+      <div class="drawer-field">
+        <label for="input-bride-name">Bride Name</label>
+        <input type="text" id="input-bride-name" value="Priyanka Sharma">
+      </div>
+      <div class="drawer-field">
+        <label for="input-bride-parents">Bride's Parents</label>
+        <input type="text" id="input-bride-parents" value="Daughter of Mrs. Sunita & Mr. Rajesh Sharma">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-groom-name">Groom Name</label>
+        <input type="text" id="input-groom-name" value="Vikram Malhotra">
+      </div>
+      <div class="drawer-field">
+        <label for="input-groom-parents">Groom's Parents</label>
+        <input type="text" id="input-groom-parents" value="Son of Mrs. Anita & Mr. Sunil Malhotra">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-monogram">Monogram Initials</label>
+        <input type="text" id="input-monogram" value="P & V">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-date">Wedding Date</label>
+        <input type="text" id="input-date" value="Saturday, November 28, 2026">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-time">Time</label>
+        <input type="text" id="input-time" value="6:00 PM Onwards">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-countdown-target">Countdown Date (YYYY-MM-DD)</label>
+        <input type="date" id="input-countdown-target" value="2026-11-28">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-venue-name">Venue Name</label>
+        <input type="text" id="input-venue-name" value="The Grand Royal Heritage Palace & Gardens">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-venue-address">Venue Address</label>
+        <textarea id="input-venue-address" rows="3">74 Heritage Boulevard, Palace Road, Lake View Enclave, Jaipur, Rajasthan 302001</textarea>
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-maps-url">Google Maps URL</label>
+        <input type="text" id="input-maps-url" value="https://maps.google.com/?q=Jaipur+Palace">
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-quote">Romantic Quote</label>
+        <textarea id="input-quote" rows="2">"Two lives, two souls, joined together in an eternal journey of love, laughter, and togetherness."</textarea>
+      </div>
+
+      <div class="drawer-field">
+        <label for="input-footer-hosts">Family Hosts</label>
+        <input type="text" id="input-footer-hosts" value="The Sharma & Malhotra Families">
+      </div>
+    </div>
+    
+    <div class="drawer-footer">
+      <button class="gold-btn" id="btn-save-customization" style="flex: 1;">
+        💾 Save Changes
+      </button>
+      <button class="outline-btn" id="btn-reset-customization" style="color: #fef0be; border-color: #cca86b;">
+        🔄 Reset
+      </button>
+    </div>
+  </aside>
+
+  <!-- Toast Notification Message -->
+  <div class="toast-notice" id="toast-notice">Notice</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
