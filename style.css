@@ -114,19 +114,28 @@ html, body {
 .scroll-dowel {
   position: relative;
   width: 100%;
-  height: 36px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 20;
+  z-index: 25;
+  filter: drop-shadow(0 8px 16px rgba(70, 45, 10, 0.32));
+}
+
+.scroll-dowel.top-dowel {
+  margin-bottom: -3px;
+}
+
+.scroll-dowel.bottom-dowel {
+  margin-top: -3px;
 }
 
 .dowel-shaft {
   flex: 1;
-  height: 24px;
+  height: 22px;
   background: var(--gold-dowel);
-  border-radius: 4px;
-  box-shadow: 0 8px 22px rgba(80, 50, 10, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 6px rgba(0, 0, 0, 0.45);
+  border-radius: 3px;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.75), inset 0 -2px 5px rgba(0, 0, 0, 0.5);
   position: relative;
   overflow: hidden;
 }
@@ -137,146 +146,245 @@ html, body {
   left: 0;
   right: 0;
   height: 4px;
-  background: rgba(255, 255, 255, 0.65);
-  filter: blur(1px);
+  background: rgba(255, 255, 255, 0.75);
+  filter: blur(0.8px);
 }
 
-.dowel-finial {
-  width: 26px;
-  height: 36px;
-  background: radial-gradient(circle at 35% 35%, #fffdf5 0%, #ecd896 35%, #b88b2f 70%, #4f3510 100%);
-  border-radius: 50% 8px 8px 50%;
-  box-shadow: 0 4px 12px rgba(80, 50, 10, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.7);
-  flex-shrink: 0;
-}
-
-.dowel-finial.right {
-  border-radius: 8px 50% 50% 8px;
-}
-
-/* ==========================================================================
-   REALISTIC 3D CLOSED SCROLL CYLINDER (EMBOSSED WHITE DAMASK PAPER)
-   ========================================================================== */
-.realistic-scroll-assembly {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: opacity 0.4s ease, height 0.4s ease, transform 0.4s ease;
-}
-
-.realistic-scroll-assembly.hidden {
-  display: none;
-  opacity: 0;
-  height: 0;
-}
-
-.scroll-paper-cylinder {
-  position: relative;
-  width: calc(100% - 24px);
-  height: 165px;
-  margin: -4px auto;
-  border-radius: 6px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 16px 38px rgba(110, 80, 30, 0.28), 0 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: none;
-}
-
-/* Photorealistic Embossed Paper Texture Overlay */
-.cylinder-texture {
+.dowel-core-band {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('assets/scroll_cover.jpg') center 42%/cover no-repeat;
-  filter: contrast(1.04) brightness(1.02);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 28px,
+    rgba(255, 245, 205, 0.3) 28px,
+    rgba(79, 53, 16, 0.4) 30px
+  );
+  pointer-events: none;
 }
 
-.cylinder-texture::after {
+.dowel-finial {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.dowel-finial.left {
+  flex-direction: row;
+}
+
+.dowel-finial.right {
+  flex-direction: row;
+}
+
+.finial-tip {
+  width: 8px;
+  height: 14px;
+  background: radial-gradient(circle at 40% 40%, #fff7d6 0%, #b88b2f 60%, #4a300a 100%);
+  border-radius: 50% 2px 2px 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dowel-finial.right .finial-tip {
+  border-radius: 2px 50% 50% 2px;
+}
+
+.finial-ring {
+  width: 6px;
+  height: 26px;
+  background: linear-gradient(180deg, #ffe7a3 0%, #a87920 50%, #4a300a 100%);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  margin: 0 1px;
+}
+
+.finial-bulb {
+  width: 18px;
+  height: 34px;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fcedbd 25%, #b88b2f 65%, #3d2305 100%);
+  border-radius: 50% 8px 8px 50%;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 10px rgba(50, 30, 8, 0.4);
+}
+
+.dowel-finial.right .finial-bulb {
+  border-radius: 8px 50% 50% 8px;
+}
+
+/* ==========================================================================
+   AUTHENTIC ROYAL SCROLL ASSEMBLY
+   ========================================================================== */
+.royal-scroll-assembly {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Traveling Bottom Roller Assembly */
+.traveling-roller-assembly {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.05s linear;
+  z-index: 20;
+}
+
+/* Rolled Paper Cylinder (Realistic 3D Parchment Roll - No Awkward Circles!) */
+.rolled-scroll-cylinder {
+  position: relative;
+  width: calc(100% - 28px);
+  height: 145px;
+  margin: -4px auto;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 
+    0 16px 36px rgba(80, 50, 15, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  transition: height 0.65s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease, margin 0.5s ease;
+  touch-action: none;
+}
+
+.stage-container.unrolled .rolled-scroll-cylinder {
+  height: 0px;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.cylinder-paper-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #faf7f0;
+  background-image: 
+    linear-gradient(
+      180deg,
+      rgba(45, 28, 8, 0.35) 0%,
+      rgba(140, 100, 45, 0.15) 8%,
+      rgba(255, 255, 255, 0.8) 22%,
+      rgba(253, 251, 245, 1) 48%,
+      rgba(242, 233, 218, 0.95) 75%,
+      rgba(100, 70, 25, 0.3) 94%,
+      rgba(40, 22, 5, 0.55) 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cylinder-paper-shadow-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(180deg, rgba(35, 20, 5, 0.45) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.cylinder-paper-shadow-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: linear-gradient(0deg, rgba(35, 20, 5, 0.5) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.cylinder-paper-highlight {
+  position: absolute;
+  top: 22%;
+  left: 0;
+  right: 0;
+  height: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  filter: blur(1.5px);
+}
+
+/* Subtle Embossed Floral Damask Watermark on Rolled Paper */
+.cylinder-damask-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 50% 50%, rgba(184, 139, 47, 0.08) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Elegant Braided Gold Ribbon Band Tied Around Scroll Waist */
+.cylinder-gold-ribbon-band {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 18px;
+  transform: translateY(-50%);
+  background: linear-gradient(
+    180deg,
+    #7a5210 0%,
+    #d4af37 25%,
+    #fff7db 50%,
+    #c4982e 75%,
+    #5c3d0a 100%
+  );
+  box-shadow: 
+    0 3px 8px rgba(45, 25, 5, 0.35),
+    0 -2px 6px rgba(45, 25, 5, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+}
+
+.cylinder-gold-ribbon-band::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(70, 45, 10, 0.25) 0%,
-    rgba(255, 255, 255, 0.3) 22%,
-    rgba(255, 255, 255, 0) 50%,
-    rgba(255, 255, 255, 0.15) 75%,
-    rgba(50, 30, 5, 0.35) 100%
+  background: repeating-linear-gradient(
+    45deg,
+    transparent 0px,
+    transparent 4px,
+    rgba(255, 255, 255, 0.4) 4px,
+    rgba(255, 255, 255, 0.4) 6px,
+    rgba(70, 45, 10, 0.3) 6px,
+    rgba(70, 45, 10, 0.3) 8px
   );
-  pointer-events: none;
-}
-
-.cylinder-paper-crease {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: rgba(120, 85, 30, 0.2);
-  z-index: 2;
-}
-
-.cylinder-paper-crease.top { top: 6px; }
-.cylinder-paper-crease.bottom { bottom: 6px; }
-
-/* Wax Seal Centered on Roll */
-.wax-seal-anchor {
-  position: relative;
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.65), 0 8px 22px rgba(60, 40, 10, 0.4);
-  overflow: hidden;
-  border: 3px solid #fff6d6;
-  z-index: 5;
-  touch-action: none;
-  animation: sealPulse 4s ease-in-out infinite alternate;
-}
-
-@keyframes sealPulse {
-  0% { transform: scale(1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.5), 0 6px 18px rgba(60, 40, 10, 0.35); }
-  100% { transform: scale(1.04); box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 10px 28px rgba(60, 40, 10, 0.45); }
-}
-
-.wax-seal-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* ==========================================================================
-   UNROLLED ROYAL INVITATION PARCHMENT
+   UNROLLING PARCHMENT VIEWPORT
    ========================================================================== */
-.unrolled-parchment-body {
+.parchment-viewport {
   position: relative;
   width: 100%;
-  overflow: hidden;
   height: 0px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: height 0.05s linear;
 }
 
-.unrolled-parchment-body.smooth-transition {
-  transition: height 1.25s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.static-top-dowel {
-  margin-bottom: -4px;
-}
-
-.dynamic-bottom-dowel {
-  margin-top: -4px;
+.parchment-viewport.smooth-transition {
+  transition: height 1.35s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .invitation-inner {
@@ -614,65 +722,48 @@ html, body {
   color: var(--text-muted);
 }
 
-/* Action Buttons */
+/* Action Buttons - Perfectly Centered Royal Pair */
 .ceremony-actions {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 9px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
   width: 100%;
+  margin: 10px auto 0 auto;
 }
 
 .royal-btn-gold {
   background: var(--gold-foil);
   color: #1a081a;
   border: 1px solid #be9031;
-  padding: 10px 10px;
-  border-radius: 25px;
+  padding: 12px 24px;
+  border-radius: 28px;
   font-family: var(--font-sans);
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   text-decoration: none;
-  box-shadow: 0 4px 12px rgba(184, 139, 47, 0.35);
-  min-height: 42px;
+  box-shadow: 0 4px 15px rgba(184, 139, 47, 0.35);
+  min-height: 44px;
   transition: all 0.25s ease;
 }
 
 .royal-btn-gold:hover {
-  box-shadow: 0 6px 18px rgba(184, 139, 47, 0.5);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(184, 139, 47, 0.55);
+  transform: translateY(-2px);
 }
 
-.royal-btn-outline {
-  background: #ffffff;
-  color: var(--gold-dark);
-  border: 1.5px solid var(--gold-primary);
-  padding: 9px 10px;
-  border-radius: 25px;
-  font-family: var(--font-sans);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-decoration: none;
-  min-height: 42px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
-}
-
-.royal-btn-outline:hover {
-  background: var(--gold-primary);
-  color: #ffffff;
-  transform: translateY(-1px);
+.btn-svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .btn-svg {
@@ -823,6 +914,9 @@ html, body {
 /* ==========================================================================
    HANGING SILK GOLD CORD & WEIGHTED TASSEL
    ========================================================================== */
+/* ==========================================================================
+   HANGING SILK GOLD CORD & WEIGHTED TASSEL (ANCHORED TO MOVING ROLLER)
+   ========================================================================== */
 .thread-assembly {
   position: relative;
   display: flex;
@@ -833,10 +927,21 @@ html, body {
   user-select: none;
   touch-action: none;
   padding: 6px 20px;
+  transition: opacity 0.4s ease, height 0.4s ease;
 }
 
 .thread-assembly:active {
   cursor: grabbing;
+}
+
+.stage-container.unrolled .thread-assembly,
+.stage-container.unrolled .pull-instruction {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .pull-thread {
@@ -863,7 +968,7 @@ html, body {
   align-items: center;
   position: relative;
   transform-origin: top center;
-  animation: regalSway 4s ease-in-out infinite alternate;
+  animation: regalSway 4.5s ease-in-out infinite alternate;
 }
 
 @keyframes regalSway {
@@ -871,44 +976,50 @@ html, body {
   100% { transform: rotate(2.5deg); }
 }
 
-.thread-ring {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 3.5px solid #fff5cc;
-  background: radial-gradient(circle, #ecd896 0%, #9e7220 85%);
-  box-shadow: 0 4px 12px rgba(80, 50, 10, 0.35), 0 0 14px rgba(212, 175, 55, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.thread-knot {
+  width: 10px;
+  height: 6px;
+  background: #8e6216;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
-.ring-gem {
-  width: 8px;
-  height: 8px;
-  background: #781026;
+.thread-gold-bead {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  box-shadow: 0 0 6px #c41e42;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #faedd0 30%, #c4982e 70%, #5c3d0a 100%);
+  box-shadow: 0 4px 10px rgba(70, 45, 10, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.7);
+  margin-top: -2px;
 }
 
-.thread-tassel {
-  width: 20px;
-  height: 44px;
-  background: linear-gradient(180deg, #c59b27 0%, #8e6216 35%, #faedd0 65%, #781026 100%);
-  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+.thread-silk-tassel {
+  width: 24px;
+  height: 52px;
+  background: linear-gradient(180deg, #c59b27 0%, #8e6216 30%, #faedd0 60%, #b88b2f 100%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
   margin-top: -3px;
   position: relative;
-  box-shadow: 0 6px 14px rgba(70, 45, 10, 0.3);
+  box-shadow: 0 6px 14px rgba(70, 45, 10, 0.35);
 }
 
-.thread-tassel::after {
+.thread-silk-tassel::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  width: 100%;
-  height: 8px;
-  background: repeating-linear-gradient(90deg, #c59b27, #c59b27 2px, #4d330c 2px, #4d330c 4px);
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(255, 255, 255, 0.28) 2px,
+    rgba(255, 255, 255, 0.28) 3px,
+    rgba(60, 35, 5, 0.32) 3px,
+    rgba(60, 35, 5, 0.32) 4px
+  );
+  pointer-events: none;
 }
 
 /* Prompt Underneath Thread */
@@ -949,46 +1060,30 @@ html, body {
   color: var(--text-muted);
 }
 
-/* Toast */
+/* Discreet Toast Utility (Quiet mode) */
 .toast-notice {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: #ffffff;
-  border: 1.5px solid var(--gold-primary);
-  color: var(--gold-dark);
-  padding: 10px 22px;
-  border-radius: 30px;
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 600;
-  box-shadow: 0 8px 25px rgba(184, 139, 47, 0.25);
-  z-index: 3000;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-  opacity: 0;
-  pointer-events: none;
-  max-width: 90vw;
-  text-align: center;
+  display: none !important;
 }
 
-.toast-notice.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
-/* Mobile Breakpoints */
-@media (max-width: 480px) {
+/* Responsive Breakpoints (Mobile First) */
+@media (max-width: 520px) {
   .stage-container {
-    padding: 35px 8px 45px 8px;
+    padding: 30px 10px 45px 10px;
   }
-  .scroll-paper-cylinder {
-    height: 140px;
+  .rolled-scroll-cylinder {
+    height: 125px;
   }
   .invitation-inner {
-    padding: 38px 14px;
+    padding: 36px 14px;
   }
   .ceremony-actions {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+  }
+  .royal-btn-gold {
+    width: 100%;
+    max-width: 290px;
   }
 }

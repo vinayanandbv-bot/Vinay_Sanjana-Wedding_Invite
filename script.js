@@ -1,11 +1,11 @@
 /**
  * THE ROYAL WEDDING E-INVITATION - MASTER INTERACTION ENGINE
- * - Silent, Realistic 3D Scroll Unroll Animation (NO beep music!)
- * - Physical Touch & Mouse Drag Gesture Tracking
- * - Tap-to-Open Fallback on Cylinder, Wax Seal, Dowel & Prompt
- * - Luminous 24K Gold Leaf Dust Particle Canvas
- * - Real-Time Wedding Countdown Engine
- * - One-Tap Google Maps, Google Calendar, Apple/Outlook (.ICS) & Copy Address
+ * - Realistic Physical Scroll Unrolling Physics (Zero beep noises!)
+ * - Fluid Mobile Touch & Drag Gestures with Natural Inertia
+ * - Tap-to-Open Fallbacks on Tassel, Rolled Scroll, Dowel & Hint
+ * - Pure 24K Gold Dust Floating Particle Canvas
+ * - Real-Time Wedding Countdown Engine (Target: Nov 28, 2026)
+ * - Seamless Google Maps & Google Calendar Actions
  */
 
 (function() {
@@ -14,21 +14,16 @@
   // DOM Elements
   const stageContainer = document.getElementById('stage-container');
   const scrollWrapper = document.getElementById('scroll-wrapper');
-  const closedScrollAssembly = document.getElementById('closed-scroll-assembly');
-  const scrollCylinderTrigger = document.getElementById('scroll-cylinder-trigger');
-  const scrollBody = document.getElementById('scroll-body');
+  const parchmentViewport = document.getElementById('parchment-viewport');
   const invitationInner = document.getElementById('invitation-inner');
-  const bottomDowelClosed = document.getElementById('bottom-dowel-closed');
+  const travelingRoller = document.getElementById('traveling-roller');
+  const scrollCylinderTrigger = document.getElementById('scroll-cylinder-trigger');
+  const bottomDowel = document.getElementById('bottom-dowel');
   const threadAssembly = document.getElementById('thread-assembly');
   const pullThread = document.getElementById('pull-thread');
   const pullInstruction = document.getElementById('pull-instruction');
   const btnRollUp = document.getElementById('btn-roll-up');
-  const toastNotice = document.getElementById('toast-notice');
-
-  // Action Buttons
-  const btnCopyAddress = document.getElementById('btn-copy-address');
   const btnAddCalendar = document.getElementById('btn-add-calendar');
-  const btnDownloadIcs = document.getElementById('btn-download-ics');
 
   // Countdown Elements
   const countDays = document.getElementById('count-days');
@@ -36,20 +31,20 @@
   const countMins = document.getElementById('count-mins');
   const countSecs = document.getElementById('count-secs');
 
-  // Interaction & Physics State
+  // Interaction State
   let isUnrolled = false;
   let isDragging = false;
   let startY = 0;
   let currentDragY = 0;
   let activePointerId = null;
-  const DRAG_THRESHOLD = 75; // Comfortable finger pull distance on mobile
+  const DRAG_THRESHOLD = 65; // Highly responsive on mobile screens
   const BASE_THREAD_HEIGHT = 85;
 
   /* ==========================================================================
-     1. PHYSICAL PULL-DOWN & UNROLL INTERACTIONS (SILENT & SMOOTH)
+     1. PHYSICAL PULL-DOWN & UNROLL INTERACTIONS
      ========================================================================== */
   function initPullInteractions() {
-    const pullTargets = [threadAssembly, scrollCylinderTrigger, bottomDowelClosed, pullInstruction];
+    const pullTargets = [threadAssembly, scrollCylinderTrigger, bottomDowel, pullInstruction];
 
     pullTargets.forEach(el => {
       if (!el) return;
@@ -60,16 +55,16 @@
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
 
-    // Instant Tap-to-Open Fallbacks (Intuitive for Mobile Phones)
+    // Instant Tap-to-Open Fallbacks (Optimized for Smartphone Users)
     if (scrollCylinderTrigger) {
       scrollCylinderTrigger.addEventListener('click', () => {
-        if (!isUnrolled && currentDragY < 12) unrollScroll();
+        if (!isUnrolled && currentDragY < 10) unrollScroll();
       });
     }
 
     if (threadAssembly) {
       threadAssembly.addEventListener('click', () => {
-        if (!isUnrolled && currentDragY < 12) unrollScroll();
+        if (!isUnrolled && currentDragY < 10) unrollScroll();
       });
     }
 
@@ -97,7 +92,7 @@
       }
     } catch (err) {}
 
-    scrollBody.classList.remove('smooth-transition');
+    parchmentViewport.classList.remove('smooth-transition');
   }
 
   function onPointerMove(e) {
@@ -106,19 +101,18 @@
     const deltaY = e.clientY - startY;
 
     if (deltaY > 0) {
-      // Prevent mobile page bouncing during pull gesture
+      // Prevent mobile page rubber-banding during finger pull
       if (e.cancelable) e.preventDefault();
 
-      currentDragY = Math.min(deltaY, 260);
+      currentDragY = Math.min(deltaY, 280);
 
-      // Dynamically stretch parchment & cord
-      scrollBody.style.height = `${currentDragY}px`;
-      pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.22}px`;
+      // Dynamically unfurl the parchment in real-time under finger
+      parchmentViewport.style.height = `${currentDragY}px`;
+      pullThread.style.height = `${BASE_THREAD_HEIGHT + currentDragY * 0.18}px`;
 
-      // Squeeze and fade closed scroll roll as it unfurls
-      const progress = currentDragY / 140;
-      closedScrollAssembly.style.opacity = Math.max(0, 1 - progress);
-      closedScrollAssembly.style.transform = `scaleY(${Math.max(0.6, 1 - progress * 0.4)})`;
+      // Gently fade the rolled cylinder as the parchment unfolds
+      const progress = currentDragY / 150;
+      scrollCylinderTrigger.style.opacity = Math.max(0.1, 1 - progress);
     }
   }
 
@@ -138,75 +132,64 @@
     if (currentDragY >= DRAG_THRESHOLD) {
       unrollScroll();
     } else {
-      // Spring back to closed state
-      scrollBody.classList.add('smooth-transition');
-      scrollBody.style.height = '0px';
+      // Smooth spring back to resting rolled position
+      parchmentViewport.classList.add('smooth-transition');
+      parchmentViewport.style.height = '0px';
       pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
-      closedScrollAssembly.style.opacity = '1';
-      closedScrollAssembly.style.transform = 'scaleY(1)';
+      scrollCylinderTrigger.style.opacity = '1';
     }
   }
 
   function unrollScroll() {
     isUnrolled = true;
     stageContainer.classList.add('unrolled');
-    scrollBody.classList.add('smooth-transition');
+    parchmentViewport.classList.add('smooth-transition');
 
-    // Calculate full content height including dowels and padding
-    const fullHeight = invitationInner.scrollHeight + 70;
-    scrollBody.style.height = `${fullHeight}px`;
+    // Calculate full content height
+    const fullHeight = invitationInner.scrollHeight + 14;
+    parchmentViewport.style.height = `${fullHeight}px`;
     pullThread.style.height = `${BASE_THREAD_HEIGHT}px`;
 
-    // Hide closed scroll assembly and instruction prompt smoothly (NO beeps!)
-    closedScrollAssembly.classList.add('hidden');
-    pullInstruction.style.opacity = '0';
-    pullInstruction.style.pointerEvents = 'none';
-
-    showToast('The Royal Wedding Invitation is revealed');
-
-    // Set height to auto after unroll transition for responsive orientation and content flow
+    // Seamless unrolling (Completely silent, no intrusive notifications!)
     setTimeout(() => {
       if (isUnrolled) {
-        scrollBody.style.height = 'auto';
+        parchmentViewport.style.height = 'auto';
       }
-    }, 1300);
+    }, 1400);
   }
 
   function rollupScroll() {
     isUnrolled = false;
 
-    // Lock to current height first
-    const currentHeight = invitationInner.scrollHeight + 70;
-    scrollBody.style.height = `${currentHeight}px`;
-    void scrollBody.offsetHeight;
+    // Lock to explicit height first for smooth CSS collapse
+    const currentHeight = invitationInner.scrollHeight + 14;
+    parchmentViewport.style.height = `${currentHeight}px`;
+    void parchmentViewport.offsetHeight;
 
-    scrollBody.classList.add('smooth-transition');
-    scrollBody.style.height = '0px';
+    parchmentViewport.classList.add('smooth-transition');
+    parchmentViewport.style.height = '0px';
 
-    closedScrollAssembly.classList.remove('hidden');
-    closedScrollAssembly.style.opacity = '1';
-    closedScrollAssembly.style.transform = 'scaleY(1)';
-    pullInstruction.style.opacity = '1';
-    pullInstruction.style.pointerEvents = 'auto';
+    scrollCylinderTrigger.style.opacity = '1';
 
     setTimeout(() => {
       if (!isUnrolled) {
         stageContainer.classList.remove('unrolled');
       }
-    }, 380);
+    }, 450);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /* ==========================================================================
-     2. SUNLIT 24K GOLD FLAKE PARTICLE CANVAS
+     2. AMBIENT 24K GOLD LEAF DUST CANVAS
      ========================================================================== */
   const canvas = document.getElementById('particles-canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas ? canvas.getContext('2d') : null;
   let particles = [];
-  const PARTICLE_COUNT = 28;
+  const PARTICLE_COUNT = 26;
 
   function resizeCanvas() {
+    if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
@@ -219,17 +202,19 @@
     }
 
     reset(initial = false) {
+      if (!canvas) return;
       this.x = Math.random() * canvas.width;
       this.y = initial ? Math.random() * canvas.height : -15;
       this.size = Math.random() * 2.2 + 1.0;
       this.speedY = Math.random() * 0.4 + 0.16;
       this.speedX = (Math.random() - 0.5) * 0.3;
-      this.opacity = Math.random() * 0.4 + 0.18;
+      this.opacity = Math.random() * 0.38 + 0.16;
       this.rotation = Math.random() * 360;
       this.rotSpeed = (Math.random() - 0.5) * 1.4;
     }
 
     update() {
+      if (!canvas) return;
       this.y += this.speedY;
       this.x += Math.sin(this.y * 0.008) * 0.35 + this.speedX;
       this.rotation += this.rotSpeed;
@@ -240,12 +225,13 @@
     }
 
     draw() {
+      if (!ctx) return;
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate((this.rotation * Math.PI) / 180);
       ctx.fillStyle = `rgba(184, 139, 47, ${this.opacity})`;
-      ctx.shadowColor = 'rgba(252, 237, 189, 0.5)';
-      ctx.shadowBlur = 5;
+      ctx.shadowColor = 'rgba(252, 237, 189, 0.45)';
+      ctx.shadowBlur = 4;
       ctx.beginPath();
       ctx.ellipse(0, 0, this.size * 1.3, this.size * 0.8, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -253,19 +239,21 @@
     }
   }
 
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push(new GoldLeafFlake());
-  }
+  if (canvas && ctx) {
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new GoldLeafFlake());
+    }
 
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    requestAnimationFrame(animateParticles);
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
   }
-  animateParticles();
 
   /* ==========================================================================
      3. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
@@ -273,6 +261,7 @@
   const targetDate = new Date('2026-11-28T18:00:00').getTime();
 
   function updateCountdown() {
+    if (!countDays || !countHours || !countMins || !countSecs) return;
     const now = new Date().getTime();
     const diff = targetDate - now;
 
@@ -299,73 +288,22 @@
   updateCountdown();
 
   /* ==========================================================================
-     4. ACTION HANDLERS (MAP, CALENDAR, COPY ADDRESS)
+     4. GOOGLE CALENDAR ONE-TAP SYNC
      ========================================================================== */
-  btnCopyAddress.addEventListener('click', () => {
-    const address = document.getElementById('venue-full-address').textContent;
-    navigator.clipboard.writeText(address).then(() => {
-      showToast('Venue address copied');
-    }).catch(() => {
-      showToast(address);
+  if (btnAddCalendar) {
+    btnAddCalendar.addEventListener('click', () => {
+      const title = encodeURIComponent('The Royal Wedding of Priyanka & Vikram');
+      const details = encodeURIComponent('Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.');
+      const location = encodeURIComponent('The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001');
+      const startTime = '20261128T123000Z';
+      const endTime = '20261128T183000Z';
+
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startTime}/${endTime}`;
+      window.open(gcalUrl, '_blank', 'noopener,noreferrer');
     });
-  });
-
-  btnAddCalendar.addEventListener('click', () => {
-    const title = encodeURIComponent('The Wedding of Priyanka & Vikram');
-    const details = encodeURIComponent('Together with their families, cordially inviting you to celebrate the marriage of Priyanka & Vikram.');
-    const location = encodeURIComponent('The Grand Heritage Palace & Royal Gardens, Jaipur, Rajasthan 302001');
-    const startTime = '20261128T123000Z';
-    const endTime = '20261128T183000Z';
-
-    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startTime}/${endTime}`;
-    window.open(gcalUrl, '_blank', 'noopener,noreferrer');
-  });
-
-  btnDownloadIcs.addEventListener('click', () => {
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//The Royal Wedding Invitation//EN',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      'UID:royal-wedding-2026@heritage',
-      'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
-      'DTSTART:20261128T123000Z',
-      'DTEND:20261128T183000Z',
-      'SUMMARY:The Wedding Ceremony of Priyanka & Vikram',
-      'DESCRIPTION:We cordially invite you to join us at The Grand Heritage Palace.',
-      'LOCATION:The Grand Heritage Palace, Jaipur, Rajasthan 302001',
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', 'Priyanka_and_Vikram_Wedding.ics');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    showToast('Calendar invitation downloaded');
-  });
-
-  /* ==========================================================================
-     5. TOAST NOTIFICATION UTILITY
-     ========================================================================== */
-  let toastTimer = null;
-  function showToast(msg) {
-    toastNotice.textContent = msg;
-    toastNotice.classList.add('show');
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toastNotice.classList.remove('show');
-    }, 3000);
   }
 
-  // Initialize
+  // Initialize Interaction Engine
   initPullInteractions();
 
 })();
