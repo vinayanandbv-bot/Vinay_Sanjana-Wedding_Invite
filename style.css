@@ -478,39 +478,46 @@ body,
     padding-bottom: 24px !important;
   }
   .invitation-sheet {
-    padding: 24px 18px 20px !important;
+    padding: 18px 16px 16px !important;
+  }
+  .card-ganesha-container {
+    margin-top: -16px !important;
+    margin-bottom: 8px !important;
+  }
+  .card-ganesha-img, .card-ganesha {
+    width: 74px !important;
+    height: 74px !important;
+  }
+  .invitation-wording {
+    margin: 4px auto 14px !important;
+  }
+  .couple-names {
+    margin: 14px 0 10px !important;
+    font-size: 44px !important;
+  }
+  .invitation-heading .small-flourish {
+    margin-top: 12px !important;
   }
   .invitation-heading {
     display: flex !important;
     flex-direction: column !important;
-    min-height: calc(100vh - 300px) !important;
-    min-height: calc(100dvh - 300px) !important;
-    min-height: calc(100svh - 300px) !important;
+    min-height: calc(100vh - 360px) !important;
+    min-height: calc(100dvh - 360px) !important;
+    min-height: calc(100svh - 360px) !important;
     justify-content: flex-start !important;
     align-items: center !important;
     position: relative !important;
-    padding-bottom: 10px !important;
-  }
-  .card-ganesha-container {
-    margin-top: -10px !important;
-    margin-bottom: 14px !important;
-  }
-  .card-ganesha-img, .card-ganesha {
-    width: 82px !important;
-    height: 82px !important;
+    padding-bottom: 6px !important;
   }
   .revealed-invitation .wedding-date {
     font-size: 30px !important;
     font-weight: 700 !important;
   }
-  .invitation-heading .small-flourish {
-    margin-top: 16px !important;
-  }
   .scroll-hint {
-    margin-top: auto !important;
-    padding-top: 10px !important;
-    padding-bottom: 24px !important;
-    margin-bottom: 16px !important;
+    margin-top: 18px !important;
+    padding-top: 6px !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 8px !important;
     font-size: 11px !important;
     letter-spacing: 0.15em !important;
   }

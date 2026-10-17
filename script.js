@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Background Wedding Music: Seetha Kalyanam (Spliced: skipped 22s-43s, pre-baked 1.5x speed)
+  // Background Wedding Music: Seetha Kalyanam (Cropped: 0-22s + 43s-1:58, 1.5x speed)
   const bgMusic = document.getElementById('wedding-music');
 
   function startMusic() {
@@ -366,26 +366,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const playPromise = bgMusic.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Unlock on first user interaction if browser blocked unmuted autoplay on load
-        const unlock = () => {
-          if (bgMusic && bgMusic.paused) {
-            bgMusic.play().catch(() => {});
-          }
-          ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
-            window.removeEventListener(evt, unlock);
-          });
-        };
-        ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
-          window.addEventListener(evt, unlock, { once: true, passive: true });
-        });
+        // Autoplay policy prevented unmuted sound on load without gesture.
       });
     }
   }
 
-  // Attempt autoplay immediately on page load
+  // 1. Attempt play immediately when script parses
   startMusic();
 
-  // Robust infinite loop handler: ensures playback never stops after 1 loop
+  // 2. Attempt play on window load
+  window.addEventListener('load', startMusic);
+
+  // 3. Capture-phase user interaction handler:
+  // Starts music immediately on the very first touch/tap on the screen (before opening the envelope)
+  const unlockAudio = () => {
+    if (bgMusic && bgMusic.paused) {
+      bgMusic.play().catch(() => {});
+    }
+    ['touchstart', 'pointerdown', 'mousedown', 'click', 'scroll', 'touchend'].forEach(evt => {
+      window.removeEventListener(evt, unlockAudio, true);
+      document.removeEventListener(evt, unlockAudio, true);
+    });
+  };
+
+  ['touchstart', 'pointerdown', 'mousedown', 'click', 'scroll', 'touchend'].forEach(evt => {
+    window.addEventListener(evt, unlockAudio, { capture: true, passive: true });
+    document.addEventListener(evt, unlockAudio, { capture: true, passive: true });
+  });
+
+  // 4. Robust infinite loop handler: ensures audio loops continuously without stalling
   bgMusic?.addEventListener('ended', () => {
     bgMusic.currentTime = 0;
     bgMusic.play().catch(() => {});

@@ -21,18 +21,24 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Italianno&amp;family=Jost:wght@300;400;500&amp;display=swap" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=2.3" />
+  <link rel="stylesheet" href="styles.css?v=2.4" />
 
   <!-- Favicon SVG -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='55' fill='%23661824' stroke='%23d4af37' stroke-width='2'/%3E%3Ccircle cx='60' cy='60' r='50' fill='none' stroke='%23d4af37' stroke-width='1'/%3E%3Ctext x='40' y='72' font-family='serif' font-size='32' fill='%23e6ca65' text-anchor='middle'%3EV%3C/text%3E%3Ctext x='60' y='68' font-family='cursive' font-size='24' fill='%23e6ca65' text-anchor='middle'%3E%26%3C/text%3E%3Ctext x='80' y='72' font-family='serif' font-size='32' fill='%23e6ca65' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
   <div class="invitation-world">
-    <!-- Background Wedding Music: Seetha Kalyanam | Karthick Iyer (Cropped & Sped up 1.5x) -->
-    <audio id="wedding-music" preload="auto" loop playsinline webkit-playsinline>
+    <!-- Background Wedding Music: Seetha Kalyanam | Karthick Iyer (0-22s + 43s-1:58 at 1.5x speed) -->
+    <audio id="wedding-music" autoplay preload="auto" loop playsinline webkit-playsinline>
       <source src="assets/seetha-kalyanam.mp3" type="audio/mpeg" />
       <source src="assets/seetha-kalyanam.m4a" type="audio/mp4" />
     </audio>
+    <script>
+      (function() {
+        var m = document.getElementById('wedding-music');
+        if (m) { m.play().catch(function() {}); }
+      })();
+    </script>
 
     <!-- Paper Texture Overlay -->
     <img class="paper-texture" src="assets/ivory-paper-CRhHLltJ.jpg" width="1024" height="1024" alt="" />
