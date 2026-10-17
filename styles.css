@@ -336,3 +336,33 @@ body,
     font-size: 19px !important;
   }
 }
+
+
+/* Card Monogram Optical Kerning Adjustment */
+.card-monogram {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  font-family: var(--font-serif);
+  color: var(--gold);
+  font-style: italic;
+  letter-spacing: 0 !important;
+}
+
+.card-monogram .monogram-v {
+  display: inline-block;
+  margin-right: -0.04em;
+}
+
+.card-monogram .monogram-amp {
+  display: inline-block;
+  font-family: var(--font-script) !important;
+  font-size: 1.15em;
+  line-height: 1;
+  margin-left: 0.06em;
+  margin-right: 0.38em;
+}
+
+.card-monogram .monogram-s {
+  display: inline-block;
+}
