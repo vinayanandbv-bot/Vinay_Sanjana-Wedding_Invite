@@ -75,7 +75,7 @@ function buildCalendarEventData(kind) {
   const title = `${G.couple.first} & ${G.couple.second} — ${ev.title}`;
   const location = [G.venue.name, G.venue.address].filter(Boolean).join(', ');
   const description = [
-    `${G.parents} would like to invite you to the wedding of their elder son ${G.couple.first} with ${G.couple.second} for their ${ev.title.toLowerCase()}.`,
+    `${G.parents} warmly welcome you to the wedding of their elder son ${G.couple.first} with ${G.couple.second} for their ${ev.title.toLowerCase()}.`,
     ev.startTime ? '' : 'Save the date. Muhurtham time is to be confirmed; this is an all-day date reminder, not the ceremony start time.',
     ev.endTime ? '' : 'End time to be confirmed. No confirmed ending time has been assigned.'
   ].filter(Boolean).join('\n');
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shareUrl = window.location.href;
     const shareData = {
       title: `${G.couple.first} & ${G.couple.second} — Wedding Invitation`,
-      text: `${G.parents} would like to invite you to the wedding of their elder son ${G.couple.first} with ${G.couple.second}.`,
+      text: `${G.parents} warmly welcome you to the wedding of their elder son ${G.couple.first} with ${G.couple.second}.`,
       url: shareUrl
     };
 

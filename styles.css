@@ -375,3 +375,133 @@ body,
   font-weight: 500 !important;
   fill: var(--opening-gold) !important;
 }
+
+
+/* Card Ganesha Emblem */
+.card-ganesha-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: var(--gold) !important;
+  margin-bottom: 24px !important;
+}
+
+.card-ganesha {
+  display: block !important;
+  color: var(--gold) !important;
+  filter: drop-shadow(0 1px 2px rgba(191, 161, 95, 0.25)) !important;
+}
+
+/* Envelope Flap Title & Lettering */
+.opening-date {
+  font-size: 26px !important;
+  letter-spacing: 2.5px !important;
+  font-weight: 500 !important;
+  fill: var(--opening-gold) !important;
+}
+
+/* Enlarged Wax Seal V&S Monogram */
+.wax-seal .seal-monogram .monogram-glyph {
+  font-size: 38px !important;
+  font-weight: 600 !important;
+}
+
+.wax-seal .seal-monogram .monogram-amp {
+  font-size: 30px !important;
+}
+
+/* Circular Curved 'tap to open' text pulsing every 0.75s */
+.seal-circular-tap {
+  position: absolute !important;
+  top: 86.2% !important;
+  left: 49.5% !important;
+  width: 38% !important;
+  aspect-ratio: 1 !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 9 !important;
+  overflow: visible !important;
+  animation: pulse-tap-seal 0.75s ease-in-out infinite !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.seal-curved-text {
+  font-family: var(--font-serif) !important;
+  font-size: 13px !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+  fill: var(--opening-gold) !important;
+  font-weight: 600 !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) !important;
+}
+
+@keyframes pulse-tap-seal {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+}
+
+.is-opening .seal-circular-tap {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Mobile Viewport-Edge Scroll Hint */
+@media (max-width: 640px) {
+  .revealed-invitation {
+    padding-top: 12px !important;
+    padding-bottom: 24px !important;
+  }
+  .invitation-sheet {
+    padding: 24px 18px 20px !important;
+  }
+  .invitation-heading {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: calc(100svh - 40px) !important;
+    min-height: calc(100dvh - 40px) !important;
+    min-height: calc(100vh - 40px) !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    position: relative !important;
+    padding-bottom: 8px !important;
+  }
+  .card-ganesha-container {
+    margin-bottom: 14px !important;
+  }
+  .card-ganesha {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .invitation-heading .small-flourish {
+    margin-top: 16px !important;
+  }
+  .scroll-hint {
+    margin-top: auto !important;
+    padding-top: 10px !important;
+    padding-bottom: 6px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.15em !important;
+  }
+  .scroll-hint svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke-width: 2 !important;
+    animation: edge-bounce 1.5s ease-in-out infinite !important;
+  }
+}
+
+@keyframes edge-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
