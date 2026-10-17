@@ -358,96 +358,36 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Background Wedding Music: Seetha Kalyanam | Karthick Iyer (Plays at 1.5x on page load)
+  // Background Wedding Music: Seetha Kalyanam (Spliced: skipped 22s-43s, pre-baked 1.5x speed)
   const bgMusic = document.getElementById('wedding-music');
-  const musicToggleBtn = document.getElementById('music-toggle-btn');
-  let isMusicPlaying = false;
-
-  function enforcePlaybackRate() {
-    if (!bgMusic) return;
-    try {
-      bgMusic.playbackRate = 1.5;
-      bgMusic.defaultPlaybackRate = 1.5;
-      if ('preservesPitch' in bgMusic) {
-        bgMusic.preservesPitch = true;
-      }
-    } catch (_) {}
-  }
-
-  function updateMusicButtonUI(playing) {
-    isMusicPlaying = playing;
-    if (!musicToggleBtn) return;
-    if (playing) {
-      musicToggleBtn.classList.add('is-playing');
-      musicToggleBtn.classList.remove('is-paused');
-      musicToggleBtn.setAttribute('aria-label', 'Pause wedding music');
-      musicToggleBtn.setAttribute('title', 'Pause wedding music');
-    } else {
-      musicToggleBtn.classList.remove('is-playing');
-      musicToggleBtn.classList.add('is-paused');
-      musicToggleBtn.setAttribute('aria-label', 'Play wedding music');
-      musicToggleBtn.setAttribute('title', 'Play wedding music (1.5x)');
-    }
-  }
 
   function startMusic() {
     if (!bgMusic) return;
-    enforcePlaybackRate();
     const playPromise = bgMusic.play();
     if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          enforcePlaybackRate();
-          updateMusicButtonUI(true);
-        })
-        .catch(() => {
-          updateMusicButtonUI(false);
-          // Browser blocked unmuted autoplay on initial load.
-          // Unlock and play immediately on the first touch/click anywhere on the page.
-          const unlock = () => {
-            if (bgMusic && bgMusic.paused) {
-              enforcePlaybackRate();
-              bgMusic.play()
-                .then(() => {
-                  enforcePlaybackRate();
-                  updateMusicButtonUI(true);
-                })
-                .catch(() => {});
-            }
-            ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
-              window.removeEventListener(evt, unlock);
-            });
-          };
+      playPromise.catch(() => {
+        // Unlock on first user interaction if browser blocked unmuted autoplay on load
+        const unlock = () => {
+          if (bgMusic && bgMusic.paused) {
+            bgMusic.play().catch(() => {});
+          }
           ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
-            window.addEventListener(evt, unlock, { once: true, passive: true });
+            window.removeEventListener(evt, unlock);
           });
+        };
+        ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(evt => {
+          window.addEventListener(evt, unlock, { once: true, passive: true });
         });
+      });
     }
   }
 
   // Attempt autoplay immediately on page load
   startMusic();
 
-  // Enforce 1.5x on playback events
-  bgMusic?.addEventListener('play', enforcePlaybackRate);
-  bgMusic?.addEventListener('playing', enforcePlaybackRate);
-  bgMusic?.addEventListener('ratechange', () => {
-    if (bgMusic && bgMusic.playbackRate !== 1.5) {
-      bgMusic.playbackRate = 1.5;
-    }
+  // Robust infinite loop handler: ensures playback never stops after 1 loop
+  bgMusic?.addEventListener('ended', () => {
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch(() => {});
   });
-
-  // Music toggle button interaction
-  musicToggleBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!bgMusic) return;
-    if (bgMusic.paused) {
-      enforcePlaybackRate();
-      bgMusic.play().then(() => updateMusicButtonUI(true)).catch(() => {});
-    } else {
-      bgMusic.pause();
-      updateMusicButtonUI(false);
-    }
-  });
-
 });
