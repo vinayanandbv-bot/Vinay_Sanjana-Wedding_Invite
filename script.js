@@ -208,6 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const revealedInvitation = document.getElementById('revealed-invitation');
   const waxSealBtn = document.getElementById('wax-seal-btn');
   const tapToOpen = document.getElementById('tap-to-open');
+  const envelopeStage = document.querySelector('.envelope-stage');
+  const envelopeFlap = document.querySelector('.envelope-flap');
   const backToEnvelopeBtn = document.getElementById('back-to-envelope-btn');
   const shareBtn = document.getElementById('share-invitation-btn');
   const shareStatus = document.getElementById('share-status');
@@ -265,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
       openingScene.classList.add('hidden');
       revealedInvitation.classList.remove('hidden');
       window.scrollTo({ top: 0 });
-      document.getElementById('invitation-title')?.focus({ preventScroll: true });
       return;
     }
 
@@ -279,16 +280,29 @@ document.addEventListener('DOMContentLoaded', () => {
       openingScene.setAttribute('aria-busy', 'false');
       revealedInvitation.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'instant' });
-      document.getElementById('invitation-title')?.focus({ preventScroll: true });
+      // Clear any text cursor focus so no caret is visible
+      const title = document.getElementById('invitation-title');
+      if (title && document.activeElement === title) {
+        title.blur();
+      }
       isOpening = false;
     }, 2650);
   }
 
-  waxSealBtn.addEventListener('click', openInvitation);
-  tapToOpen.addEventListener('click', openInvitation);
+  waxSealBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openInvitation();
+  });
+  tapToOpen?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openInvitation();
+  });
+  envelopeStage?.addEventListener('click', () => {
+    openInvitation();
+  });
 
   // Back to Envelope Handler
-  backToEnvelopeBtn.addEventListener('click', () => {
+  backToEnvelopeBtn?.addEventListener('click', () => {
     if (openTimer) clearTimeout(openTimer);
     isOpening = false;
     revealedInvitation.classList.add('hidden');
@@ -296,13 +310,20 @@ document.addEventListener('DOMContentLoaded', () => {
     openingScene.classList.remove('is-opening');
     waxSealBtn.disabled = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    requestAnimationFrame(() => waxSealBtn.focus());
+    requestAnimationFrame(() => {
+      waxSealBtn.focus();
+      // Remove outline/caret immediately after focus
+      setTimeout(() => {
+        if (document.activeElement === waxSealBtn) {
+          waxSealBtn.blur();
+        }
+      }, 100);
+    });
   });
 
   // Calendar Dropdowns
   function toggleMenu(menu, button) {
     const isClosed = menu.classList.contains('hidden');
-    // Close other menus first
     ceremonyCalMenu?.classList.add('hidden');
     receptionCalMenu?.classList.add('hidden');
     if (isClosed) {

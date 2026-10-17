@@ -94,3 +94,97 @@
 .opening-scene.hidden {
   display: none !important;
 }
+
+
+/* Cursor and Caret Polish */
+.opening-scene,
+.envelope-stage,
+.envelope,
+.envelope-flap,
+.opening-lettering,
+.opening-lettering text,
+.emerging-letter,
+.vs-monogram,
+.vs-sprig {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.opening-lettering text {
+  cursor: pointer;
+}
+
+.envelope-stage,
+.envelope,
+.envelope-flap,
+.wax-seal,
+.tap-to-open {
+  cursor: pointer;
+}
+
+/* Suppress blinking text cursor / caret on focused non-input elements */
+body,
+.opening-scene,
+.envelope-stage,
+.revealed-invitation,
+.invitation-sheet,
+.couple-names,
+.invitation-heading,
+[tabindex="-1"] {
+  caret-color: transparent !important;
+}
+
+.couple-names:focus,
+.couple-names:focus-visible,
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+/* Cursor and Caret Polish */
+.opening-scene,
+.envelope-stage,
+.envelope,
+.envelope-flap,
+.opening-lettering,
+.opening-lettering text,
+.emerging-letter,
+.vs-monogram,
+.vs-sprig {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.opening-lettering text {
+  cursor: pointer;
+}
+
+.envelope-stage,
+.envelope,
+.envelope-flap,
+.wax-seal,
+.tap-to-open {
+  cursor: pointer;
+}
+
+/* Suppress blinking text cursor / caret on focused non-input elements */
+body,
+.opening-scene,
+.envelope-stage,
+.revealed-invitation,
+.invitation-sheet,
+.couple-names,
+.invitation-heading,
+[tabindex="-1"] {
+  caret-color: transparent !important;
+}
+
+.couple-names:focus,
+.couple-names:focus-visible,
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
