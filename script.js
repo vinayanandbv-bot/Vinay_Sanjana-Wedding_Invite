@@ -1,473 +1,395 @@
 /**
- * THE ROYAL PALACE WEDDING E-INVITATION - MASTER CONTROLLER (V2 - 9.5 GRADE)
- * - Three.js WebGL 3D Palace Doors with Flower Petal Burst & PBR Shaders
- * - Cinematic Multi-Scene Story Card Engine (Swipe, Progress Bars, Direct Jump)
- * - View Mode Toggle: Interactive Story Carousel vs Continuous Royal Parchment
- * - 24K Gold Specular Shimmer Calligraphy Animations
- * - Live Wedding Countdown to November 28, 2026
- * - Google Calendar One-Tap Sync & Google Maps Navigation
+ * Sanjana & Vinayanand Wedding Invitation
+ * Complete interactive logic replicating Lovable production app
  */
 
-(function () {
-  'use strict';
+const G = {
+  couple: {
+    first: 'Sanjana',
+    second: 'Vinayanand',
+    monogram: 'S & V'
+  },
+  date: '2026-11-20',
+  timeZone: 'Asia/Kolkata',
+  utcOffset: '+05:30',
+  venue: {
+    name: 'Aditya Kalyana Mantapa',
+    address: '',
+    mapsUrl: '',
+    mapsDestination: 'Aditya Kalyana Mantapa'
+  },
+  ceremony: {
+    title: 'Wedding Ceremony',
+    startTime: null,
+    endTime: null
+  },
+  reception: {
+    title: 'Wedding Reception',
+    startTime: '19:00',
+    endTime: null
+  },
+  countdown: {
+    targetTime: '00:00',
+    provisional: true
+  }
+};
 
-  // DOM Elements
-  const stageContainer = document.getElementById('stage-container');
-  const courtyardInvitation = document.getElementById('courtyard-invitation');
-  const btnReplayGates = document.getElementById('btn-replay-gates');
-  const btnCloseScroll = document.querySelector('.btn-close-scroll');
-  const btnAddCalendar = document.getElementById('btn-add-calendar');
-  const btnCalendarScroll = document.querySelector('.btn-calendar-scroll');
+/* Formatters */
+function formatTime(timeStr) {
+  if (!timeStr) return '';
+  const [h = 0, m = 0] = timeStr.split(':').map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+}
 
-  // Mode Switcher Elements
-  const btnModeStory = document.getElementById('btn-mode-story');
-  const btnModeScroll = document.getElementById('btn-mode-scroll');
+function formatWeddingDate() {
+  const parts = new Intl.DateTimeFormat('en-IN', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: G.timeZone
+  }).formatToParts(new Date(`${G.date}T12:00:00${G.utcOffset}`));
 
-  // Theme Switcher Buttons
-  const themeBtns = document.querySelectorAll('.theme-tab-btn');
-  const stages = {
-    doors: document.getElementById('stage-doors'),
-    envelope: document.getElementById('stage-envelope'),
-    scroll: document.getElementById('stage-scroll'),
+  const get = type => parts.find(p => p.type === type)?.value || '';
+  return `${get('weekday')}, ${get('day')} ${get('month')} ${get('year')}`;
+}
+
+function getDirectionsUrl() {
+  return G.venue.mapsUrl || `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(G.venue.mapsDestination)}`;
+}
+
+/* Calendar Date Formatting Helpers */
+const stripDashes = s => s.replaceAll('-', '');
+const toIcsDateUtc = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+const parseLocalTime = t => new Date(`${G.date}T${t}:00${G.utcOffset}`);
+
+const getNextDayIso = () => {
+  const d = new Date(`${G.date}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1);
+  return stripDashes(d.toISOString().slice(0, 10));
+};
+
+function buildCalendarEventData(kind) {
+  const ev = G[kind];
+  const title = `${G.couple.first} & ${G.couple.second} — ${ev.title}`;
+  const location = [G.venue.name, G.venue.address].filter(Boolean).join(', ');
+  const description = [
+    `Join ${G.couple.first} & ${G.couple.second} for their ${ev.title.toLowerCase()}.`,
+    ev.startTime ? '' : 'Save the date. Muhurtham time is to be confirmed; this is an all-day date reminder, not the ceremony start time.',
+    ev.endTime ? '' : 'End time to be confirmed. No confirmed ending time has been assigned.'
+  ].filter(Boolean).join('\n');
+
+  const start = ev.startTime ? toIcsDateUtc(parseLocalTime(ev.startTime)) : stripDashes(G.date);
+  const end = ev.endTime
+    ? toIcsDateUtc(parseLocalTime(ev.endTime))
+    : ev.startTime
+    ? toIcsDateUtc(parseLocalTime(ev.startTime))
+    : getNextDayIso();
+
+  return {
+    title,
+    location,
+    description,
+    start,
+    end,
+    allDay: !ev.startTime,
+    hasEnd: Boolean(ev.endTime)
   };
+}
 
-  // Envelope Elements
-  const envelopeAssembly = document.getElementById('envelope-assembly');
-  const envelopeWaxSeal = document.getElementById('envelope-wax-seal');
-  const envelopePrompt = document.getElementById('envelope-prompt');
-
-  // Scroll Elements
-  const scrollAssembly = document.getElementById('scroll-assembly');
-  const scrollPullCord = document.getElementById('scroll-pull-cord');
-  const scrollPrompt = document.getElementById('scroll-prompt');
-
-  // Story Carousel Elements
-  const storyCards = document.querySelectorAll('.story-card');
-  const progressSegments = document.querySelectorAll('.progress-segment');
-  const btnStoryPrev = document.getElementById('btn-story-prev');
-  const btnStoryNext = document.getElementById('btn-story-next');
-  const storyCounter = document.getElementById('story-counter');
-  const storyTrack = document.getElementById('story-slides-track');
-
-  let currentCardIndex = 0;
-  const totalCards = storyCards.length;
-  let activeTheme = 'doors';
-  let isInvitationRevealed = false;
-
-  /* ==========================================================================
-     1. THREE.JS 3D PALACE PORTAL ENGINE INITIALIZATION
-     ========================================================================== */
-  if (window.Palace3D) {
-    window.Palace3D.init({
-      containerId: 'palace-webgl-container',
-      onOpen: function () {
-        revealInvitation();
-      },
-      onClose: function () {
-        resetReveal();
-      },
-    });
-  }
-
-  const portalPrompt = document.getElementById('portal-prompt');
-  if (portalPrompt) {
-    portalPrompt.addEventListener('click', function () {
-      if (window.Palace3D && !window.Palace3D.isOpen()) {
-        window.Palace3D.openGates();
-      }
-    });
-  }
-
-  /* ==========================================================================
-     2. REVEAL & RESET INVITATION
-     ========================================================================== */
-  function revealInvitation() {
-    if (isInvitationRevealed) return;
-    isInvitationRevealed = true;
-
-    stageContainer.classList.add('opened');
-
-    setTimeout(() => {
-      if (courtyardInvitation) {
-        courtyardInvitation.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 700);
-  }
-
-  function resetReveal() {
-    isInvitationRevealed = false;
-    stageContainer.classList.remove('opened');
-  }
-
-  function replayPalaceExperience() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    setTimeout(() => {
-      if (activeTheme === 'doors') {
-        if (window.Palace3D && window.Palace3D.isOpen()) {
-          window.Palace3D.closeGates();
-        }
-      } else {
-        resetReveal();
-      }
-      goToCard(0);
-    }, 300);
-  }
-
-  if (btnReplayGates) {
-    btnReplayGates.addEventListener('click', function (e) {
-      e.stopPropagation();
-      replayPalaceExperience();
-    });
-  }
-
-  if (btnCloseScroll) {
-    btnCloseScroll.addEventListener('click', function (e) {
-      e.stopPropagation();
-      replayPalaceExperience();
-    });
-  }
-
-  /* ==========================================================================
-     3. CINEMATIC STORY CAROUSEL ENGINE
-     ========================================================================== */
-  function updateStoryCarousel() {
-    // Update active card
-    storyCards.forEach((card, idx) => {
-      if (idx === currentCardIndex) {
-        card.classList.add('active');
-      } else {
-        card.classList.remove('active');
-      }
-    });
-
-    // Update progress segments
-    progressSegments.forEach((segment, idx) => {
-      segment.classList.remove('active', 'completed');
-      if (idx < currentCardIndex) {
-        segment.classList.add('completed');
-      } else if (idx === currentCardIndex) {
-        segment.classList.add('active');
-      }
-    });
-
-    // Update Counter
-    if (storyCounter) {
-      storyCounter.textContent = `${currentCardIndex + 1} / ${totalCards}`;
-    }
-  }
-
-  function goToCard(index) {
-    if (index < 0 || index >= totalCards) return;
-    currentCardIndex = index;
-    updateStoryCarousel();
-  }
-
-  function nextCard() {
-    if (currentCardIndex < totalCards - 1) {
-      goToCard(currentCardIndex + 1);
-    }
-  }
-
-  function prevCard() {
-    if (currentCardIndex > 0) {
-      goToCard(currentCardIndex - 1);
-    }
-  }
-
-  if (btnStoryNext) btnStoryNext.addEventListener('click', nextCard);
-  if (btnStoryPrev) btnStoryPrev.addEventListener('click', prevCard);
-
-  // Direct Progress Bar Segment Click
-  progressSegments.forEach((seg, idx) => {
-    seg.addEventListener('click', () => goToCard(idx));
+function getGoogleCalendarUrl(kind) {
+  const data = buildCalendarEventData(kind);
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: data.title,
+    dates: `${data.start}/${data.end}`,
+    ctz: G.timeZone,
+    location: data.location,
+    details: data.description
   });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
 
-  // Touch Swipe on Story Track
-  let touchStartX = 0;
-  let touchStartY = 0;
+const escapeIcs = s => s.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
 
-  if (storyTrack) {
-    storyTrack.addEventListener(
-      'touchstart',
-      function (e) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-      },
-      { passive: true }
-    );
-
-    storyTrack.addEventListener(
-      'touchend',
-      function (e) {
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-        const diffX = touchEndX - touchStartX;
-        const diffY = touchEndY - touchStartY;
-
-        // Ensure horizontal swipe
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-          if (diffX < 0) {
-            nextCard();
-          } else {
-            prevCard();
-          }
-        }
-      },
-      { passive: true }
-    );
-  }
-
-  // Keyboard Navigation
-  window.addEventListener('keydown', function (e) {
-    if (!isInvitationRevealed) return;
-    if (e.key === 'ArrowRight') nextCard();
-    if (e.key === 'ArrowLeft') prevCard();
-  });
-
-  /* ==========================================================================
-     4. VIEW MODE TOGGLE (STORY CAROUSEL VS CONTINUOUS SCROLL)
-     ========================================================================== */
-  if (btnModeStory && btnModeScroll) {
-    btnModeStory.addEventListener('click', function () {
-      btnModeStory.classList.add('active');
-      btnModeScroll.classList.remove('active');
-      document.body.classList.remove('mode-scroll-active');
-    });
-
-    btnModeScroll.addEventListener('click', function () {
-      btnModeScroll.classList.add('active');
-      btnModeStory.classList.remove('active');
-      document.body.classList.add('mode-scroll-active');
-    });
-  }
-
-  /* ==========================================================================
-     5. THEME SWITCHER LOGIC
-     ========================================================================== */
-  function switchTheme(newTheme) {
-    if (newTheme === activeTheme) return;
-
-    if (isInvitationRevealed) {
-      replayPalaceExperience();
+function foldIcsLine(line) {
+  const parts = [];
+  let cur = '';
+  let curLen = 0;
+  for (const char of line) {
+    const bLen = new TextEncoder().encode(char).length;
+    if (curLen + bLen > 75) {
+      parts.push(cur);
+      cur = ' ';
+      curLen = 1;
     }
+    cur += char;
+    curLen += bLen;
+  }
+  parts.push(cur);
+  return parts.join('\r\n');
+}
 
-    activeTheme = newTheme;
-    document.body.className = `theme-${newTheme}`;
+function generateIcsFileContent(kind) {
+  const data = buildCalendarEventData(kind);
+  const now = new Date();
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Sanjana and Vinayanand//Wedding Invitation//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${G.date}-${kind}@sanjana-vinayanand.wedding`,
+    `DTSTAMP:${toIcsDateUtc(now)}`,
+    `SUMMARY:${escapeIcs(data.title)}`,
+    `LOCATION:${escapeIcs(data.location)}`,
+    `DESCRIPTION:${escapeIcs(data.description)}`
+  ];
 
-    themeBtns.forEach((btn) => {
-      if (btn.dataset.theme === newTheme) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    });
-
-    Object.keys(stages).forEach((key) => {
-      if (stages[key]) {
-        if (key === newTheme) {
-          stages[key].classList.add('active');
-        } else {
-          stages[key].classList.remove('active');
-        }
-      }
-    });
-
-    if (newTheme === 'doors') {
-      window.dispatchEvent(new Event('resize'));
-    }
+  if (data.allDay) {
+    lines.push(`DTSTART;VALUE=DATE:${data.start}`);
+    lines.push(`DTEND;VALUE=DATE:${data.end}`);
+  } else {
+    lines.push(`DTSTART:${data.start}`);
+    if (data.hasEnd) lines.push(`DTEND:${data.end}`);
   }
 
-  themeBtns.forEach((btn) => {
-    btn.addEventListener('click', function () {
-      const theme = this.dataset.theme;
-      switchTheme(theme);
-    });
-  });
+  lines.push('END:VEVENT');
+  lines.push('END:VCALENDAR');
 
-  /* ==========================================================================
-     6. ENVELOPE & SCROLL FALLBACK INTERACTION
-     ========================================================================== */
-  function openEnvelope() {
-    revealInvitation();
+  return lines.map(foldIcsLine).join('\r\n') + '\r\n';
+}
+
+function downloadIcs(kind) {
+  const content = generateIcsFileContent(kind);
+  const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${kind}-${G.date}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* Countdown Logic */
+function getTargetCountdownTime() {
+  return new Date(`${G.date}T${G.countdown.targetTime}:00${G.utcOffset}`).getTime();
+}
+
+function updateCountdown() {
+  const targetTime = getTargetCountdownTime();
+  const now = Date.now();
+  const diffSec = Math.max(0, Math.floor((targetTime - now) / 1000));
+
+  const days = Math.floor(diffSec / 86400);
+  const hours = Math.floor((diffSec % 86400) / 3600);
+  const minutes = Math.floor((diffSec % 3600) / 60);
+  const seconds = diffSec % 60;
+
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minutesEl = document.getElementById('cd-minutes');
+  const secondsEl = document.getElementById('cd-seconds');
+
+  if (daysEl && hoursEl && minutesEl && secondsEl) {
+    daysEl.textContent = String(days).padStart(2, '0');
+    hoursEl.textContent = String(hours).padStart(2, '0');
+    minutesEl.textContent = String(minutes).padStart(2, '0');
+    secondsEl.textContent = String(seconds).padStart(2, '0');
+  }
+}
+
+/* Main Initialization */
+document.addEventListener('DOMContentLoaded', () => {
+  const openingScene = document.getElementById('opening-scene');
+  const revealedInvitation = document.getElementById('revealed-invitation');
+  const waxSealBtn = document.getElementById('wax-seal-btn');
+  const tapToOpen = document.getElementById('tap-to-open');
+  const backToEnvelopeBtn = document.getElementById('back-to-envelope-btn');
+  const shareBtn = document.getElementById('share-invitation-btn');
+  const shareStatus = document.getElementById('share-status');
+  const shareFallbackInput = document.getElementById('share-fallback-input');
+
+  // Calendar elements
+  const ceremonyCalBtn = document.getElementById('ceremony-calendar-btn');
+  const ceremonyCalMenu = document.getElementById('ceremony-calendar-menu');
+  const ceremonyGcal = document.getElementById('ceremony-gcal-link');
+  const ceremonyIcs = document.getElementById('ceremony-ics-btn');
+
+  const receptionCalBtn = document.getElementById('reception-calendar-btn');
+  const receptionCalMenu = document.getElementById('reception-calendar-menu');
+  const receptionGcal = document.getElementById('reception-gcal-link');
+  const receptionIcs = document.getElementById('reception-ics-btn');
+
+  // Set Google Calendar links
+  if (ceremonyGcal) ceremonyGcal.href = getGoogleCalendarUrl('ceremony');
+  if (receptionGcal) receptionGcal.href = getGoogleCalendarUrl('reception');
+
+  // Set Directions link
+  const getDirectionsLink = document.getElementById('get-directions-link');
+  if (getDirectionsLink) getDirectionsLink.href = getDirectionsUrl();
+
+  // Populate dynamic times & dates
+  const ceremonyTimeText = document.getElementById('ceremony-time-text');
+  if (ceremonyTimeText) {
+    ceremonyTimeText.textContent = G.ceremony.startTime
+      ? `Muhurtham · ${formatTime(G.ceremony.startTime)} IST`
+      : 'Muhurtham time to be confirmed';
   }
 
-  if (envelopeWaxSeal) {
-    envelopeWaxSeal.addEventListener('click', function (e) {
-      e.stopPropagation();
-      openEnvelope();
-    });
+  const receptionTimeText = document.getElementById('reception-time-text');
+  if (receptionTimeText) {
+    receptionTimeText.textContent = G.reception.startTime
+      ? `${formatTime(G.reception.startTime)} onwards`
+      : 'Reception time to be confirmed';
   }
 
-  if (envelopeAssembly) {
-    envelopeAssembly.addEventListener('click', function () {
-      if (!isInvitationRevealed) {
-        openEnvelope();
-      }
-    });
+  const displayWeddingDate = document.getElementById('display-wedding-date');
+  if (displayWeddingDate) {
+    displayWeddingDate.textContent = formatWeddingDate();
   }
 
-  if (envelopePrompt) {
-    envelopePrompt.addEventListener('click', openEnvelope);
-  }
+  // Open Invitation Handler
+  let isOpening = false;
+  let openTimer = null;
 
-  function openScroll() {
-    revealInvitation();
-  }
+  function openInvitation() {
+    if (isOpening) return;
+    isOpening = true;
 
-  if (scrollPullCord) {
-    scrollPullCord.addEventListener('click', function (e) {
-      e.stopPropagation();
-      openScroll();
-    });
-  }
-
-  if (scrollAssembly) {
-    scrollAssembly.addEventListener('click', function () {
-      if (!isInvitationRevealed) {
-        openScroll();
-      }
-    });
-  }
-
-  if (scrollPrompt) {
-    scrollPrompt.addEventListener('click', openScroll);
-  }
-
-  /* ==========================================================================
-     7. FLOATING 24K GOLD LEAF DUST CANVAS
-     ========================================================================== */
-  const canvas = document.getElementById('particles-canvas');
-  const ctx = canvas ? canvas.getContext('2d') : null;
-  let particles = [];
-  const PARTICLE_COUNT = 24;
-
-  function resizeCanvas() {
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  class GoldLeafFlake {
-    constructor() {
-      this.reset(true);
-    }
-
-    reset(initial = false) {
-      if (!canvas) return;
-      this.x = Math.random() * canvas.width;
-      this.y = initial ? Math.random() * canvas.height : -15;
-      this.size = Math.random() * 2.2 + 0.9;
-      this.speedY = Math.random() * 0.4 + 0.15;
-      this.speedX = (Math.random() - 0.5) * 0.28;
-      this.opacity = Math.random() * 0.35 + 0.15;
-      this.rotation = Math.random() * 360;
-      this.rotSpeed = (Math.random() - 0.5) * 1.2;
-    }
-
-    update() {
-      if (!canvas) return;
-      this.y += this.speedY;
-      this.x += Math.sin(this.y * 0.008) * 0.35 + this.speedX;
-      this.rotation += this.rotSpeed;
-
-      if (this.y > canvas.height + 15) {
-        this.reset(false);
-      }
-    }
-
-    draw() {
-      if (!ctx) return;
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate((this.rotation * Math.PI) / 180);
-      ctx.fillStyle = `rgba(184, 139, 47, ${this.opacity})`;
-      ctx.shadowColor = 'rgba(252, 237, 189, 0.45)';
-      ctx.shadowBlur = 4;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, this.size * 1.3, this.size * 0.8, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  if (canvas && ctx) {
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(new GoldLeafFlake());
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
-  }
-
-  /* ==========================================================================
-     8. WEDDING COUNTDOWN TIMER (TARGET: NOVEMBER 28, 2026)
-     ========================================================================== */
-  const targetDate = new Date('2026-11-28T18:00:00').getTime();
-  const storyDays = document.getElementById('story-days');
-  const storyHours = document.getElementById('story-hours');
-  const storyMins = document.getElementById('story-mins');
-  const storySecs = document.getElementById('story-secs');
-
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
-
-    if (diff <= 0) {
-      if (storyDays) storyDays.textContent = '00';
-      if (storyHours) storyHours.textContent = '00';
-      if (storyMins) storyMins.textContent = '00';
-      if (storySecs) storySecs.textContent = '00';
+    // Check prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      openingScene.classList.add('hidden');
+      revealedInvitation.classList.remove('hidden');
+      window.scrollTo({ top: 0 });
+      document.getElementById('invitation-title')?.focus({ preventScroll: true });
       return;
     }
 
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    openingScene.classList.add('is-opening');
+    openingScene.setAttribute('aria-busy', 'true');
+    waxSealBtn.disabled = true;
 
-    const sD = String(d).padStart(2, '0');
-    const sH = String(h).padStart(2, '0');
-    const sM = String(m).padStart(2, '0');
-    const sS = String(s).padStart(2, '0');
-
-    if (storyDays) storyDays.textContent = sD;
-    if (storyHours) storyHours.textContent = sH;
-    if (storyMins) storyMins.textContent = sM;
-    if (storySecs) storySecs.textContent = sS;
+    openTimer = setTimeout(() => {
+      openingScene.classList.add('hidden');
+      openingScene.classList.remove('is-opening');
+      openingScene.setAttribute('aria-busy', 'false');
+      revealedInvitation.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.getElementById('invitation-title')?.focus({ preventScroll: true });
+      isOpening = false;
+    }, 2650);
   }
 
-  setInterval(updateCountdown, 1000);
+  waxSealBtn.addEventListener('click', openInvitation);
+  tapToOpen.addEventListener('click', openInvitation);
+
+  // Back to Envelope Handler
+  backToEnvelopeBtn.addEventListener('click', () => {
+    if (openTimer) clearTimeout(openTimer);
+    isOpening = false;
+    revealedInvitation.classList.add('hidden');
+    openingScene.classList.remove('hidden');
+    openingScene.classList.remove('is-opening');
+    waxSealBtn.disabled = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    requestAnimationFrame(() => waxSealBtn.focus());
+  });
+
+  // Calendar Dropdowns
+  function toggleMenu(menu, button) {
+    const isClosed = menu.classList.contains('hidden');
+    // Close other menus first
+    ceremonyCalMenu?.classList.add('hidden');
+    receptionCalMenu?.classList.add('hidden');
+    if (isClosed) {
+      menu.classList.remove('hidden');
+    }
+  }
+
+  ceremonyCalBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu(ceremonyCalMenu, ceremonyCalBtn);
+  });
+
+  receptionCalBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu(receptionCalMenu, receptionCalBtn);
+  });
+
+  // Close menus on outside click or Escape
+  document.addEventListener('click', (e) => {
+    if (!ceremonyCalMenu?.contains(e.target) && e.target !== ceremonyCalBtn) {
+      ceremonyCalMenu?.classList.add('hidden');
+    }
+    if (!receptionCalMenu?.contains(e.target) && e.target !== receptionCalBtn) {
+      receptionCalMenu?.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      ceremonyCalMenu?.classList.add('hidden');
+      receptionCalMenu?.classList.add('hidden');
+    }
+  });
+
+  // ICS Download triggers
+  ceremonyIcs?.addEventListener('click', () => {
+    downloadIcs('ceremony');
+    ceremonyCalMenu?.classList.add('hidden');
+  });
+
+  receptionIcs?.addEventListener('click', () => {
+    downloadIcs('reception');
+    receptionCalMenu?.classList.add('hidden');
+  });
+
+  // Share Handler
+  shareBtn?.addEventListener('click', async () => {
+    const shareBtnText = document.getElementById('share-btn-text');
+    if (shareBtnText) shareBtnText.textContent = 'Sharing…';
+    shareBtn.disabled = true;
+    shareStatus.textContent = '';
+    shareFallbackInput.classList.add('hidden');
+
+    const shareUrl = window.location.href;
+    const shareData = {
+      title: `${G.couple.first} & ${G.couple.second} — Wedding Invitation`,
+      text: 'A special invitation awaits. Join us as we begin our new chapter together.',
+      url: shareUrl
+    };
+
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        shareStatus.textContent = 'Invitation link copied.';
+      }
+    } catch (err) {
+      if (!(err instanceof Error && err.name === 'AbortError')) {
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          shareStatus.textContent = 'Invitation link copied.';
+        } catch {
+          shareFallbackInput.value = shareUrl;
+          shareFallbackInput.classList.remove('hidden');
+          shareFallbackInput.focus();
+          shareFallbackInput.select();
+          shareStatus.textContent = 'Select and copy the invitation link below.';
+        }
+      }
+    } finally {
+      if (shareBtnText) shareBtnText.textContent = 'Share Invitation';
+      shareBtn.disabled = false;
+    }
+  });
+
+  // Start live countdown
   updateCountdown();
-
-  /* ==========================================================================
-     9. ONE-TAP GOOGLE CALENDAR SYNC
-     ========================================================================== */
-  function syncGoogleCalendar(e) {
-    if (e) e.stopPropagation();
-    const title = encodeURIComponent('The Royal Wedding of Priyanka & Vikram');
-    const details = encodeURIComponent(
-      'Together with their families, cordially inviting you to celebrate the marriage solemnization of Priyanka & Vikram at The Grand Heritage Palace & Royal Gardens.'
-    );
-    const location = encodeURIComponent(
-      'The Grand Heritage Palace & Royal Gardens, Heritage Boulevard, Palace Enclave, Jaipur, Rajasthan 302001'
-    );
-    const startTime = '20261128T123000Z';
-    const endTime = '20261128T183000Z';
-
-    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startTime}/${endTime}`;
-    window.open(gcalUrl, '_blank', 'noopener,noreferrer');
-  }
-
-  if (btnAddCalendar) btnAddCalendar.addEventListener('click', syncGoogleCalendar);
-  if (btnCalendarScroll) btnCalendarScroll.addEventListener('click', syncGoogleCalendar);
-})();
+  setInterval(updateCountdown, 1000);
+});
