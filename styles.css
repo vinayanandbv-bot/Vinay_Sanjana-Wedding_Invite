@@ -366,3 +366,12 @@ body,
 .card-monogram .monogram-s {
   display: inline-block;
 }
+
+
+/* Envelope Cover Title Styling */
+.opening-date {
+  font-size: 17px !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 500 !important;
+  fill: var(--opening-gold) !important;
+}
