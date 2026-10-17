@@ -382,15 +382,28 @@ body,
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  margin-bottom: 22px !important;
+  margin-top: -18px !important;
+  margin-bottom: 18px !important;
 }
 
 .card-ganesha-img {
-  width: 68px !important;
-  height: 68px !important;
+  width: 95px !important;
+  height: 95px !important;
   object-fit: contain !important;
   display: block !important;
   filter: drop-shadow(0 1px 2px rgba(191, 161, 95, 0.25)) !important;
+}
+
+/* Wedding Date - Larger and Bold */
+.revealed-invitation .wedding-date {
+  font-family: var(--font-serif) !important;
+  font-size: 38px !important;
+  font-weight: 700 !important;
+  color: #4E111C !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.02em !important;
+  margin-top: 18px !important;
+  margin-bottom: 8px !important;
 }
 
 /* Envelope Flap Title & Lettering */
@@ -479,11 +492,16 @@ body,
     padding-bottom: 8px !important;
   }
   .card-ganesha-container {
+    margin-top: -10px !important;
     margin-bottom: 14px !important;
   }
   .card-ganesha-img, .card-ganesha {
-    width: 48px !important;
-    height: 48px !important;
+    width: 82px !important;
+    height: 82px !important;
+  }
+  .revealed-invitation .wedding-date {
+    font-size: 30px !important;
+    font-weight: 700 !important;
   }
   .invitation-heading .small-flourish {
     margin-top: 16px !important;
