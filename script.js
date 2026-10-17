@@ -183,24 +183,33 @@ function getTargetCountdownTime() {
 function updateCountdown() {
   const targetTime = getTargetCountdownTime();
   const now = Date.now();
-  const diffSec = Math.max(0, Math.floor((targetTime - now) / 1000));
-
-  const days = Math.floor(diffSec / 86400);
-  const hours = Math.floor((diffSec % 86400) / 3600);
-  const minutes = Math.floor((diffSec % 3600) / 60);
-  const seconds = diffSec % 60;
 
   const daysEl = document.getElementById('cd-days');
   const hoursEl = document.getElementById('cd-hours');
   const minutesEl = document.getElementById('cd-minutes');
   const secondsEl = document.getElementById('cd-seconds');
 
-  if (daysEl && hoursEl && minutesEl && secondsEl) {
-    daysEl.textContent = String(days).padStart(2, '0');
-    hoursEl.textContent = String(hours).padStart(2, '0');
-    minutesEl.textContent = String(minutes).padStart(2, '0');
-    secondsEl.textContent = String(seconds).padStart(2, '0');
+  if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+  // Strict stop at 0 - countdown will never go negative or lower
+  if (now >= targetTime) {
+    daysEl.textContent = '00';
+    hoursEl.textContent = '00';
+    minutesEl.textContent = '00';
+    secondsEl.textContent = '00';
+    return;
   }
+
+  const diffSec = Math.max(0, Math.floor((targetTime - now) / 1000));
+  const days = Math.max(0, Math.floor(diffSec / 86400));
+  const hours = Math.max(0, Math.floor((diffSec % 86400) / 3600));
+  const minutes = Math.max(0, Math.floor((diffSec % 3600) / 60));
+  const seconds = Math.max(0, diffSec % 60);
+
+  daysEl.textContent = String(days).padStart(2, '0');
+  hoursEl.textContent = String(hours).padStart(2, '0');
+  minutesEl.textContent = String(minutes).padStart(2, '0');
+  secondsEl.textContent = String(seconds).padStart(2, '0');
 }
 
 /* Main Initialization */

@@ -257,3 +257,54 @@ body,
   padding-top: 30px !important;
   margin-top: 24px !important;
 }
+
+
+/* iPhone 18 Deep Luxury Burgundy Color Palette for the Wedding Card */
+.revealed-invitation {
+  --primary: #4E111C;
+  --wax-dark: #33070E;
+  --primary-foreground: #FFFFFF;
+}
+
+.revealed-invitation .couple-names {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .blessings {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .venue-name {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .section-title {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .countdown-value {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .event-title {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .event-time {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .invitation-button {
+  background: #4E111C !important;
+  border-color: #4E111C !important;
+  color: #FFFFFF !important;
+}
+
+.revealed-invitation .invitation-button:hover {
+  background: #33070E !important;
+  border-color: #33070E !important;
+}
+
+.revealed-invitation .share-status {
+  color: #4E111C !important;
+}
