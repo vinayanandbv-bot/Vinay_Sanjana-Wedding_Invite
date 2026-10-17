@@ -143,6 +143,53 @@ body,
 }
 
 
+/* Cursor and Caret Polish */
+.opening-scene,
+.envelope-stage,
+.envelope,
+.envelope-flap,
+.opening-lettering,
+.opening-lettering text,
+.emerging-letter,
+.vs-monogram,
+.vs-sprig {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.opening-lettering text {
+  cursor: pointer;
+}
+
+.envelope-stage,
+.envelope,
+.envelope-flap,
+.wax-seal,
+.tap-to-open {
+  cursor: pointer;
+}
+
+/* Suppress blinking text cursor / caret on focused non-input elements */
+body,
+.opening-scene,
+.envelope-stage,
+.revealed-invitation,
+.invitation-sheet,
+.couple-names,
+.invitation-heading,
+[tabindex="-1"] {
+  caret-color: transparent !important;
+}
+
+.couple-names:focus,
+.couple-names:focus-visible,
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
 /* Wordings & Conjunction Styling */
 .with-script {
   font-family: var(--font-script);
@@ -436,13 +483,13 @@ body,
   .invitation-heading {
     display: flex !important;
     flex-direction: column !important;
-    min-height: calc(100svh - 40px) !important;
-    min-height: calc(100dvh - 40px) !important;
-    min-height: calc(100vh - 40px) !important;
+    min-height: calc(100svh - 110px) !important;
+    min-height: calc(100dvh - 110px) !important;
+    min-height: calc(100vh - 110px) !important;
     justify-content: flex-start !important;
     align-items: center !important;
     position: relative !important;
-    padding-bottom: 8px !important;
+    padding-bottom: 16px !important;
   }
   .card-ganesha-container {
     margin-top: -10px !important;
@@ -461,8 +508,8 @@ body,
   }
   .scroll-hint {
     margin-top: auto !important;
-    padding-top: 10px !important;
-    padding-bottom: 6px !important;
+    padding-top: 12px !important;
+    padding-bottom: 16px !important;
     font-size: 11px !important;
     letter-spacing: 0.15em !important;
   }
@@ -481,4 +528,28 @@ body,
   50% {
     transform: translateY(6px);
   }
+}
+
+/* Desktop Spacing & Breathing Room for Scroll Hint and Details */
+.invitation-heading .small-flourish {
+  margin-top: 44px !important;
+  margin-bottom: 16px !important;
+}
+
+.scroll-hint {
+  margin-top: 42px !important;
+  margin-bottom: 28px !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.18em !important;
+}
+
+.scroll-hint svg {
+  width: 22px !important;
+  height: 22px !important;
+  stroke-width: 1.5 !important;
+  margin-top: 6px !important;
+}
+
+.details-section {
+  padding-top: 76px !important;
 }
