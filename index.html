@@ -213,9 +213,6 @@
             Get Directions
             <svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
           </a>
-          <p class="map-note">
-            Opens a venue-name search in Google Maps.<br />Please confirm the correct location before travelling.
-          </p>
 
           <!-- Timeline -->
           <div class="timeline">
@@ -226,25 +223,7 @@
               </div>
               <div>
                 <h3 class="event-title">Wedding Ceremony</h3>
-                <p class="event-time" id="ceremony-time-text">Muhurtham time to be confirmed</p>
-                <div class="dropdown-container">
-                  <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors stationery-button" id="ceremony-calendar-btn" aria-label="Add Wedding Ceremony to Calendar">
-                    <svg class="lucide lucide-calendar-plus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19h6"/><path d="M16 2v4"/><path d="M19 16v6"/><path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5"/><path d="M3 10h18"/><path d="M8 2v4"/></svg>
-                    Add to calendar
-                    <svg class="lucide lucide-chevron-down" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                  </button>
-                  <div class="dropdown-menu hidden" id="ceremony-calendar-menu">
-                    <a class="dropdown-item" id="ceremony-gcal-link" href="#" target="_blank" rel="noopener noreferrer">
-                      <svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-                      Google Calendar
-                    </a>
-                    <button class="dropdown-item" id="ceremony-ics-btn" type="button">
-                      <svg class="lucide lucide-download" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
-                      Apple, Outlook &amp; other calendars (.ics)
-                    </button>
-                  </div>
-                </div>
-                <p class="calendar-note">Saves an all-day reminder until the time is confirmed.</p>
+                <p class="event-time" id="ceremony-time-text">Muhurtham: [Time Placeholder]</p>
               </div>
             </section>
 
@@ -255,25 +234,7 @@
               </div>
               <div>
                 <h3 class="event-title">Wedding Reception</h3>
-                <p class="event-time" id="reception-time-text">7:00 PM onwards</p>
-                <div class="dropdown-container">
-                  <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors stationery-button" id="reception-calendar-btn" aria-label="Add Wedding Reception to Calendar">
-                    <svg class="lucide lucide-calendar-plus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19h6"/><path d="M16 2v4"/><path d="M19 16v6"/><path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5"/><path d="M3 10h18"/><path d="M8 2v4"/></svg>
-                    Add to calendar
-                    <svg class="lucide lucide-chevron-down" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                  </button>
-                  <div class="dropdown-menu hidden" id="reception-calendar-menu">
-                    <a class="dropdown-item" id="reception-gcal-link" href="#" target="_blank" rel="noopener noreferrer">
-                      <svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-                      Google Calendar
-                    </a>
-                    <button class="dropdown-item" id="reception-ics-btn" type="button">
-                      <svg class="lucide lucide-download" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
-                      Apple, Outlook &amp; other calendars (.ics)
-                    </button>
-                  </div>
-                </div>
-                <p class="calendar-note">End time to be confirmed.</p>
+                <p class="event-time" id="reception-time-text">Reception: 7:00 PM onwards</p>
               </div>
             </section>
           </div>

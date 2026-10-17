@@ -224,21 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareStatus = document.getElementById('share-status');
   const shareFallbackInput = document.getElementById('share-fallback-input');
 
-  // Calendar elements
-  const ceremonyCalBtn = document.getElementById('ceremony-calendar-btn');
-  const ceremonyCalMenu = document.getElementById('ceremony-calendar-menu');
-  const ceremonyGcal = document.getElementById('ceremony-gcal-link');
-  const ceremonyIcs = document.getElementById('ceremony-ics-btn');
-
-  const receptionCalBtn = document.getElementById('reception-calendar-btn');
-  const receptionCalMenu = document.getElementById('reception-calendar-menu');
-  const receptionGcal = document.getElementById('reception-gcal-link');
-  const receptionIcs = document.getElementById('reception-ics-btn');
-
-  // Set Google Calendar links
-  if (ceremonyGcal) ceremonyGcal.href = getGoogleCalendarUrl('ceremony');
-  if (receptionGcal) receptionGcal.href = getGoogleCalendarUrl('reception');
-
   // Set Directions link
   const getDirectionsLink = document.getElementById('get-directions-link');
   if (getDirectionsLink) getDirectionsLink.href = getDirectionsUrl();
@@ -248,14 +233,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (ceremonyTimeText) {
     ceremonyTimeText.textContent = G.ceremony.startTime
       ? `Muhurtham · ${formatTime(G.ceremony.startTime)} IST`
-      : 'Muhurtham time to be confirmed';
+      : 'Muhurtham: [Time Placeholder]';
   }
 
   const receptionTimeText = document.getElementById('reception-time-text');
   if (receptionTimeText) {
     receptionTimeText.textContent = G.reception.startTime
-      ? `${formatTime(G.reception.startTime)} onwards`
-      : 'Reception time to be confirmed';
+      ? `Reception: ${formatTime(G.reception.startTime)} onwards`
+      : 'Reception: [Time Placeholder]';
   }
 
   const displayWeddingDate = document.getElementById('display-wedding-date');
@@ -326,54 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }, 100);
     });
-  });
-
-  // Calendar Dropdowns
-  function toggleMenu(menu, button) {
-    const isClosed = menu.classList.contains('hidden');
-    ceremonyCalMenu?.classList.add('hidden');
-    receptionCalMenu?.classList.add('hidden');
-    if (isClosed) {
-      menu.classList.remove('hidden');
-    }
-  }
-
-  ceremonyCalBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleMenu(ceremonyCalMenu, ceremonyCalBtn);
-  });
-
-  receptionCalBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleMenu(receptionCalMenu, receptionCalBtn);
-  });
-
-  // Close menus on outside click or Escape
-  document.addEventListener('click', (e) => {
-    if (!ceremonyCalMenu?.contains(e.target) && e.target !== ceremonyCalBtn) {
-      ceremonyCalMenu?.classList.add('hidden');
-    }
-    if (!receptionCalMenu?.contains(e.target) && e.target !== receptionCalBtn) {
-      receptionCalMenu?.classList.add('hidden');
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      ceremonyCalMenu?.classList.add('hidden');
-      receptionCalMenu?.classList.add('hidden');
-    }
-  });
-
-  // ICS Download triggers
-  ceremonyIcs?.addEventListener('click', () => {
-    downloadIcs('ceremony');
-    ceremonyCalMenu?.classList.add('hidden');
-  });
-
-  receptionIcs?.addEventListener('click', () => {
-    downloadIcs('reception');
-    receptionCalMenu?.classList.add('hidden');
   });
 
   // Share Handler
