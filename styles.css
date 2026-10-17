@@ -236,3 +236,24 @@ body,
     font-size: 16px !important;
   }
 }
+
+
+/* Positioning Countdown directly after Friday 20 November 2026 */
+.details-section .countdown-section {
+  border-top: none !important;
+  margin-top: 20px !important;
+  margin-bottom: 34px !important;
+  padding-top: 0 !important;
+}
+
+.countdown-title {
+  font-size: 24px !important;
+  color: var(--primary) !important;
+  margin-bottom: 0 !important;
+}
+
+.details-section .venue-name {
+  border-top: 1px solid var(--border) !important;
+  padding-top: 30px !important;
+  margin-top: 24px !important;
+}
