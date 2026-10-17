@@ -335,13 +335,14 @@ body,
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  color: var(--gold) !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 22px !important;
 }
 
-.card-ganesha {
+.card-ganesha-img {
+  width: 68px !important;
+  height: 68px !important;
+  object-fit: contain !important;
   display: block !important;
-  color: var(--gold) !important;
   filter: drop-shadow(0 1px 2px rgba(191, 161, 95, 0.25)) !important;
 }
 
@@ -364,7 +365,7 @@ body,
 }
 
 
-/* Circular Curved 'tap to open' text - Clean Font-Size Pulse (No Glow), 1s interval */
+/* Circular Curved 'tap to open' text - Clean Size Pulse (No Glow), 1s interval */
 .seal-circular-tap {
   position: absolute !important;
   top: 86.2% !important;
@@ -379,26 +380,29 @@ body,
   transition: opacity 0.3s ease !important;
 }
 
+.pulse-text-group {
+  transform-box: fill-box !important;
+  transform-origin: 50% 50% !important;
+  animation: pulse-tap-scale 1s ease-in-out infinite !important;
+}
+
 .seal-curved-text {
   font-family: var(--font-serif) !important;
-  font-size: 10.5px !important;
+  font-size: 11px !important;
   letter-spacing: 2px !important;
   text-transform: uppercase !important;
   fill: var(--opening-gold) !important;
   font-weight: 500 !important;
   filter: none !important;
   text-shadow: none !important;
-  animation: pulse-tap-font 1s ease-in-out infinite !important;
 }
 
-@keyframes pulse-tap-font {
+@keyframes pulse-tap-scale {
   0%, 100% {
-    font-size: 10.5px;
-    letter-spacing: 2px;
+    transform: scale(0.82);
   }
   50% {
-    font-size: 14px;
-    letter-spacing: 3px;
+    transform: scale(1.22);
   }
 }
 
@@ -430,7 +434,7 @@ body,
   .card-ganesha-container {
     margin-bottom: 14px !important;
   }
-  .card-ganesha {
+  .card-ganesha-img, .card-ganesha {
     width: 48px !important;
     height: 48px !important;
   }
