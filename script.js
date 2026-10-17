@@ -1,14 +1,15 @@
 /**
- * Sanjana & Vinayanand Wedding Invitation
+ * Vinayanad B V & Sanjana P Wedding Invitation
  * Complete interactive logic replicating Lovable production app
  */
 
 const G = {
   couple: {
-    first: 'Sanjana',
-    second: 'Vinayanand',
-    monogram: 'S & V'
+    first: 'Vinayanad B V',
+    second: 'Sanjana P',
+    monogram: 'V & S'
   },
+  parents: 'Smt. Vidya D S and Dr. J B Venkatesh Prasad',
   date: '2026-11-20',
   timeZone: 'Asia/Kolkata',
   utcOffset: '+05:30',
@@ -74,7 +75,7 @@ function buildCalendarEventData(kind) {
   const title = `${G.couple.first} & ${G.couple.second} — ${ev.title}`;
   const location = [G.venue.name, G.venue.address].filter(Boolean).join(', ');
   const description = [
-    `Join ${G.couple.first} & ${G.couple.second} for their ${ev.title.toLowerCase()}.`,
+    `${G.parents} would like to invite you to the wedding of their elder son ${G.couple.first} with ${G.couple.second} for their ${ev.title.toLowerCase()}.`,
     ev.startTime ? '' : 'Save the date. Muhurtham time is to be confirmed; this is an all-day date reminder, not the ceremony start time.',
     ev.endTime ? '' : 'End time to be confirmed. No confirmed ending time has been assigned.'
   ].filter(Boolean).join('\n');
@@ -136,11 +137,11 @@ function generateIcsFileContent(kind) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Sanjana and Vinayanand//Wedding Invitation//EN',
+    'PRODID:-//Vinayanad and Sanjana//Wedding Invitation//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    `UID:${G.date}-${kind}@sanjana-vinayanand.wedding`,
+    `UID:${G.date}-${kind}@vinayanad-sanjana.wedding`,
     `DTSTAMP:${toIcsDateUtc(now)}`,
     `SUMMARY:${escapeIcs(data.title)}`,
     `LOCATION:${escapeIcs(data.location)}`,
@@ -209,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const waxSealBtn = document.getElementById('wax-seal-btn');
   const tapToOpen = document.getElementById('tap-to-open');
   const envelopeStage = document.querySelector('.envelope-stage');
-  const envelopeFlap = document.querySelector('.envelope-flap');
   const backToEnvelopeBtn = document.getElementById('back-to-envelope-btn');
   const shareBtn = document.getElementById('share-invitation-btn');
   const shareStatus = document.getElementById('share-status');
@@ -280,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
       openingScene.setAttribute('aria-busy', 'false');
       revealedInvitation.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'instant' });
-      // Clear any text cursor focus so no caret is visible
       const title = document.getElementById('invitation-title');
       if (title && document.activeElement === title) {
         title.blur();
@@ -312,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     requestAnimationFrame(() => {
       waxSealBtn.focus();
-      // Remove outline/caret immediately after focus
       setTimeout(() => {
         if (document.activeElement === waxSealBtn) {
           waxSealBtn.blur();
@@ -380,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shareUrl = window.location.href;
     const shareData = {
       title: `${G.couple.first} & ${G.couple.second} — Wedding Invitation`,
-      text: 'A special invitation awaits. Join us as we begin our new chapter together.',
+      text: `${G.parents} would like to invite you to the wedding of their elder son ${G.couple.first} with ${G.couple.second}.`,
       url: shareUrl
     };
 

@@ -141,3 +141,51 @@ body,
   outline: none !important;
   box-shadow: none !important;
 }
+
+
+/* Wordings & Conjunction Styling */
+.with-script {
+  font-family: var(--font-script);
+  color: var(--gold);
+  margin: 4px 0;
+  font-size: 46px;
+  line-height: 1.1;
+  font-style: italic;
+  display: block;
+}
+
+.couple-names {
+  font-size: 68px !important;
+}
+
+.blessings {
+  max-width: 580px;
+  margin: 0 auto 6px;
+  font-size: 21px !important;
+  line-height: 1.4;
+  color: var(--primary) !important;
+  font-weight: 500;
+}
+
+.invitation-wording {
+  font-size: 19px !important;
+  color: var(--muted-foreground) !important;
+  margin: 6px auto 26px !important;
+  max-width: 520px !important;
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 640px) {
+  .couple-names {
+    font-size: 46px !important;
+  }
+  .with-script {
+    font-size: 38px !important;
+  }
+  .blessings {
+    font-size: 18px !important;
+  }
+  .invitation-wording {
+    font-size: 16px !important;
+  }
+}
