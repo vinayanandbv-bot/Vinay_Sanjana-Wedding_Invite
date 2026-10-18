@@ -362,10 +362,10 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Background Wedding Music: Seetha Kalyanam (Plays twice then stops)
+  // Background Wedding Music: Seetha Kalyanam (Plays once then stops)
   const bgMusic = document.getElementById('wedding-music');
   let playCount = 0;
-  const MAX_PLAYS = 2;
+  const MAX_PLAYS = 1;
 
   function startMusic() {
     if (!bgMusic || playCount >= MAX_PLAYS) return;
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener(evt, unlockAudio, { capture: true, passive: true });
   });
 
-  // 4. Stop after playing twice
+  // 4. Stop after playing once
   bgMusic?.addEventListener('ended', () => {
     playCount++;
     if (playCount < MAX_PLAYS) {
