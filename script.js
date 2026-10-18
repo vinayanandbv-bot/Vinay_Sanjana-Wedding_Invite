@@ -257,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let openTimer = null;
 
   function openInvitation() {
+    tryPlayAudio();
     if (isOpening) return;
     isOpening = true;
 
@@ -362,42 +363,57 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Background Wedding Music: Seetha Kalyanam (Plays once then stops)
+  // Background Wedding Music Manager: Seetha Kalyanam
+  // Robust cross-platform handling for Android Chrome, iOS Safari & Desktop
   const bgMusic = document.getElementById('wedding-music');
   let playCount = 0;
   const MAX_PLAYS = 1;
+  let isAudioUnlocked = false;
 
-  function startMusic() {
+  const unlockEvents = ['click', 'touchstart', 'touchend', 'pointerdown', 'pointerup', 'keydown'];
+
+  function removeUnlockListeners() {
+    if (isAudioUnlocked) return;
+    isAudioUnlocked = true;
+    unlockEvents.forEach(evt => {
+      window.removeEventListener(evt, handleUserGestureUnlock, true);
+      document.removeEventListener(evt, handleUserGestureUnlock, true);
+    });
+  }
+
+  function tryPlayAudio() {
     if (!bgMusic || playCount >= MAX_PLAYS) return;
+
+    // Ensure audio element is primed and buffered (critical for Android Chrome over cellular/data-saver)
+    if (bgMusic.readyState === 0) {
+      try { bgMusic.load(); } catch (e) {}
+    }
+
     const playPromise = bgMusic.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Autoplay policy prevented unmuted sound on load without gesture.
+      playPromise.then(() => {
+        // Audio playback successfully started! Now safe to remove gesture listeners
+        removeUnlockListeners();
+      }).catch(() => {
+        // Autoplay blocked by browser policy; DO NOT remove listeners so subsequent taps retry!
       });
     }
   }
 
-  // 1. Attempt play immediately when script parses
-  startMusic();
+  function handleUserGestureUnlock() {
+    tryPlayAudio();
+  }
+
+  // 1. Attempt play immediately when script initializes
+  tryPlayAudio();
 
   // 2. Attempt play on window load
-  window.addEventListener('load', startMusic);
+  window.addEventListener('load', tryPlayAudio);
 
-  // 3. Capture-phase user interaction handler:
-  // Starts music immediately on the very first touch/tap on the screen (before opening the envelope)
-  const unlockAudio = () => {
-    if (bgMusic && bgMusic.paused && playCount < MAX_PLAYS) {
-      bgMusic.play().catch(() => {});
-    }
-    ['touchstart', 'pointerdown', 'mousedown', 'click', 'scroll', 'touchend'].forEach(evt => {
-      window.removeEventListener(evt, unlockAudio, true);
-      document.removeEventListener(evt, unlockAudio, true);
-    });
-  };
-
-  ['touchstart', 'pointerdown', 'mousedown', 'click', 'scroll', 'touchend'].forEach(evt => {
-    window.addEventListener(evt, unlockAudio, { capture: true, passive: true });
-    document.addEventListener(evt, unlockAudio, { capture: true, passive: true });
+  // 3. Capture-phase user interaction handlers (retries until playback succeeds)
+  unlockEvents.forEach(evt => {
+    window.addEventListener(evt, handleUserGestureUnlock, { capture: true, passive: true });
+    document.addEventListener(evt, handleUserGestureUnlock, { capture: true, passive: true });
   });
 
   // 4. Stop after playing once
