@@ -201,6 +201,17 @@ body,
   display: block;
 }
 
+.bride-parents {
+  max-width: 580px;
+  margin: 12px auto 0 !important;
+  font-size: 20px !important;
+  line-height: 1.4;
+  color: #4E111C !important;
+  font-weight: 500;
+  font-family: var(--font-serif);
+  text-align: center;
+}
+
 .couple-names {
   font-size: 68px !important;
 }
@@ -217,7 +228,7 @@ body,
 .invitation-wording {
   font-size: 19px !important;
   color: var(--muted-foreground) !important;
-  margin: 6px auto 26px !important;
+  margin: 6px auto 38px !important;
   max-width: 520px !important;
   line-height: 1.5 !important;
 }
@@ -489,7 +500,7 @@ body,
     height: 74px !important;
   }
   .invitation-wording {
-    margin: 4px auto 14px !important;
+    margin: 4px auto 24px !important;
   }
   .couple-names {
     margin: 14px 0 10px !important;
@@ -514,7 +525,7 @@ body,
     font-weight: 700 !important;
   }
   .scroll-hint {
-    margin-top: 18px !important;
+    margin-top: 32px !important;
     padding-top: 6px !important;
     padding-bottom: 14px !important;
     margin-bottom: 8px !important;
@@ -545,7 +556,7 @@ body,
 }
 
 .scroll-hint {
-  margin-top: 42px !important;
+  margin-top: 56px !important;
   margin-bottom: 28px !important;
   font-size: 11.5px !important;
   letter-spacing: 0.18em !important;
@@ -560,4 +571,32 @@ body,
 
 .details-section {
   padding-top: 76px !important;
+}
+
+
+/* Bride Parents and Venue Address Polish */
+.revealed-invitation .bride-parents {
+  color: #4E111C !important;
+}
+
+.revealed-invitation .venue-address {
+  font-family: var(--font-serif) !important;
+  font-size: 19px !important;
+  color: #6B5B53 !important;
+  letter-spacing: 0.03em;
+  margin-top: 6px !important;
+  margin-bottom: 22px !important;
+  font-weight: 400;
+}
+
+@media (max-width: 640px) {
+  .bride-parents {
+    font-size: 17px !important;
+    margin-top: 8px !important;
+  }
+  .revealed-invitation .venue-address {
+    font-size: 15px !important;
+    margin-top: 4px !important;
+    margin-bottom: 18px !important;
+  }
 }

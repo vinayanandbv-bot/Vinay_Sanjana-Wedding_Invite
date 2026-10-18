@@ -15,14 +15,14 @@ const G = {
   utcOffset: '+05:30',
   venue: {
     name: 'Aditya Kalyana Mantapa',
-    address: '',
+    address: 'Ittmadu, Bengaluru',
     mapsUrl: '',
-    mapsDestination: 'Aditya Kalyana Mantapa'
+    mapsDestination: 'Aditya Kalyana Mantapa, Ittmadu, Bengaluru'
   },
   ceremony: {
-    title: 'Wedding Ceremony',
-    startTime: null,
-    endTime: null
+    title: 'Muhurtam',
+    startTime: '08:40',
+    endTime: '09:04'
   },
   reception: {
     title: 'Wedding Reception',
@@ -231,16 +231,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Populate dynamic times & dates
   const ceremonyTimeText = document.getElementById('ceremony-time-text');
   if (ceremonyTimeText) {
-    ceremonyTimeText.textContent = G.ceremony.startTime
-      ? `Muhurtham · ${formatTime(G.ceremony.startTime)} IST`
-      : 'Muhurtham: [Time Placeholder]';
+    ceremonyTimeText.textContent = '8:40 AM to 9:04 AM';
   }
 
   const receptionTimeText = document.getElementById('reception-time-text');
   if (receptionTimeText) {
     receptionTimeText.textContent = G.reception.startTime
-      ? `Reception: ${formatTime(G.reception.startTime)} onwards`
-      : 'Reception: [Time Placeholder]';
+      ? `${formatTime(G.reception.startTime)} onwards`
+      : '7:00 PM onwards';
+  }
+
+  const displayVenueAddress = document.getElementById('display-venue-address');
+  if (displayVenueAddress && G.venue.address) {
+    displayVenueAddress.textContent = G.venue.address;
+    displayVenueAddress.classList.remove('hidden');
   }
 
   const displayWeddingDate = document.getElementById('display-wedding-date');
@@ -358,11 +362,13 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Background Wedding Music: Seetha Kalyanam (Cropped: 0-22s + 43s-1:58, 1.5x speed)
+  // Background Wedding Music: Seetha Kalyanam (Plays twice then stops)
   const bgMusic = document.getElementById('wedding-music');
+  let playCount = 0;
+  const MAX_PLAYS = 2;
 
   function startMusic() {
-    if (!bgMusic) return;
+    if (!bgMusic || playCount >= MAX_PLAYS) return;
     const playPromise = bgMusic.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
@@ -380,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Capture-phase user interaction handler:
   // Starts music immediately on the very first touch/tap on the screen (before opening the envelope)
   const unlockAudio = () => {
-    if (bgMusic && bgMusic.paused) {
+    if (bgMusic && bgMusic.paused && playCount < MAX_PLAYS) {
       bgMusic.play().catch(() => {});
     }
     ['touchstart', 'pointerdown', 'mousedown', 'click', 'scroll', 'touchend'].forEach(evt => {
@@ -394,9 +400,27 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener(evt, unlockAudio, { capture: true, passive: true });
   });
 
-  // 4. Robust infinite loop handler: ensures audio loops continuously without stalling
+  // 4. Stop after playing twice
   bgMusic?.addEventListener('ended', () => {
-    bgMusic.currentTime = 0;
-    bgMusic.play().catch(() => {});
+    playCount++;
+    if (playCount < MAX_PLAYS) {
+      bgMusic.currentTime = 0;
+      bgMusic.play().catch(() => {});
+    } else {
+      bgMusic.pause();
+    }
+  });
+
+  // 5. Stop music when browser is minimized, screen locked, app switched, or user goes to home screen on phone
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && bgMusic && !bgMusic.paused) {
+      bgMusic.pause();
+    }
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (bgMusic && !bgMusic.paused) {
+      bgMusic.pause();
+    }
   });
 });
